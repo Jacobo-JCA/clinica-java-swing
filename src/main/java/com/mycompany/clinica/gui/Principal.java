@@ -26,7 +26,6 @@ public class Principal extends javax.swing.JFrame {
         grupoModulos = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         btnPaciente = new javax.swing.JToggleButton();
-        btnAntecedentes = new javax.swing.JToggleButton();
         contenedorModulos = new javax.swing.JDesktopPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -39,23 +38,13 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
-        grupoModulos.add(btnAntecedentes);
-        btnAntecedentes.setText("Antecedentes");
-        btnAntecedentes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAntecedentesActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnPaciente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnAntecedentes, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))
+                .addComponent(btnPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -63,9 +52,7 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(btnPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnAntecedentes, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(606, Short.MAX_VALUE))
+                .addContainerGap(662, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout contenedorModulosLayout = new javax.swing.GroupLayout(contenedorModulos);
@@ -113,18 +100,6 @@ public class Principal extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_btnPacienteActionPerformed
-    AntecedentesFrame antecedentes;
-    private void btnAntecedentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAntecedentesActionPerformed
-        if(antecedentes == null) {
-            antecedentes = new AntecedentesFrame();
-            contenedorModulos.add(antecedentes);
-            contenedorModulos.getDesktopManager().maximizeFrame(antecedentes);
-            antecedentes.setVisible(true);
-        }else {
-            contenedorModulos.getDesktopManager().maximizeFrame(antecedentes);
-        }
-        
-    }//GEN-LAST:event_btnAntecedentesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -162,7 +137,6 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToggleButton btnAntecedentes;
     private javax.swing.JToggleButton btnPaciente;
     private javax.swing.JDesktopPane contenedorModulos;
     private javax.swing.ButtonGroup grupoModulos;

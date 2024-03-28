@@ -1,6 +1,7 @@
 package com.mycompany.clinica.model;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 /**
  *
@@ -18,11 +19,18 @@ public class Paciente {
     private int expediente;
     private String ciudad;
     private String estado;
-    private Date fechaNacimiento;
     private String telefono;
+    private Date fechaNacimiento;
     private String ocupacion;
     private String motivoConsulta;
     private Date fechaConsulta;
+    private ArrayList<Enfermedades> listEnfermedades = new ArrayList<>();
+    private ArrayList<SignosVitales> listSignosVitales = new ArrayList<>();
+
+    public Paciente() {
+    }
+    
+    
 
     public Paciente(String cedula, String nombre, String apellido, 
             String direccion, String email, int edad, String genero, int expediente, String ciudad, String estado, 
@@ -172,14 +180,27 @@ public class Paciente {
         this.fechaConsulta = fechaConsulta;
     }
 
-    @Override
-    public String toString() {
-        return  "idPaciente=" + idPaciente + ", cedula=" + cedula + ", nombre=" + nombre + ", apellido=" 
-                + apellido + ", direccion=" + direccion + ", email=" + email + ", edad=" + edad + ", genero=" + genero 
-                + ", expediente=" + expediente + ", ciudad=" + ciudad + ", estado=" + estado + ", fechaNacimiento=" 
-                + fechaNacimiento + ", telefono=" + telefono + ", ocupacion=" + ocupacion + ", motivoConsulta=" + motivoConsulta 
-                + ", fechaConsulta=" + fechaConsulta;
+    public ArrayList<Enfermedades> getListEnfermedades() {
+        return listEnfermedades;
+    }
+
+    public void setListEnfermedades(ArrayList<Enfermedades> listEnfermedades) {
+        this.listEnfermedades = listEnfermedades;
+    }
+
+    public void addEnfermedad(Enfermedades enfermedad) {
+        this.listEnfermedades.add(enfermedad);
+    }
+
+    public ArrayList<SignosVitales> getListSignosVitales() {
+        return listSignosVitales;
+    }
+
+    public void setListSignosVitales(ArrayList<SignosVitales> listSignosVitales) {
+        this.listSignosVitales = listSignosVitales;
     }
     
-    
+    public void addSignosVitales(SignosVitales signosVitales) {
+        this.listSignosVitales.add(signosVitales);
+    }
 }

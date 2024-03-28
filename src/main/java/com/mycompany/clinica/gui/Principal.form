@@ -55,10 +55,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="btnPaciente" max="32767" attributes="0"/>
-                      <Component id="btnAntecedentes" pref="107" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="btnPaciente" min="-2" pref="107" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -68,9 +65,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                   <Component id="btnPaciente" min="-2" pref="38" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="btnAntecedentes" min="-2" pref="38" max="-2" attributes="0"/>
-                  <EmptySpace pref="606" max="32767" attributes="0"/>
+                  <EmptySpace pref="662" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -85,17 +80,6 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPacienteActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JToggleButton" name="btnAntecedentes">
-          <Properties>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="grupoModulos"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Antecedentes"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAntecedentesActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
