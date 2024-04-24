@@ -1,6 +1,7 @@
 package com.mycompany.clinica.model;
 
-import java.sql.Date;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -8,6 +9,7 @@ import java.util.ArrayList;
  * @author jacob
  */
 public class Paciente {
+    
     private int idPaciente;
     private String cedula;
     private String nombre;
@@ -20,13 +22,12 @@ public class Paciente {
     private String ciudad;
     private String estado;
     private String telefono;
-    private Date fechaNacimiento;
+    private LocalDate fechaNacimiento;
     private String ocupacion;
-    private String motivoConsulta;
-    private Date fechaConsulta;
     private ArrayList<Enfermedades> listEnfermedades = new ArrayList<>();
     private ArrayList<SignosVitales> listSignosVitales = new ArrayList<>();
-
+    private ArrayList<Consulta> listConsultas = new ArrayList<>();
+    
     public Paciente() {
     }
     
@@ -34,7 +35,7 @@ public class Paciente {
 
     public Paciente(String cedula, String nombre, String apellido, 
             String direccion, String email, int edad, String genero, int expediente, String ciudad, String estado, 
-            Date fechaNacimiento, String telefono, String ocupacion, String motivoConsulta, Date fechaConsulta) {
+            LocalDate fechaNacimiento, String telefono, String ocupacion) {
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -48,9 +49,29 @@ public class Paciente {
         this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
         this.ocupacion = ocupacion;
-        this.motivoConsulta = motivoConsulta;
-        this.fechaConsulta = fechaConsulta;
     }
+
+    public Paciente(int idPaciente, String cedula, String nombre, String apellido, String direccion, String email, int edad, String genero, int expediente, 
+            String ciudad, String estado, String telefono, LocalDate fechaNacimiento, String ocupacion) {
+        this.idPaciente = idPaciente;
+        this.cedula = cedula;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.direccion = direccion;
+        this.email = email;
+        this.edad = edad;
+        this.genero = genero;
+        this.expediente = expediente;
+        this.ciudad = ciudad;
+        this.estado = estado;
+        this.telefono = telefono;
+        this.fechaNacimiento = fechaNacimiento;
+        this.ocupacion = ocupacion;
+    }
+
+    
+    
+    
 
     public int getIdPaciente() {
         return idPaciente;
@@ -140,11 +161,11 @@ public class Paciente {
         this.estado = estado;
     }
 
-    public Date getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
@@ -162,22 +183,6 @@ public class Paciente {
 
     public void setOcupacion(String ocupacion) {
         this.ocupacion = ocupacion;
-    }
-
-    public String getMotivoConsulta() {
-        return motivoConsulta;
-    }
-
-    public void setMotivoConsulta(String motivoConsulta) {
-        this.motivoConsulta = motivoConsulta;
-    }
-
-    public Date getFechaConsulta() {
-        return fechaConsulta;
-    }
-
-    public void setFechaConsulta(Date fechaConsulta) {
-        this.fechaConsulta = fechaConsulta;
     }
 
     public ArrayList<Enfermedades> getListEnfermedades() {
@@ -203,4 +208,30 @@ public class Paciente {
     public void addSignosVitales(SignosVitales signosVitales) {
         this.listSignosVitales.add(signosVitales);
     }
+
+    public ArrayList<Consulta> getListConsultas() {
+        return listConsultas;
+    }
+
+    public void setListConsultas(ArrayList<Consulta> listConsultas) {
+        this.listConsultas = listConsultas;
+    }
+    
+    public void addConsultas(Consulta consulta) {
+        this.listConsultas.add(consulta);
+    }
+
+    @Override
+    public String toString() {
+        return "Paciente{" + "idPaciente=" + idPaciente + ", cedula=" + cedula 
+                + ", nombre=" + nombre + ", apellido=" + apellido 
+                + ", direccion=" + direccion + ", email=" + email 
+                + ", edad=" + edad + ", genero=" + genero + ", expediente=" + expediente 
+                + ", ciudad=" + ciudad + ", estado=" + estado + ", telefono=" + telefono 
+                + ", fechaNacimiento=" + fechaNacimiento + ", ocupacion=" + ocupacion 
+                + ", listEnfermedades=" + listEnfermedades + ", listSignosVitales=" 
+                + listSignosVitales + ", listConsultas=" + listConsultas + '}';
+    }
+    
+    
 }

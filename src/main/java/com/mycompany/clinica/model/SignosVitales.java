@@ -18,6 +18,10 @@ public class SignosVitales {
     private String imc;
     private int idPaciente;
 
+    public SignosVitales() {
+    }
+    
+
     public SignosVitales(String presionArterial, String frecuenciaCardiaca, String frecuenciaRespiratoria, String temperatura, double peso, double talla, String descripcion, String imc) {
         this.presionArterial = presionArterial;
         this.frecuenciaCardiaca = frecuenciaCardiaca;

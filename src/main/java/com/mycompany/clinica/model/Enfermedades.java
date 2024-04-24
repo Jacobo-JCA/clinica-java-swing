@@ -5,14 +5,22 @@ package com.mycompany.clinica.model;
  * @author jacob
  */
 public class Enfermedades {
+    
     private int idEnfermedad;
-    private String enfermedad;
-    private String descripcion;
-    private int idPaciente;
+    private String patologico;
+    private String noPatologico;
+    private String clinico;
+    private String quirurjico;
 
-    public Enfermedades(String enfermedad, String descripcion) {
-        this.enfermedad = enfermedad;
-        this.descripcion = descripcion;
+    public Enfermedades() {
+        
+    }
+
+    public Enfermedades(String patologico, String noPatologico, String clinico, String quirurjico) {
+        this.patologico = patologico;
+        this.noPatologico = noPatologico;
+        this.clinico = clinico;
+        this.quirurjico = quirurjico;
     }
 
     public int getIdEnfermedad() {
@@ -22,30 +30,44 @@ public class Enfermedades {
     public void setIdEnfermedad(int idEnfermedad) {
         this.idEnfermedad = idEnfermedad;
     }
-    
 
-    public String getEnfermedad() {
-        return enfermedad;
+    public String getPatologico() {
+        return patologico;
     }
 
-    public void setEnfermedad(String enfermedad) {
-        this.enfermedad = enfermedad;
+    public void setPatologico(String patologico) {
+        this.patologico = patologico;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getNoPatologico() {
+        return noPatologico;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setNoPatologico(String noPatologico) {
+        this.noPatologico = noPatologico;
     }
 
-    public int getIdPaciente() {
-        return idPaciente;
+    public String getClinico() {
+        return clinico;
     }
 
-    public void setIdPaciente(int idPaciente) {
-        this.idPaciente = idPaciente;
+    public void setClinico(String clinico) {
+        this.clinico = clinico;
+    }
+
+    public String getQuirurjico() {
+        return quirurjico;
+    }
+
+    public void setQuirurjico(String quirurjico) {
+        this.quirurjico = quirurjico;
+    }
+
+    @Override
+    public String toString() {
+        return "Enfermedades{" + "idEnfermedad=" + idEnfermedad + ", patologico=" 
+                + patologico + ", noPatologico=" + noPatologico + ", clinico=" 
+                + clinico + ", quirurjico=" + quirurjico + '}';
     }
     
     

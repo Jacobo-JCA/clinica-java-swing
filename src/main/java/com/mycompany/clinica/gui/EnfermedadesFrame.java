@@ -2,6 +2,8 @@
 package com.mycompany.clinica.gui;
 import com.mycompany.clinica.model.Enfermedades;
 import com.mycompany.clinica.model.Paciente;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 
 /**
@@ -12,11 +14,12 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
 
     private Paciente paciente;
     private String enfermedad;
+    private String info = "hola";
+    private Map<String, String> descripcionesEnfermedades = new HashMap<>();
     
-    public EnfermedadesFrame(java.awt.Frame parent, boolean modal, Paciente paciente, String enfermedad) {
+    public EnfermedadesFrame(java.awt.Frame parent, boolean modal, Paciente paciente) {
         super(parent, modal);
         this.paciente = paciente;
-        this.enfermedad = enfermedad;
         initComponents();
     }
 
@@ -33,6 +36,7 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         descripcion = new javax.swing.JTextArea();
         btnGuardarPatologico = new javax.swing.JButton();
+        finalizar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -49,6 +53,13 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
             }
         });
 
+        finalizar.setText("Finalizar");
+        finalizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                finalizarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -57,8 +68,12 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
                 .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGuardarPatologico, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(btnGuardarPatologico, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(finalizar))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(54, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -69,7 +84,9 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35)
-                .addComponent(btnGuardarPatologico, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnGuardarPatologico, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(finalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(148, Short.MAX_VALUE))
         );
 
@@ -77,16 +94,59 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarPatologicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarPatologicoActionPerformed
-        paciente.addEnfermedad(new Enfermedades(enfermedad, descripcion.getText()));
-        
-        JOptionPane.showMessageDialog(null, "Enfermedad insertada correctamente!", "Información", JOptionPane.INFORMATION_MESSAGE);
-         this.dispose();
+        System.out.println("valor: " + this.info);
+        String descript = descripcion.getText();
+        if (this.enfermedad.equals("patologico")) {
+            descripcionesEnfermedades.put("patologico", descript);
+            JOptionPane.showMessageDialog(null, "Descripción de patológico guardada.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        } else if (this.enfermedad.equals("no patologico")) {
+            descripcionesEnfermedades.put("no patologico", descript);
+            JOptionPane.showMessageDialog(null, "Descripción de no patológico guardada.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        } else if (this.enfermedad.equals("clinico")) {
+            descripcionesEnfermedades.put("clinico", descript);
+            JOptionPane.showMessageDialog(null, "Descripción de clínico guardada.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        } else if (this.enfermedad.equals("quirurjico")) {
+            descripcionesEnfermedades.put("quirurjico", descript);
+            JOptionPane.showMessageDialog(null, "Descripción de quirúrgico guardada.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Tipo de enfermedad no reconocido", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        descripcion.setText("");
     }//GEN-LAST:event_btnGuardarPatologicoActionPerformed
+
+    private void finalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finalizarActionPerformed
+        this.agregarEnfermedadesPaciente();
+    }//GEN-LAST:event_finalizarActionPerformed
+
+    private void agregarEnfermedadesPaciente() {
+        String patologico = descripcionesEnfermedades.get("patologico");
+        String noPatologico = descripcionesEnfermedades.get("no patologico");
+        String clinico = descripcionesEnfermedades.get("clinico");
+        String quirurjico = descripcionesEnfermedades.get("quirurjico");
+
+        if (patologico == null || noPatologico == null || clinico == null || quirurjico == null) {
+            JOptionPane.showMessageDialog(null, "Por favor, complete todas las descripciones de enfermedades.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Enfermedades enfermedad = new Enfermedades(patologico, noPatologico, clinico, quirurjico);
+
+        paciente.addEnfermedad(enfermedad);
+        JOptionPane.showMessageDialog(null, "Enfermedades agregadas al paciente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+
+        descripcionesEnfermedades.clear();
+    }
+    
+    public void setEnfermedad(String enfermedad) {
+        this.enfermedad = enfermedad;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardarPatologico;
     private javax.swing.JTextArea descripcion;
+    private javax.swing.JButton finalizar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
