@@ -14,6 +14,10 @@ public class Consulta {
     private LocalDate fechaConsulta;
     private String diagnostico;
     private String receta;
+    private int idPaciente;
+
+    public Consulta() {
+    }
 
     public Consulta(String motivoConsulta, LocalDate fechaConsulta, String diagnostico, String receta) {
         this.motivoConsulta = motivoConsulta;
@@ -60,6 +64,14 @@ public class Consulta {
 
     public void setReceta(String receta) {
         this.receta = receta;
+    }
+
+    public int getIdPaciente() {
+        return idPaciente;
+    }
+
+    public void setIdPaciente(int idPaciente) {
+        this.idPaciente = idPaciente;
     }
     
     

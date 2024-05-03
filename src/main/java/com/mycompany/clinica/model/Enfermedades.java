@@ -11,16 +11,18 @@ public class Enfermedades {
     private String noPatologico;
     private String clinico;
     private String quirurjico;
+    private String hereditario;
 
     public Enfermedades() {
         
     }
 
-    public Enfermedades(String patologico, String noPatologico, String clinico, String quirurjico) {
+    public Enfermedades(String patologico, String noPatologico, String clinico, String quirurjico, String hereditario) {
         this.patologico = patologico;
         this.noPatologico = noPatologico;
         this.clinico = clinico;
         this.quirurjico = quirurjico;
+        this.hereditario = hereditario;
     }
 
     public int getIdEnfermedad() {
@@ -63,12 +65,22 @@ public class Enfermedades {
         this.quirurjico = quirurjico;
     }
 
+    public String getHereditario() {
+        return hereditario;
+    }
+
+    public void setHereditario(String hereditario) {
+        this.hereditario = hereditario;
+    }
+
     @Override
     public String toString() {
         return "Enfermedades{" + "idEnfermedad=" + idEnfermedad + ", patologico=" 
                 + patologico + ", noPatologico=" + noPatologico + ", clinico=" 
-                + clinico + ", quirurjico=" + quirurjico + '}';
+                + clinico + ", quirurjico=" + quirurjico + ", hereditario=" + hereditario + '}';
     }
+
+    
     
     
 }

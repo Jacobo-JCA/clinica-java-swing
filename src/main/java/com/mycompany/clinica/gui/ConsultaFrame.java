@@ -109,7 +109,7 @@ public class ConsultaFrame extends javax.swing.JDialog {
         paciente.addConsultas(new Consulta(motivo, fechaConsulta, diagnostic, recet));
         
         JOptionPane.showMessageDialog(null, "Enfermedad insertada correctamente!", "Información", JOptionPane.INFORMATION_MESSAGE);
-         this.dispose();
+        this.dispose();
     }//GEN-LAST:event_btnGuadarConsultaActionPerformed
 
   
