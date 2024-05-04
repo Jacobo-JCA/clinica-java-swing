@@ -25,7 +25,6 @@ public class Paciente {
     private LocalDate fechaNacimiento;
     private String ocupacion;
     private ArrayList<Enfermedades> listEnfermedades = new ArrayList<>();
-    private ArrayList<SignosVitales> listSignosVitales = new ArrayList<>();
     private ArrayList<Consulta> listConsultas = new ArrayList<>();
     
     public Paciente() {
@@ -203,18 +202,6 @@ public class Paciente {
         this.listEnfermedades.add(enfermedad);
     }
 
-    public ArrayList<SignosVitales> getListSignosVitales() {
-        return listSignosVitales;
-    }
-
-    public void setListSignosVitales(ArrayList<SignosVitales> listSignosVitales) {
-        this.listSignosVitales = listSignosVitales;
-    }
-    
-    public void addSignosVitales(SignosVitales signosVitales) {
-        this.listSignosVitales.add(signosVitales);
-    }
-
     public ArrayList<Consulta> getListConsultas() {
         return listConsultas;
     }
@@ -226,18 +213,16 @@ public class Paciente {
     public void addConsultas(Consulta consulta) {
         this.listConsultas.add(consulta);
     }
+    
 
     @Override
     public String toString() {
-        return "Paciente{" + "idPaciente=" + idPaciente + ", cedula=" + cedula 
-                + ", nombre=" + nombre + ", apellido=" + apellido 
-                + ", direccion=" + direccion + ", email=" + email 
-                + ", edad=" + edad + ", genero=" + genero + ", expediente=" + expediente 
-                + ", ciudad=" + ciudad + ", estado=" + estado + ", telefono=" + telefono 
-                + ", fechaNacimiento=" + fechaNacimiento + ", ocupacion=" + ocupacion 
-                + ", listEnfermedades=" + listEnfermedades + ", listSignosVitales=" 
-                + listSignosVitales + ", listConsultas=" + listConsultas + '}';
+        return "Paciente{" + "idPaciente=" + idPaciente + ", cedula=" + cedula + ", nombre=" + nombre + 
+                ", apellido=" + apellido + ", direccion=" + direccion + ", email=" + email + ", edad=" + edad + 
+                ", genero=" + genero + ", expediente=" + expediente + ", ciudad=" + ciudad + ", estado=" + estado + ", telefono=" + telefono + 
+                ", fechaNacimiento=" + fechaNacimiento + ", ocupacion=" + ocupacion + ", listEnfermedades=" + listEnfermedades + ", listConsultas=" + listConsultas + '}';
     }
+
     
     
 }

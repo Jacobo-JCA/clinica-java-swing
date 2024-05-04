@@ -5,6 +5,7 @@ D:\javaFX\clinica\src\main\java\com\mycompany\clinica\model\SignosVitales.java
 D:\javaFX\clinica\src\main\java\com\mycompany\clinica\model\Enfermedades.java
 D:\javaFX\clinica\src\main\java\com\mycompany\clinica\gui\Principal.java
 D:\javaFX\clinica\src\main\java\com\mycompany\clinica\model\Paciente.java
+D:\javaFX\clinica\src\main\java\com\mycompany\clinica\data\ConnectionDB.java
 D:\javaFX\clinica\src\main\java\com\mycompany\clinica\data\BaseDatos.java
 D:\javaFX\clinica\src\main\java\com\mycompany\clinica\gui\ConsultaFrame.java
 D:\javaFX\clinica\src\main\java\com\mycompany\clinica\gui\PacienteFrame.java

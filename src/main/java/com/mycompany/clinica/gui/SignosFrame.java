@@ -1,6 +1,7 @@
 package com.mycompany.clinica.gui;
 
-import com.mycompany.clinica.model.Paciente;
+import com.mycompany.clinica.model.Consulta;
+
 import com.mycompany.clinica.model.SignosVitales;
 import javax.swing.JOptionPane;
 
@@ -10,11 +11,11 @@ import javax.swing.JOptionPane;
  */
 public class SignosFrame extends javax.swing.JDialog {
 
-    private Paciente paciente;
+    private Consulta consulta;
     
-    public SignosFrame(java.awt.Frame parent, boolean modal, Paciente paciente) {
+    public SignosFrame(java.awt.Frame parent, boolean modal, Consulta consulta) {
         super(parent, modal);
-        this.paciente = paciente;
+        this.consulta = consulta;
         initComponents();
     }
 
@@ -166,7 +167,7 @@ public class SignosFrame extends javax.swing.JDialog {
         String imc = calcularImc(peso, talla);
         JOptionPane.showMessageDialog(null, "Almacenado!\nIMC: " + imc, "Información", JOptionPane.INFORMATION_MESSAGE);
         
-        paciente.addSignosVitales(new SignosVitales(textArterial.getText(), textCardiaca.getText(), textRespiratoria.getText(), textTemperatura.getText(), peso, talla, textDescripcion.getText(), imc));
+        consulta.setSignosVitales(new SignosVitales(textArterial.getText(), textCardiaca.getText(), textRespiratoria.getText(), textTemperatura.getText(), peso, talla, textDescripcion.getText(), imc));
        
         JOptionPane.showMessageDialog(null, "Almacenado!", "Información", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnGuardarSignosActionPerformed

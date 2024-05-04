@@ -5,7 +5,6 @@ import com.mycompany.clinica.model.Consulta;
 import com.mycompany.clinica.model.Enfermedades;
 import com.mycompany.clinica.model.Paciente;
 import com.mycompany.clinica.model.SignosVitales;
-import java.sql.Date;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -579,15 +578,16 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
         }
 
         ArrayList<Enfermedades> enfermedades1 = paciente.getListEnfermedades();
-        ArrayList<Consulta> consults = paciente.getListConsultas();
-        ArrayList<SignosVitales> signosVitales = paciente.getListSignosVitales();
+        
+        ArrayList<Consulta> consulta = paciente.getListConsultas();
+
+        
 
         paciente = new Paciente(cedula, nombre, apellido, direccion, email, edad, genero, expediente, ciudad, estado, fechaNacimiento,
                 telefono, ocupacion);
 
         paciente.setListEnfermedades(enfermedades1);
-        paciente.setListConsultas(consults);
-        paciente.setListSignosVitales(signosVitales);
+        paciente.setListConsultas(consulta);
         
         base.insertPaciente(paciente);
         paciente = new Paciente();
@@ -680,7 +680,13 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnQuirurjicoActionPerformed
 
     private void btnSignosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignosActionPerformed
-        SignosFrame signosFrame = new SignosFrame(null, true, paciente);
+        SignosFrame signosFrame;
+        if (paciente == null) {
+            signosFrame = new SignosFrame(null, true, paciente.getListConsultas().get(0));
+        } else {
+            signosFrame = new SignosFrame(null, true, paciente.getListConsultas().get(paciente.getListConsultas().size()-1));
+        }
+        
         signosFrame.setLocationRelativeTo(null);
         signosFrame.setVisible(true);
         signosFrame.setLocation(600, 150);

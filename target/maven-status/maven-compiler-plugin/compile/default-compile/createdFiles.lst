@@ -10,6 +10,7 @@ com\mycompany\clinica\gui\SignosFrame$1.class
 com\mycompany\clinica\gui\PacienteFrame$16.class
 com\mycompany\clinica\gui\PacienteFrame$10.class
 com\mycompany\clinica\gui\PacienteFrame$20.class
+com\mycompany\clinica\data\ConnectionDB.class
 com\mycompany\clinica\gui\PacienteFrame$4.class
 com\mycompany\clinica\model\Paciente.class
 com\mycompany\clinica\gui\ConsultaFrame.class

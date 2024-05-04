@@ -14,7 +14,7 @@ public class Consulta {
     private LocalDate fechaConsulta;
     private String diagnostico;
     private String receta;
-    private int idPaciente;
+    private SignosVitales signosVitales;
 
     public Consulta() {
     }
@@ -66,13 +66,13 @@ public class Consulta {
         this.receta = receta;
     }
 
-    public int getIdPaciente() {
-        return idPaciente;
+    public SignosVitales getSignosVitales() {
+        return signosVitales;
     }
 
-    public void setIdPaciente(int idPaciente) {
-        this.idPaciente = idPaciente;
+    public void setSignosVitales(SignosVitales signosVitales) {
+        this.signosVitales = signosVitales;
     }
-    
+
     
 }

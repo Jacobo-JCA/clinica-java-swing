@@ -16,7 +16,6 @@ public class SignosVitales {
     private double talla;
     private String descripcion;
     private String imc;
-    private int idConsulta;
     
 
     public SignosVitales() {
@@ -107,13 +106,4 @@ public class SignosVitales {
         this.imc = imc;
     }
 
-    public int getIdConsulta() {
-        return idConsulta;
-    }
-
-    public void setIdConsulta(int idConsulta) {
-        this.idConsulta = idConsulta;
-    }
-
-    
 }

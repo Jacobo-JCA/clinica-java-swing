@@ -22,104 +22,77 @@ import javax.swing.JOptionPane;
  * @author jacob
  */
 public class BaseDatos {
-    Connection conn = null;
-    PreparedStatement pst = null;
-    Statement st = null;
-    ResultSet rs = null;
     
-    public BaseDatos() {
-        try {
-            Class.forName("org.postgresql.Driver"); 
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
+    private Connection getConnection() throws SQLException {
+        return ConnectionDB.getInstance();
     }
     
-    public int insertPaciente(Paciente paciente) {
+    public BaseDatos() {
+        
+    }
+    
+    public void insertPaciente(Paciente paciente) {
         int pacientId = 0;
+        
+        try (PreparedStatement sqlInsertar = this.getConnection().prepareStatement("INSERT INTO paciente (cedula, nombre, apellido, direccion, "
+                + "email, edad, genero, expediente, ciudad, estado, fecha_nacimiento, telefono, ocupacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
 
-        try (Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/clinica_praxell", "postgres", "1234")) {
-            // Primero, busco en BD
-            String sqlBusqueda = "SELECT id_paciente FROM paciente WHERE cedula = ?";
-            pst = conn.prepareStatement(sqlBusqueda);
-            pst.setString(1, paciente.getCedula());
-            rs = pst.executeQuery();
+            ResultSet rs = sqlInsertar.executeQuery();
 
-            if (rs.next()) {
-                // Verifico si el paciente ya existe
-                pacientId = rs.getInt("id_paciente");
-                int consultaId = insertConsulta(paciente.getListConsultas().get(0), pacientId);
+            sqlInsertar.setString(1, paciente.getCedula());
+            sqlInsertar.setString(2, paciente.getNombre());
+            sqlInsertar.setString(3, paciente.getApellido());
+            sqlInsertar.setString(4, paciente.getDireccion());
+            sqlInsertar.setString(5, paciente.getEmail());
+            sqlInsertar.setInt(6, paciente.getEdad());
+            sqlInsertar.setString(7, paciente.getGenero());
+            sqlInsertar.setInt(8, paciente.getExpediente());
+            sqlInsertar.setString(9, paciente.getCiudad());
+            sqlInsertar.setString(10, paciente.getEstado());
+            Date fechaNacimientoSQL = Date.valueOf(paciente.getFechaNacimiento());
+            sqlInsertar.setDate(11, fechaNacimientoSQL);
+            sqlInsertar.setString(12, paciente.getTelefono());
+            sqlInsertar.setString(13, paciente.getOcupacion());
 
-                // Inserta los nuevos signos vitales
-                for (SignosVitales signosVitales : paciente.getListSignosVitales()) {
-                    insertSignosVitales(signosVitales, consultaId);
-                }
-            }else {
-                String sqlInsertar = "INSERT INTO paciente (cedula, nombre, apellido, direccion, email, edad, genero, expediente, ciudad, estado, fecha_nacimiento, telefono, ocupacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            int affectedRows = sqlInsertar.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Inserte el paciente, filas no afectadas.");
+            }
 
-                pst = conn.prepareStatement(sqlInsertar, Statement.RETURN_GENERATED_KEYS);
+            try (ResultSet generatedKeys = sqlInsertar.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    pacientId = generatedKeys.getInt(1);
 
-                pst.setString(1, paciente.getCedula());
-                pst.setString(2, paciente.getNombre());
-                pst.setString(3, paciente.getApellido());
-                pst.setString(4, paciente.getDireccion());
-                pst.setString(5, paciente.getEmail());
-                pst.setInt(6, paciente.getEdad());
-                pst.setString(7, paciente.getGenero());
-                pst.setInt(8, paciente.getExpediente());
-                pst.setString(9, paciente.getCiudad());
-                pst.setString(10, paciente.getEstado());
-                Date fechaNacimientoSQL = Date.valueOf(paciente.getFechaNacimiento());
-                pst.setDate(11, fechaNacimientoSQL);
-                pst.setString(12, paciente.getTelefono());
-                pst.setString(13, paciente.getOcupacion());
-
-                int affectedRows = pst.executeUpdate();
-                if (affectedRows == 0) {
-                    throw new SQLException("Inserte el paciente, filas no afectadas.");
-                }
-
-                try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        pacientId = generatedKeys.getInt(1);
-
-                        // Insertamos las enfermedades asociadas con el paciente
-                        for (Enfermedades enfermedad : paciente.getListEnfermedades()) {
-                            insertEnfermedades(enfermedad, pacientId);
-                        }
-
-                        /*for (Consulta consulta : paciente.getListConsultas()) {
-                            insertConsulta(consulta, pacientId);
-                        }*/
-                        int consultId = insertConsulta(paciente.getListConsultas().get(0), pacientId);
-
-                        for (SignosVitales signosVitales : paciente.getListSignosVitales()) {
-                            insertSignosVitales(signosVitales, consultId);
-                        }
-
-                    } else {
-                        throw new SQLException("Inserte el paciente, ID no obtenido.");
+                    // Insertamos las enfermedades asociadas con el paciente
+                    for (Enfermedades enfermedad : paciente.getListEnfermedades()) {
+                        insertEnfermedades(enfermedad, pacientId);
                     }
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
+
+                    int consultId = insertConsulta(paciente.getListConsultas().get(0), pacientId);
+
+                    for (Consulta consulta : paciente.getListConsultas()) {
+                        insertSignosVitales(consulta.getSignosVitales(), consultId);
+                    }
+
+                } else {
+                    throw new SQLException("Inserte el paciente, ID no obtenido.");
                 }
-            }   
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
 
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
-        return pacientId;
     }
+    
 
     public Paciente buscarPacientePorCedula(String cedula) {
         Paciente paciente = null;
-        try (Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/clinica_praxell", "postgres", "1234")) {
+        try (PreparedStatement pst = this.getConnection().prepareStatement("SELECT * FROM paciente WHERE cedula = ?")) {
 
-            String sql = "SELECT * FROM paciente WHERE cedula = ?";
-            pst = conn.prepareStatement(sql);
             pst.setString(1, cedula);
-            rs = pst.executeQuery();
+            ResultSet rs = pst.executeQuery();
             if (rs.next()) {
                 String dni = rs.getString("cedula");
                 String nombre = rs.getString("nombre");
@@ -145,10 +118,8 @@ public class BaseDatos {
     }
     
     public void insertEnfermedades(Enfermedades enfermedad, int idPaciente) {
-        try (Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/clinica_praxell", "postgres", "1234")) {
-            String sql = "INSERT INTO enfermedades_paciente(patologico, no_patologico, clinico, quirurjico, hereditario, id_paciente) VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement pst = this.getConnection().prepareStatement("INSERT INTO enfermedades_paciente(patologico, no_patologico, clinico, quirurjico, hereditario, id_paciente) VALUES (?, ?, ?, ?, ?, ?)")) {
 
-            pst = conn.prepareStatement(sql);
             // Asigna la misma descripción a todos los campos
             pst.setString(1, enfermedad.getPatologico());
             pst.setString(2, enfermedad.getNoPatologico());
@@ -164,11 +135,9 @@ public class BaseDatos {
     }
 
     public void insertSignosVitales(SignosVitales signosVitales, int idConsulta) {
-        try(Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/clinica_praxell", "postgres", "1234")) {
+        try(PreparedStatement pst = this.getConnection().prepareStatement("INSERT INTO signos_vitales(presion_arterial, frecuencia_cardiaca, frecuencia_respiratoria, "
+                + "temperatura, peso, talla, descripcion, imc, id_consulta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             
-            String sql = "INSERT INTO signos_vitales(presion_arterial, frecuencia_cardiaca, frecuencia_respiratoria, temperatura, peso, talla, descripcion, imc, id_consulta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            
-            pst = conn.prepareStatement(sql);
             
             pst.setString(1, signosVitales.getPresionArterial());
             pst.setString(2, signosVitales.getFrecuenciaCardiaca());
@@ -188,11 +157,9 @@ public class BaseDatos {
     
     public int insertConsulta(Consulta consulta, int idPaciente) {
         int consultaId = 0;
-        try(Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/clinica_praxell", "postgres", "1234")) {
+        try(PreparedStatement pst = this.getConnection().prepareStatement("INSERT INTO consulta(id_paciente, fecha_consulta, motivo, "
+                + "diagnostico, receta) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             
-            String sql = "INSERT INTO consulta(id_paciente, fecha_consulta, motivo, diagnostico, receta) VALUES (?, ?, ?, ?, ?)";
-            
-            pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             
             pst.setInt(1, idPaciente);
             Date fechaConsultaSQL = Date.valueOf(consulta.getFechaConsulta());
@@ -225,12 +192,9 @@ public class BaseDatos {
     public  ArrayList<Paciente> obtenerPacientes() {
         ArrayList<Paciente> listaPaciente = new ArrayList<>();
         
-        try {
-            conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/clinica_praxell", "postgres", "1234");
-            String sql = "SELECT * FROM paciente";
+        try(PreparedStatement pst = this.getConnection().prepareStatement("SELECT * FROM paciente")) {
 
-            pst = conn.prepareStatement(sql);
-            rs = pst.executeQuery();
+            ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
 
@@ -250,34 +214,24 @@ public class BaseDatos {
                 String telefono = rs.getString("telefono");
                 String ocupacion = rs.getString("ocupacion");
 
-                Paciente paciente = new Paciente(idPaciente, cedula, nombre, apellido, direccion, email, edad, genero, 
+                Paciente paciente = new Paciente(idPaciente, cedula, nombre, apellido, direccion, email, edad, genero,
                         expediente, ciudad, estado, telefono, fechaNacimiento, ocupacion);
                 listaPaciente.add(paciente);
             }
 
         } catch (SQLException s) {
             s.printStackTrace();
-        } finally {
-            try {
-                pst.close();
-                conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        } 
         return listaPaciente;
     }
     
     public Consulta obtenerConsulta(int idPaciente) {
         Consulta consulta = new Consulta();
         
-        try {
-            conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/clinica_praxell", "postgres", "1234");
-            String sql = "SELECT * FROM consulta WHERE id_paciente = ?";
-
-            pst = conn.prepareStatement(sql);
+        try(PreparedStatement pst = this.getConnection().prepareStatement("SELECT * FROM consulta WHERE id_paciente = ?")) {
+            
             pst.setInt(1, idPaciente);
-            rs = pst.executeQuery();
+            ResultSet rs = pst.executeQuery();
 
             if (rs.next()) {
                 Date date = rs.getDate(3);
@@ -287,26 +241,17 @@ public class BaseDatos {
 
         } catch (SQLException s) {
             s.printStackTrace();
-        } finally {
-            try {
-                pst.close();
-                conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        } 
         return consulta;
     }
     
     public SignosVitales obtenerSignosVitales(int idConsulta) {
         SignosVitales signosVitales = new SignosVitales();
         
-        try(Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/clinica_praxell", "postgres", "1234")){
-            String sql = "SELECT * FROM signos_vitales WHERE id_consulta = ?";
-            
-            pst = conn.prepareStatement(sql);
+        try(PreparedStatement pst = this.getConnection().prepareStatement("SELECT * FROM signos_vitales WHERE id_consulta = ?")){
+
             pst.setInt(1, idConsulta);
-            rs = pst.executeQuery();
+            ResultSet rs = pst.executeQuery();
             
             if (rs.next()) {
                 signosVitales = new SignosVitales(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), 
@@ -322,11 +267,9 @@ public class BaseDatos {
     public ArrayList<Paciente> obtenerPacientesPorCampo(String campo) {
         ArrayList<Paciente> listPacientes = new ArrayList<>();
         
-        try {
-            conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/clinica_praxell", "postgres", "1234");
-            String sql = "SELECT * FROM paciente WHERE nombre LIKE'%"+campo+"%'" + "OR apellido LIKE'%"+campo+"%'" + "ORDER BY nombre";
-            st = conn.createStatement();
-            rs = st.executeQuery(sql);
+        try(PreparedStatement pst = this.getConnection().prepareStatement("SELECT * FROM paciente WHERE nombre LIKE'%"+campo+"%'" + "OR apellido LIKE'%"+campo+"%'" + "ORDER BY nombre")) {
+           
+            ResultSet rs = pst.executeQuery();
             
             while(rs.next()) {
                 int idPaciente = rs.getInt("id_paciente");
@@ -350,22 +293,13 @@ public class BaseDatos {
             }
         }catch(SQLException s) {
             s.printStackTrace();
-        }finally {
-            try {
-                st.close();
-                conn.close();
-            }catch(SQLException s) {
-                s.printStackTrace();
-            }
         }
         return listPacientes;
     }
     
     //Updating
     public void actualizarPaciente(Paciente paciente, int id) {
-        try (Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/clinica_praxell", "postgres", "1234")) {
-            String sql = "UPDATE paciente SET nombre = ?, apellido = ?, direccion = ?, expediente = ?, ciudad = ?, genero = ?, email = ? WHERE id_paciente = ?";
-            pst = conn.prepareStatement(sql);
+        try (PreparedStatement pst = this.getConnection().prepareStatement("UPDATE paciente SET nombre = ?, apellido = ?, direccion = ?, expediente = ?, ciudad = ?, genero = ?, email = ? WHERE id_paciente = ?")) {
 
             pst.setString(1, paciente.getNombre());
             pst.setString(2, paciente.getApellido());
@@ -383,24 +317,14 @@ public class BaseDatos {
     }
     
     public void deletePaciente(Paciente paciente) {
-        try {
-            conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/clinica_praxell", "postgres", "1234");
-            String sql = "DELETE FROM paciente WHERE id_paciente = ?";
+        try(PreparedStatement pst = this.getConnection().prepareStatement("DELETE FROM paciente WHERE id_paciente = ?")) {
 
-            pst = conn.prepareStatement(sql);
             pst.setInt(1, paciente.getIdPaciente());
             pst.executeUpdate();
 
         } catch (SQLException s) {
             s.printStackTrace();
-        } finally {
-            try {
-                pst.close();
-                conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        } 
     }
 
 }
