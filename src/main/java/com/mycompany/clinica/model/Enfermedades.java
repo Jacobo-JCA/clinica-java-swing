@@ -17,6 +17,16 @@ public class Enfermedades {
         
     }
 
+    public Enfermedades(int idEnfermedad, String patologico, String noPatologico, String clinico, String quirurjico, String hereditario) {
+        this.idEnfermedad = idEnfermedad;
+        this.patologico = patologico;
+        this.noPatologico = noPatologico;
+        this.clinico = clinico;
+        this.quirurjico = quirurjico;
+        this.hereditario = hereditario;
+    }
+    
+    
     public Enfermedades(String patologico, String noPatologico, String clinico, String quirurjico, String hereditario) {
         this.patologico = patologico;
         this.noPatologico = noPatologico;

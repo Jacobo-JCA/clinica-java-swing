@@ -11,11 +11,11 @@ import javax.swing.JOptionPane;
  */
 public class SignosFrame extends javax.swing.JDialog {
 
-    private Consulta consulta;
+    private SignosVitales signosVitales;
     
-    public SignosFrame(java.awt.Frame parent, boolean modal, Consulta consulta) {
+    public SignosFrame(java.awt.Frame parent, boolean modal, SignosVitales signosVitales) {
         super(parent, modal);
-        this.consulta = consulta;
+        this.signosVitales = signosVitales;
         initComponents();
     }
 
@@ -51,6 +51,12 @@ public class SignosFrame extends javax.swing.JDialog {
         jLabel2.setText("Frecuencia Cardiaca: ");
 
         jLabel3.setText("Frecuencia Respiratoria:");
+
+        textRespiratoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textRespiratoriaActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Temperatura:");
 
@@ -100,11 +106,14 @@ public class SignosFrame extends javax.swing.JDialog {
                         .addGap(114, 114, 114)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(btnGuardarSignos, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
-                                .addComponent(textTalla)
+                                .addComponent(textTalla, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
                                 .addComponent(textPeso))
                             .addComponent(textDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 169, Short.MAX_VALUE))))
+                        .addGap(0, 103, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnGuardarSignos, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -140,9 +149,9 @@ public class SignosFrame extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(textDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(66, 66, 66)
+                .addGap(51, 51, 51)
                 .addComponent(btnGuardarSignos, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         pack();
@@ -165,12 +174,24 @@ public class SignosFrame extends javax.swing.JDialog {
         
         
         String imc = calcularImc(peso, talla);
-        JOptionPane.showMessageDialog(null, "Almacenado!\nIMC: " + imc, "Información", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "IMC: " + imc, "Información", JOptionPane.INFORMATION_MESSAGE);
+         
+        signosVitales.setPresionArterial(textArterial.getText());
+        signosVitales.setFrecuenciaCardiaca(textCardiaca.getText());
+        signosVitales.setFrecuenciaRespiratoria(textRespiratoria.getText());
+        signosVitales.setTemperatura(textTemperatura.getText());
+        signosVitales.setDescripcion(textDescripcion.getText());
+        signosVitales.setPeso(peso);
+        signosVitales.setTalla(talla);
+        signosVitales.setImc(imc);
         
-        consulta.setSignosVitales(new SignosVitales(textArterial.getText(), textCardiaca.getText(), textRespiratoria.getText(), textTemperatura.getText(), peso, talla, textDescripcion.getText(), imc));
-       
         JOptionPane.showMessageDialog(null, "Almacenado!", "Información", JOptionPane.INFORMATION_MESSAGE);
+        this.dispose();
     }//GEN-LAST:event_btnGuardarSignosActionPerformed
+
+    private void textRespiratoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textRespiratoriaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textRespiratoriaActionPerformed
     
     private String calcularImc(double peso, double talla) {
         double imcValue = peso / (talla * talla);

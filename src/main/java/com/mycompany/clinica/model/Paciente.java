@@ -212,17 +212,17 @@ public class Paciente {
     
     public void addConsultas(Consulta consulta) {
         this.listConsultas.add(consulta);
+        
     }
-    
 
     @Override
     public String toString() {
-        return "Paciente{" + "idPaciente=" + idPaciente + ", cedula=" + cedula + ", nombre=" + nombre + 
-                ", apellido=" + apellido + ", direccion=" + direccion + ", email=" + email + ", edad=" + edad + 
-                ", genero=" + genero + ", expediente=" + expediente + ", ciudad=" + ciudad + ", estado=" + estado + ", telefono=" + telefono + 
-                ", fechaNacimiento=" + fechaNacimiento + ", ocupacion=" + ocupacion + ", listEnfermedades=" + listEnfermedades + ", listConsultas=" + listConsultas + '}';
+        return "Paciente{" + "idPaciente=" + idPaciente + ", cedula=" + cedula + 
+                ", nombre=" + nombre + ", apellido=" + apellido + ", direccion=" + direccion + 
+                ", email=" + email + ", edad=" + edad + ", genero=" + genero + ", expediente=" + expediente + 
+                ", ciudad=" + ciudad + ", estado=" + estado + ", telefono=" + telefono + ", fechaNacimiento=" + fechaNacimiento + 
+                ", ocupacion=" + ocupacion + '}';
     }
-
     
     
 }

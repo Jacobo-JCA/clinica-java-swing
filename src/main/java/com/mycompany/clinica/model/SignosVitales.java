@@ -32,6 +32,7 @@ public class SignosVitales {
         this.descripcion = descripcion;
         this.imc = imc;
     }
+    
 
     public int getIdSignosVitales() {
         return idSignosVitales;
@@ -106,4 +107,13 @@ public class SignosVitales {
         this.imc = imc;
     }
 
+    @Override
+    public String toString() {
+        return "SignosVitales{" + "idSignosVitales=" + idSignosVitales + 
+                ", presionArterial=" + presionArterial + ", frecuenciaCardiaca=" + frecuenciaCardiaca + 
+                ", frecuenciaRespiratoria=" + frecuenciaRespiratoria + ", temperatura=" + temperatura + 
+                ", peso=" + peso + ", talla=" + talla + ", descripcion=" + descripcion + ", imc=" + imc + '}';
+    }
+    
+    
 }

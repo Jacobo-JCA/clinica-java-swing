@@ -1,5 +1,7 @@
 package com.mycompany.clinica.gui;
 
+
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
@@ -16,7 +18,9 @@ public class Principal extends javax.swing.JFrame {
         this.setResizable(false);
         this.setBounds(0, 0, 1375, 750);
         this.setLocationRelativeTo(null);
+        
     }
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -30,6 +34,8 @@ public class Principal extends javax.swing.JFrame {
         grupoModulos = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         btnPaciente = new javax.swing.JToggleButton();
+        btnHistorial = new javax.swing.JButton();
+        btnPrint = new javax.swing.JButton();
         contenedorModulos = new javax.swing.JDesktopPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -42,28 +48,49 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
+        btnHistorial.setText("Historial");
+        btnHistorial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHistorialActionPerformed(evt);
+            }
+        });
+
+        btnPrint.setText("Imprimir");
+        btnPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnPaciente, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                    .addComponent(btnHistorial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnPrint, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addGap(46, 46, 46)
                 .addComponent(btnPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(662, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
+                .addComponent(btnHistorial, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
+                .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(506, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout contenedorModulosLayout = new javax.swing.GroupLayout(contenedorModulos);
         contenedorModulos.setLayout(contenedorModulosLayout);
         contenedorModulosLayout.setHorizontalGroup(
             contenedorModulosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1030, Short.MAX_VALUE)
+            .addGap(0, 1020, Short.MAX_VALUE)
         );
         contenedorModulosLayout.setVerticalGroup(
             contenedorModulosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -92,23 +119,46 @@ public class Principal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    PacienteFrame paciente;
+    
+    PacienteFrame pacienteFrame;
     private void btnPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPacienteActionPerformed
-        if(paciente == null) {
-            paciente = new PacienteFrame();
-            contenedorModulos.add(paciente);
-            contenedorModulos.getDesktopManager().maximizeFrame(paciente);
-            paciente.setVisible(true);
+        if(pacienteFrame == null) {
+            
+            pacienteFrame = new PacienteFrame();
+            contenedorModulos.add(pacienteFrame);
+            contenedorModulos.getDesktopManager().maximizeFrame(pacienteFrame);
+            pacienteFrame.setVisible(true);
         }else {
-            contenedorModulos.getDesktopManager().maximizeFrame(paciente);
+            JOptionPane.showMessageDialog(null, "Seleccione un Paciente antes de ver su Historial!", "Información", JOptionPane.INFORMATION_MESSAGE);
+            contenedorModulos.getDesktopManager().maximizeFrame(pacienteFrame);
         }
         
     }//GEN-LAST:event_btnPacienteActionPerformed
+    HistorialFrame historialFrame;
+    private void btnHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistorialActionPerformed
+        if (pacienteFrame != null && pacienteFrame.pacienteSeleccionado != null) {
+            historialFrame = new HistorialFrame(pacienteFrame.pacienteSeleccionado);
+            historialFrame.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "Seleccione un Paciente antes de ver su Historial!", "Información", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnHistorialActionPerformed
 
+    PrintFrame printFrame;
+    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
+        if (pacienteFrame != null && pacienteFrame.pacienteSeleccionado != null) {
+            printFrame = new PrintFrame(pacienteFrame.pacienteSeleccionado);
+            printFrame.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "Seleccione un Paciente antes de imprimir la Receta!", "Información", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnPrintActionPerformed
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -130,13 +180,16 @@ public class Principal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Principal().setVisible(true);
+                new Principal().setVisible(true);  
             }
         });
+ 
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnHistorial;
     private javax.swing.JToggleButton btnPaciente;
+    private javax.swing.JButton btnPrint;
     private javax.swing.JDesktopPane contenedorModulos;
     private javax.swing.ButtonGroup grupoModulos;
     private javax.swing.JPanel jPanel1;

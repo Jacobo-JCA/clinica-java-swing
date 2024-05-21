@@ -14,16 +14,28 @@ public class Consulta {
     private LocalDate fechaConsulta;
     private String diagnostico;
     private String receta;
+    private String indicaciones;
     private SignosVitales signosVitales;
 
     public Consulta() {
     }
 
-    public Consulta(String motivoConsulta, LocalDate fechaConsulta, String diagnostico, String receta) {
+    public Consulta(String motivoConsulta, LocalDate fechaConsulta, String diagnostico, String receta, String indicaciones, SignosVitales signosVitales) {
         this.motivoConsulta = motivoConsulta;
         this.fechaConsulta = fechaConsulta;
         this.diagnostico = diagnostico;
         this.receta = receta;
+        this.indicaciones = indicaciones;
+        this.signosVitales = signosVitales;
+    }
+    
+
+    public Consulta(String motivoConsulta, LocalDate fechaConsulta, String diagnostico, String receta, String indicaciones) {
+        this.motivoConsulta = motivoConsulta;
+        this.fechaConsulta = fechaConsulta;
+        this.diagnostico = diagnostico;
+        this.receta = receta;
+        this.indicaciones = indicaciones;
     }
 
     public int getIdConsulta() {
@@ -64,6 +76,14 @@ public class Consulta {
 
     public void setReceta(String receta) {
         this.receta = receta;
+    }
+
+    public String getIndicaciones() {
+        return indicaciones;
+    }
+
+    public void setIndicaciones(String indicaciones) {
+        this.indicaciones = indicaciones;
     }
 
     public SignosVitales getSignosVitales() {

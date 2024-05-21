@@ -1,5 +1,6 @@
 package com.mycompany.clinica.data;
 
+import com.mycompany.clinica.gui.PacienteFrame;
 import com.mycompany.clinica.model.Consulta;
 import com.mycompany.clinica.model.Enfermedades;
 import com.mycompany.clinica.model.Paciente;
@@ -32,12 +33,10 @@ public class BaseDatos {
     }
     
     public void insertPaciente(Paciente paciente) {
-        int pacientId = 0;
         
         try (PreparedStatement sqlInsertar = this.getConnection().prepareStatement("INSERT INTO paciente (cedula, nombre, apellido, direccion, "
                 + "email, edad, genero, expediente, ciudad, estado, fecha_nacimiento, telefono, ocupacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
 
-            ResultSet rs = sqlInsertar.executeQuery();
 
             sqlInsertar.setString(1, paciente.getCedula());
             sqlInsertar.setString(2, paciente.getNombre());
@@ -55,24 +54,19 @@ public class BaseDatos {
             sqlInsertar.setString(13, paciente.getOcupacion());
 
             int affectedRows = sqlInsertar.executeUpdate();
+            
             if (affectedRows == 0) {
                 throw new SQLException("Inserte el paciente, filas no afectadas.");
             }
 
             try (ResultSet generatedKeys = sqlInsertar.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    pacientId = generatedKeys.getInt(1);
+                    paciente.setIdPaciente(generatedKeys.getInt(1));
 
                     // Insertamos las enfermedades asociadas con el paciente
-                    for (Enfermedades enfermedad : paciente.getListEnfermedades()) {
-                        insertEnfermedades(enfermedad, pacientId);
-                    }
+                    insertEnfermedades(paciente.getListEnfermedades().get(paciente.getListEnfermedades().size()-1), paciente.getIdPaciente());
 
-                    int consultId = insertConsulta(paciente.getListConsultas().get(0), pacientId);
-
-                    for (Consulta consulta : paciente.getListConsultas()) {
-                        insertSignosVitales(consulta.getSignosVitales(), consultId);
-                    }
+                    insertarConsultaAndSignosVitales(paciente);
 
                 } else {
                     throw new SQLException("Inserte el paciente, ID no obtenido.");
@@ -86,6 +80,11 @@ public class BaseDatos {
         }
     }
     
+    public void insertarConsultaAndSignosVitales(Paciente paciente) {
+        Consulta consulta = paciente.getListConsultas().get(paciente.getListConsultas().size()-1);
+        insertConsulta(consulta, paciente.getIdPaciente());
+        insertSignosVitales(consulta.getSignosVitales(), consulta.getIdConsulta());
+    }
 
     public Paciente buscarPacientePorCedula(String cedula) {
         Paciente paciente = null;
@@ -128,7 +127,7 @@ public class BaseDatos {
             pst.setString(5, enfermedad.getHereditario());
             pst.setInt(6, idPaciente);
 
-            pst.executeUpdate();
+            int row = pst.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -137,7 +136,6 @@ public class BaseDatos {
     public void insertSignosVitales(SignosVitales signosVitales, int idConsulta) {
         try(PreparedStatement pst = this.getConnection().prepareStatement("INSERT INTO signos_vitales(presion_arterial, frecuencia_cardiaca, frecuencia_respiratoria, "
                 + "temperatura, peso, talla, descripcion, imc, id_consulta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
-            
             
             pst.setString(1, signosVitales.getPresionArterial());
             pst.setString(2, signosVitales.getFrecuenciaCardiaca());
@@ -155,10 +153,10 @@ public class BaseDatos {
         } 
     }
     
-    public int insertConsulta(Consulta consulta, int idPaciente) {
-        int consultaId = 0;
+    public void insertConsulta(Consulta consulta, int idPaciente) {
+        
         try(PreparedStatement pst = this.getConnection().prepareStatement("INSERT INTO consulta(id_paciente, fecha_consulta, motivo, "
-                + "diagnostico, receta) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+                + "diagnostico, receta, indicaciones) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             
             
             pst.setInt(1, idPaciente);
@@ -167,8 +165,10 @@ public class BaseDatos {
             pst.setString(3, consulta.getMotivoConsulta());
             pst.setString(4, consulta.getDiagnostico());
             pst.setString(5, consulta.getReceta());
+            pst.setString(6, consulta.getIndicaciones());
             
             int affectRow = pst.executeUpdate();
+            System.out.println("se guardo" + affectRow);
            
             if (affectRow == 0) {
                 throw new SQLException("No se afecto la fila");
@@ -176,7 +176,7 @@ public class BaseDatos {
             
             try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
                 if(generatedKeys.next()) {
-                    consultaId = generatedKeys.getInt(1);
+                    consulta.setIdConsulta(generatedKeys.getInt(1));
                 } else {
                     throw new SQLException("No se pudo obtener el ID");
                 }
@@ -185,7 +185,6 @@ public class BaseDatos {
             e.printStackTrace();
         }
         
-        return consultaId;
     }
     
     
@@ -216,8 +215,13 @@ public class BaseDatos {
 
                 Paciente paciente = new Paciente(idPaciente, cedula, nombre, apellido, direccion, email, edad, genero,
                         expediente, ciudad, estado, telefono, fechaNacimiento, ocupacion);
+                
+                paciente.addEnfermedad(obtenerEnfermedades(paciente.getIdPaciente()));
+                paciente.setListConsultas(obtenerConsulta(paciente.getIdPaciente()));
+                
                 listaPaciente.add(paciente);
-            }
+                
+            }  
 
         } catch (SQLException s) {
             s.printStackTrace();
@@ -225,24 +229,30 @@ public class BaseDatos {
         return listaPaciente;
     }
     
-    public Consulta obtenerConsulta(int idPaciente) {
-        Consulta consulta = new Consulta();
+    public ArrayList<Consulta> obtenerConsulta(int idPaciente) {
+        ArrayList<Consulta> consultas = new ArrayList<>();
         
         try(PreparedStatement pst = this.getConnection().prepareStatement("SELECT * FROM consulta WHERE id_paciente = ?")) {
             
             pst.setInt(1, idPaciente);
             ResultSet rs = pst.executeQuery();
 
-            if (rs.next()) {
+            
+            while(rs.next()) {
                 Date date = rs.getDate(3);
                 LocalDate localDate = date.toLocalDate();
-                consulta = new Consulta(rs.getString(4), localDate, rs.getString(5), rs.getString(6));
-            }
+                
+                Consulta consulta = new Consulta(rs.getString(4), localDate, rs.getString(5), rs.getString(6), rs.getString(7));
+                consulta.setIdConsulta(rs.getInt(1));
+                consulta.setSignosVitales(obtenerSignosVitales(consulta.getIdConsulta()));
+                
+                consultas.add(consulta);
+            }   
 
         } catch (SQLException s) {
             s.printStackTrace();
         } 
-        return consulta;
+        return consultas;
     }
     
     public SignosVitales obtenerSignosVitales(int idConsulta) {
@@ -256,6 +266,10 @@ public class BaseDatos {
             if (rs.next()) {
                 signosVitales = new SignosVitales(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), 
                         rs.getDouble(6), rs.getDouble(7), rs.getString(8), rs.getString(9));
+                signosVitales.setIdSignosVitales(rs.getInt(1));
+                
+            }else {
+                System.out.println("No hay info de signos");
             }
         }catch (SQLException s) {
             s.printStackTrace();
@@ -263,6 +277,25 @@ public class BaseDatos {
         return signosVitales;
     }
     
+    public Enfermedades obtenerEnfermedades(int idPaciente) {
+        Enfermedades enfermedad = new Enfermedades();
+        
+        try(PreparedStatement pst = this.getConnection().prepareStatement("SELECT * FROM enfermedades_paciente WHERE id_paciente = ?")) {
+            
+            pst.setInt(1, idPaciente);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                enfermedad = new Enfermedades(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(7));
+            }else {
+                System.out.println("No hay info enfermedades");
+            }
+
+        } catch (SQLException s) {
+            s.printStackTrace();
+        } 
+        return enfermedad;
+    }
     
     public ArrayList<Paciente> obtenerPacientesPorCampo(String campo) {
         ArrayList<Paciente> listPacientes = new ArrayList<>();
@@ -298,8 +331,9 @@ public class BaseDatos {
     }
     
     //Updating
-    public void actualizarPaciente(Paciente paciente, int id) {
-        try (PreparedStatement pst = this.getConnection().prepareStatement("UPDATE paciente SET nombre = ?, apellido = ?, direccion = ?, expediente = ?, ciudad = ?, genero = ?, email = ? WHERE id_paciente = ?")) {
+    public void actualizarPaciente(Paciente paciente) {
+        try (PreparedStatement pst = this.getConnection().prepareStatement("UPDATE paciente SET nombre = ?, apellido = ?, direccion = ?, expediente = ?, ciudad = ?, genero = ?, "
+                + "ocupacion=?, estado=?, telefono=?, email = ? WHERE id_paciente = ?")) {
 
             pst.setString(1, paciente.getNombre());
             pst.setString(2, paciente.getApellido());
@@ -307,8 +341,11 @@ public class BaseDatos {
             pst.setInt(4, paciente.getExpediente());
             pst.setString(5, paciente.getCiudad());
             pst.setString(6, paciente.getGenero());
-            pst.setString(7, paciente.getEmail());
-            pst.setInt(8, id);
+            pst.setString(7, paciente.getOcupacion());
+            pst.setString(8, paciente.getEstado());
+            pst.setString(9, paciente.getTelefono());
+            pst.setString(10, paciente.getEmail());
+            pst.setInt(11, paciente.getIdPaciente());
             pst.executeUpdate();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al actualizar paciente: " + e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);

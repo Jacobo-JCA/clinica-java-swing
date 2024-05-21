@@ -1,4 +1,5 @@
 com\mycompany\clinica\data\BaseDatos.class
+com\mycompany\clinica\gui\Principal$3.class
 com\mycompany\clinica\gui\PacienteFrame$7.class
 com\mycompany\clinica\gui\ConsultaFrame$1.class
 com\mycompany\clinica\gui\PacienteFrame$19.class
@@ -13,11 +14,13 @@ com\mycompany\clinica\gui\PacienteFrame$20.class
 com\mycompany\clinica\data\ConnectionDB.class
 com\mycompany\clinica\gui\PacienteFrame$4.class
 com\mycompany\clinica\model\Paciente.class
+com\mycompany\clinica\gui\Principal$4.class
+com\mycompany\clinica\gui\PrintFrame$1.class
 com\mycompany\clinica\gui\ConsultaFrame.class
 com\mycompany\clinica\gui\Principal.class
+com\mycompany\clinica\gui\SignosFrame$4.class
 com\mycompany\clinica\model\Enfermedades.class
 com\mycompany\clinica\gui\SignosFrame.class
-com\mycompany\clinica\gui\EnfermedadesFrame$2.class
 com\mycompany\clinica\gui\PacienteFrame$18.class
 com\mycompany\clinica\gui\PacienteFrame.class
 com\mycompany\clinica\gui\SignosFrame$2.class
@@ -26,10 +29,11 @@ com\mycompany\clinica\gui\PacienteFrame$8.class
 com\mycompany\clinica\model\Consulta.class
 com\mycompany\clinica\gui\EnfermedadesFrame$1.class
 com\mycompany\clinica\gui\PacienteFrame$15.class
-com\mycompany\clinica\gui\PacienteFrame$21.class
 com\mycompany\clinica\gui\PacienteFrame$6.class
 com\mycompany\clinica\gui\Principal$2.class
+com\mycompany\clinica\gui\HistorialFrame.class
 com\mycompany\clinica\gui\PacienteFrame$11.class
+com\mycompany\clinica\gui\PrintFrame.class
 com\mycompany\clinica\gui\PacienteFrame$1.class
 com\mycompany\clinica\gui\EnfermedadesFrame.class
 com\mycompany\clinica\gui\PacienteFrame$5.class
