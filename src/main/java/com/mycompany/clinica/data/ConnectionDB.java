@@ -11,9 +11,9 @@ import java.sql.SQLException;
  */
 public class ConnectionDB {
     
-    private static String URL = "jdbc:postgresql://localhost:5432/";
+    private static String URL = "jdbc:postgresql://";
     private static String USERNAME = "postgres";
-    private static String PASSWORD = "";
+    private static String PASSWORD = " ";
     
     
     private static Connection connection;
