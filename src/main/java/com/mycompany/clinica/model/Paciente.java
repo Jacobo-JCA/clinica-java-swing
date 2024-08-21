@@ -8,8 +8,7 @@ import java.util.ArrayList;
  *
  * @author jacob
  */
-public class Paciente {
-    
+public class Paciente {   
     private int idPaciente;
     private String cedula;
     private String nombre;
@@ -24,10 +23,11 @@ public class Paciente {
     private String telefono;
     private LocalDate fechaNacimiento;
     private String ocupacion;
-    private ArrayList<Enfermedades> listEnfermedades = new ArrayList<>();
+    private ArrayList<Enfermedades> listEnfermedades;
     private ArrayList<Consulta> listConsultas = new ArrayList<>();
     
     public Paciente() {
+        this.listEnfermedades = new ArrayList<>();
     }
     
     public Paciente(String cedula, String nombre, String apellido, 
@@ -46,6 +46,7 @@ public class Paciente {
         this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
         this.ocupacion = ocupacion;
+        this.listEnfermedades = new ArrayList<>();
     }
 
     public Paciente(int idPaciente, String cedula, String nombre, String apellido, String direccion, String email, int edad, String genero, int expediente, 
@@ -64,6 +65,7 @@ public class Paciente {
         this.telefono = telefono;
         this.fechaNacimiento = fechaNacimiento;
         this.ocupacion = ocupacion;
+        this.listEnfermedades = new ArrayList<>();
     }
 
     public Paciente(int idPaciente, String nombre, String apellido, String genero, String ciudad, int expediente) {
@@ -74,7 +76,7 @@ public class Paciente {
         this.ciudad = ciudad;
         this.expediente = expediente;
         this.email = email;
-       
+        this.listEnfermedades = new ArrayList<>();
     }
 
     
@@ -191,7 +193,7 @@ public class Paciente {
     }
 
     public ArrayList<Enfermedades> getListEnfermedades() {
-        return listEnfermedades;
+        return this.listEnfermedades;
     }
 
     public void setListEnfermedades(ArrayList<Enfermedades> listEnfermedades) {

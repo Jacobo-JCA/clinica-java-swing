@@ -20,21 +20,19 @@ import javax.swing.table.DefaultTableModel;
  * @author jacob
  */
 public class PacienteFrame extends javax.swing.JInternalFrame {
-
     BaseDatos base = new BaseDatos();
     Paciente paciente;
     EnfermedadesFrame enfermedadesFrame;
+    HistorialFrame historialFrame;
     DefaultTableModel modeloTabla = new DefaultTableModel();
-    
     Paciente pacienteSeleccionado = null;
     ArrayList<Paciente> listaPacientes;
-    
     SignosVitales signosVitalesReferencia = new SignosVitales();
-    
-    
+     
     public PacienteFrame() {
         paciente = new Paciente();
-        enfermedadesFrame = new EnfermedadesFrame(null, true, paciente);
+        enfermedadesFrame = new EnfermedadesFrame(null, true, paciente, this);
+        historialFrame = new HistorialFrame(paciente);
         listaPacientes = base.obtenerPacientes();
         cargarModeloTabla();
         this.setSize(1200, 750); 
@@ -42,27 +40,21 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
     }
     
     private void cargarModeloTabla() {
-
         modeloTabla.addColumn("identificador");
         modeloTabla.addColumn("nombre");
         modeloTabla.addColumn("apellido");
         modeloTabla.addColumn("género");
         modeloTabla.addColumn("ciudad");
         modeloTabla.addColumn("expediente");
-        modeloTabla.addColumn("edad");
-        
+        modeloTabla.addColumn("edad");       
         this.getFilasTable();
-        
     }
     
-    private void getFilasTable() {
-        
+    private void getFilasTable() { 
         int numeroPacientes = listaPacientes.size();
         modeloTabla.setNumRows(numeroPacientes);
-        
         for (int i = 0; i < numeroPacientes; i++) {
-            Paciente paciente = listaPacientes.get(i);
-            
+            Paciente paciente = listaPacientes.get(i); 
             modeloTabla.setValueAt(paciente.getIdPaciente(), i, 0);
             modeloTabla.setValueAt(paciente.getNombre(), i, 1);
             modeloTabla.setValueAt(paciente.getApellido(), i, 2);
@@ -71,7 +63,6 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
             modeloTabla.setValueAt(paciente.getExpediente(), i, 5);
             modeloTabla.setValueAt(paciente.getEdad(), i, 6);
         }
- 
     }
     
     
@@ -91,7 +82,7 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
                 paciente.getEdad()
             };
             listaPacientes.add(paciente);
-            modeloTabla.addRow(fila);     
+            modeloTabla.addRow(fila);           
     }
 
     @SuppressWarnings("unchecked")
@@ -146,6 +137,7 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
         select = new javax.swing.JButton();
         editar = new javax.swing.JButton();
         btnHeredit = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
 
         jTextField4.setText("jTextField4");
 
@@ -239,6 +231,12 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
             }
         });
 
+        campoFechaNacimiento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                campoFechaNacimientoActionPerformed(evt);
+            }
+        });
+
         campoFechaConsulta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 campoFechaConsultaActionPerformed(evt);
@@ -328,6 +326,13 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
         btnHeredit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHereditActionPerformed(evt);
+            }
+        });
+
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
             }
         });
 
@@ -430,11 +435,13 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
                                             .addGroup(jPanel2Layout.createSequentialGroup()
                                                 .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(18, 18, 18)
-                                                .addComponent(editar, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(editar, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(jPanel2Layout.createSequentialGroup()
                                                 .addComponent(btnGuardarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(18, 18, 18)
-                                                .addComponent(select, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGap(18, 18, 18)
+                                        .addComponent(select, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(531, 531, 531))))
         );
@@ -519,15 +526,19 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(select, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(24, 24, 24))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(editar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnLimpiar, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE))
+                            .addComponent(btnLimpiar, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+                            .addComponent(editar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnGuardarPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(select, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(6, 6, 6)))
                 .addGap(27, 27, 27)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -553,24 +564,30 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarPacienteActionPerformed
+        try {
+            ArrayList<Consulta> consulta = paciente.getListConsultas();
+            ArrayList<Enfermedades> enfermedades1 = this.paciente.getListEnfermedades();
+            if (pacienteSeleccionado == null) {
+                setCamposPaciente();
+                paciente.setListEnfermedades(enfermedades1);
+                paciente.setListConsultas(consulta);
+                base.insertPaciente(paciente);
+                this.actualizarTabla();
+            } else {
+                addConsultaAndSignosVitales();
+                addEnfermedades();
+            }
+            // EL BUG  
+            //paciente = new Paciente();
+            JOptionPane.showMessageDialog(this, "¡Se almacenó el Paciente!");
 
-        ArrayList<Enfermedades> enfermedades1 = paciente.getListEnfermedades();
-        
-        ArrayList<Consulta> consulta = paciente.getListConsultas();
-
-        if (pacienteSeleccionado == null) {
-            setCamposPaciente();
-            paciente.setListEnfermedades(enfermedades1);
-            paciente.setListConsultas(consulta);
-            base.insertPaciente(paciente);
-            this.actualizarTabla();
-        }else{
-            addConsultaAndSignosVitales();
-            addEnfermedades();
-        }
-        
-        paciente = new Paciente();
-        JOptionPane.showMessageDialog(this, "¡Se almacenó el Paciente!");
+        } catch(NullPointerException n) {
+            JOptionPane.showMessageDialog(this, "Error: Hay campos requeridos que están vacíos.", "Error", JOptionPane.ERROR_MESSAGE);
+            n.printStackTrace();
+        } catch(Exception e) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }  
     }//GEN-LAST:event_btnGuardarPacienteActionPerformed
 
     public void setCamposPaciente() {
@@ -580,27 +597,22 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
         String apellido = campoApellido.getText();
         String direccion = campoDireccion.getText();
         String email = campoEmail.getText();
-
         String genero = campoGenero.getText();
         String expedienteString = campoExpediente.getText(); // Se obtiene el texto del campo expediente
         String ciudad = campoCiudad.getText();
         String estado = campoEstado.getText();
         String nacimiento = campoFechaNacimiento.getText();
-
         try {
             fechaNacimiento = LocalDate.parse(nacimiento);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Por favor, ingrese una fecha de nacimiento válida.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
         LocalDate fechaActual = LocalDate.now();
         Period periodo = Period.between(fechaNacimiento, fechaActual);
         int edad = periodo.getYears();
-
         String telefono = campoTelefono.getText();
         String ocupacion = campoOcuapacion.getText();
-
         int expediente;
         try {
             expediente = Integer.parseInt(expedienteString);
@@ -608,14 +620,12 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "Por favor, ingrese un número de expediente válido.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
         if (cedula.isEmpty() || nombre.isEmpty() || apellido.isEmpty() || direccion.isEmpty() || email.isEmpty()
                 || genero.isEmpty() || expedienteString.isEmpty() || ciudad.isEmpty()
                 || estado.isEmpty() || nacimiento.isEmpty() || telefono.isEmpty() || ocupacion.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
         paciente = new Paciente(cedula, nombre, apellido, direccion, email, edad, genero, expediente, ciudad, estado, fechaNacimiento,
             telefono, ocupacion);
     }
@@ -627,9 +637,33 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
     }
     
     public void addEnfermedades() {
-        Paciente pacienteAux = paciente;
-        pacienteAux.setIdPaciente(pacienteSeleccionado.getIdPaciente());
-        base.insertEnfermedades(paciente.getListEnfermedades().get(paciente.getListEnfermedades().size()-1), pacienteAux.getIdPaciente());
+        try {
+            //Paciente pacienteAux = paciente;
+            paciente.setIdPaciente(pacienteSeleccionado.getIdPaciente());
+            if (!paciente.getListEnfermedades().isEmpty()) {
+                Enfermedades nuevaEnfermedad = paciente.getListEnfermedades().get(paciente.getListEnfermedades().size()-1);
+                //base.insertEnfermedades(nuevaEnfermedad, pacienteAux.getIdPaciente());
+                base.insertEnfermedades(nuevaEnfermedad, paciente.getIdPaciente());
+                actualizarEnfermedades(nuevaEnfermedad);
+            } else {
+                JOptionPane.showMessageDialog(this, "¡Lista de enfermedades vacia!");
+            }
+        } catch(IndexOutOfBoundsException index) {
+            index.printStackTrace();
+        }
+    }
+    
+    private void actualizarEnfermedades(Enfermedades nuevaEnfermedad) {
+        Object[] fila = {
+            nuevaEnfermedad.getIdEnfermedad(),
+            nuevaEnfermedad.getPatologico(),
+            nuevaEnfermedad.getNoPatologico(),
+            nuevaEnfermedad.getClinico(),
+            nuevaEnfermedad.getQuirurjico(),
+            nuevaEnfermedad.getHereditario()
+        };
+        paciente.addEnfermedad(nuevaEnfermedad);
+        historialFrame.modeloTablaEnfermedad.addRow(fila);
     }
     
     private void campoDireccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoDireccionActionPerformed
@@ -802,7 +836,29 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
 
     private void editarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarActionPerformed
         if (pacienteSeleccionado != null) {
-           
+            this.actualizarEstado();
+            for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+                if (modeloTabla.getValueAt(i, 0).equals(pacienteSeleccionado.getIdPaciente())) {
+                    modeloTabla.setValueAt(pacienteSeleccionado.getNombre(), i, 1);
+                    modeloTabla.setValueAt(pacienteSeleccionado.getApellido(), i, 2);
+                    modeloTabla.setValueAt(pacienteSeleccionado.getGenero(), i, 3);
+                    modeloTabla.setValueAt(pacienteSeleccionado.getCiudad(), i, 4);
+                    modeloTabla.setValueAt(pacienteSeleccionado.getExpediente(), i, 5);
+                    modeloTabla.setValueAt(pacienteSeleccionado.getEdad(), i, 6);
+                    break;
+                }
+            }
+            JOptionPane.showMessageDialog(this, "¡El paciente ha sido actualizado con éxito!", "Informacion", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            modeloTabla.fireTableDataChanged();
+        }else {
+            JOptionPane.showMessageDialog(this, "No ha seleccionado un paciente para editar!", "ERROR AL EDITAR PACIENTE", 
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_editarActionPerformed
+    
+    private void actualizarEstado() {
+        if (pacienteSeleccionado != null) {
             int idPaciente = pacienteSeleccionado.getIdPaciente();
             String nombre = campoNombre.getText();
             String apellido = campoApellido.getText();
@@ -814,7 +870,7 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
             String estado = campoEstado.getText();
             String telefono = campoTelefono.getText();
             String email = campoEmail.getText();
-             
+            
             pacienteSeleccionado.setNombre(nombre);
             pacienteSeleccionado.setApellido(apellido);
             pacienteSeleccionado.setExpediente(expediente);
@@ -825,14 +881,9 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
             pacienteSeleccionado.setEstado(estado);
             pacienteSeleccionado.setTelefono(telefono);
             pacienteSeleccionado.setEmail(email);
-
-            base.actualizarPaciente(pacienteSeleccionado);
-            JOptionPane.showMessageDialog(null, "Actualización exitosa!", "Información", JOptionPane.INFORMATION_MESSAGE);
-            
-        } else {
-            JOptionPane.showMessageDialog(null, "No ha seleccionado un paciente para editar!", "ERROR AL EDITAR PACIENTE", JOptionPane.WARNING_MESSAGE);
-        }    
-    }//GEN-LAST:event_editarActionPerformed
+            base.actualizarPaciente(pacienteSeleccionado);     
+        } 
+    }
     
     private void btnHereditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHereditActionPerformed
         enfermedadesFrame.setEnfermedad("hereditario");
@@ -842,6 +893,32 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
         enfermedadesFrame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }//GEN-LAST:event_btnHereditActionPerformed
 
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        if(pacienteSeleccionado != null) {
+            base.deletePaciente(pacienteSeleccionado);
+            eliminarPacienteTabla(pacienteSeleccionado);
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void campoFechaNacimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoFechaNacimientoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_campoFechaNacimientoActionPerformed
+    
+    private void eliminarPacienteTabla(Paciente paciente) {
+         for (int i = 0; i < listaPacientes.size(); i++) {
+            if (listaPacientes.get(i).getIdPaciente() == pacienteSeleccionado.getIdPaciente()) {
+                // Eliminar el paciente de la lista de pacientes
+                listaPacientes.remove(i);
+                // Eliminar el paciente del modelo de la tabla
+                modeloTabla.removeRow(i);
+                break;
+            }
+        }
+        JOptionPane.showMessageDialog(this, "¡El paciente ha sido eliminado con éxito!", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+
+        modeloTabla.fireTableDataChanged();
+    }
+    
     private void limpiarTabla() {
         int numFilas = modeloTabla.getRowCount();
         if(numFilas > 0) {
@@ -853,6 +930,7 @@ public class PacienteFrame extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClinico;
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardarPaciente;
     private javax.swing.JButton btnHeredit;
     private javax.swing.JButton btnLimpiar;

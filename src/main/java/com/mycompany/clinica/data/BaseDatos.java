@@ -216,7 +216,7 @@ public class BaseDatos {
                 Paciente paciente = new Paciente(idPaciente, cedula, nombre, apellido, direccion, email, edad, genero,
                         expediente, ciudad, estado, telefono, fechaNacimiento, ocupacion);
                 
-                paciente.addEnfermedad(obtenerEnfermedades(paciente.getIdPaciente()));
+                paciente.setListEnfermedades(obtenerEnfermedades(paciente.getIdPaciente()));
                 paciente.setListConsultas(obtenerConsulta(paciente.getIdPaciente()));
                 
                 listaPaciente.add(paciente);
@@ -277,24 +277,25 @@ public class BaseDatos {
         return signosVitales;
     }
     
-    public Enfermedades obtenerEnfermedades(int idPaciente) {
-        Enfermedades enfermedad = new Enfermedades();
+    public ArrayList<Enfermedades> obtenerEnfermedades(int idPaciente) {
+        ArrayList<Enfermedades> enfermedades = new ArrayList<>();
         
         try(PreparedStatement pst = this.getConnection().prepareStatement("SELECT * FROM enfermedades_paciente WHERE id_paciente = ?")) {
             
             pst.setInt(1, idPaciente);
             ResultSet rs = pst.executeQuery();
-
-            if (rs.next()) {
-                enfermedad = new Enfermedades(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(7));
-            }else {
-                System.out.println("No hay info enfermedades");
-            }
-
+            
+            while(rs.next()) {
+                Enfermedades enfermedad = 
+                        new Enfermedades(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(7));
+                
+                enfermedades.add(enfermedad);
+            }   
+           
         } catch (SQLException s) {
             s.printStackTrace();
         } 
-        return enfermedad;
+        return enfermedades;
     }
     
     public ArrayList<Paciente> obtenerPacientesPorCampo(String campo) {

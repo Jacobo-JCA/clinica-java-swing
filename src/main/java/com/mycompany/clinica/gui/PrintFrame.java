@@ -3,12 +3,16 @@ package com.mycompany.clinica.gui;
 
 import com.mycompany.clinica.data.ConnectionDB;
 import com.mycompany.clinica.model.Paciente;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.WindowConstants;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -18,8 +22,8 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
-
 /**
  *
  * @author jacob
@@ -77,8 +81,10 @@ public class PrintFrame extends javax.swing.JFrame {
             Connection conn = ConnectionDB.getInstance();
             
             JasperReport report = null;
-            String path = "src/main/java/com/mycompany/clinica/report/recet.jrxml";
-            report = JasperCompileManager.compileReport(path);
+            //InputStream inputStream = getClass().getResourceAsStream("/com/mycompany/clinica/report/recet.jrxml");
+            report = (JasperReport) JRLoader.loadObject(getClass().getResource("/com/mycompany/clinica/report/recet.jasper"));
+            
+            //report = JasperCompileManager.compileReport(inputStream);
             
             String sqlQuery = "SELECT p.nombre AS nombre, p.cedula AS cedula, c.diagnostico AS diagnostico, c.receta AS receta, c.indicaciones AS indicaciones "
                     + "FROM paciente p INNER JOIN consulta c ON p.id_paciente = c.id_paciente WHERE p.id_paciente=?";
@@ -96,14 +102,16 @@ public class PrintFrame extends javax.swing.JFrame {
             parameters.put("cedula", paciente.getCedula()); 
             parameters.put("diagnostico", paciente.getListConsultas().get(0).getDiagnostico()); 
             parameters.put("receta", paciente.getListConsultas().get(0).getReceta()); 
-            parameters.put("indicaciones", paciente.getListConsultas().get(0).getIndicaciones()); 
+            parameters.put("indicaciones", paciente.getListConsultas().get(0).getIndicaciones());
+            parameters.put("logo", this.getClass().getResourceAsStream("/images/logo.jpeg")); 
             
             JasperPrint jprint = JasperFillManager.fillReport(report, parameters, dataSource);
             //JasperPrintManager.printReport(jprint, true);
             
-            JasperViewer viewer = new JasperViewer(jprint, false);
-            //viewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+            JasperViewer viewer = new JasperViewer(jprint, true);
+            viewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
             viewer.setVisible(true);
+            
             
         } catch (JRException jr) {
             jr.printStackTrace();

@@ -15,6 +15,8 @@ public class ConnectionDB {
     private static String USERNAME = "postgres";
     private static String PASSWORD = "1234";
     
+    //Pilito2024
+    
     private static Connection connection;
     
     public static Connection getInstance() throws SQLException {

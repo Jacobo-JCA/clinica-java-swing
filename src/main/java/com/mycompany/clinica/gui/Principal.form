@@ -56,7 +56,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="btnPaciente" pref="107" max="32767" attributes="0"/>
+                      <Component id="btnPaciente" max="32767" attributes="0"/>
                       <Component id="btnHistorial" max="32767" attributes="0"/>
                       <Component id="btnPrint" max="32767" attributes="0"/>
                   </Group>
@@ -92,7 +92,8 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnHistorial">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Historial"/>
+            <Property name="text" type="java.lang.String" value="Historial Paciente"/>
+            <Property name="toolTipText" type="java.lang.String" value="Informacion del paciente seleccionado"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHistorialActionPerformed"/>
@@ -113,7 +114,7 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="1020" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="1005" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">

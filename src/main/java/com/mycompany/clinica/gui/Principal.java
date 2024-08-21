@@ -48,7 +48,8 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
-        btnHistorial.setText("Historial");
+        btnHistorial.setText("Historial Paciente");
+        btnHistorial.setToolTipText("Informacion del paciente seleccionado");
         btnHistorial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHistorialActionPerformed(evt);
@@ -69,7 +70,7 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnPaciente, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                    .addComponent(btnPaciente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnHistorial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnPrint, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(16, Short.MAX_VALUE))
@@ -90,7 +91,7 @@ public class Principal extends javax.swing.JFrame {
         contenedorModulos.setLayout(contenedorModulosLayout);
         contenedorModulosLayout.setHorizontalGroup(
             contenedorModulosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1020, Short.MAX_VALUE)
+            .addGap(0, 1005, Short.MAX_VALUE)
         );
         contenedorModulosLayout.setVerticalGroup(
             contenedorModulosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

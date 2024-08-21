@@ -27,9 +27,7 @@ public class HistorialFrame extends javax.swing.JFrame {
             mostrarDatos();
     }
     
-    private void cargarModeloSignosVitales() {
-        
-        modeloTablaSignos.addColumn("Identificador");
+    private void cargarModeloSignosVitales() {  
         modeloTablaSignos.addColumn("Presion Arterial");
         modeloTablaSignos.addColumn("Frecuencia Cardiaca");
         modeloTablaSignos.addColumn("Frecuencia Respiratoria");
@@ -38,31 +36,24 @@ public class HistorialFrame extends javax.swing.JFrame {
         modeloTablaSignos.addColumn("Talla");
         modeloTablaSignos.addColumn("Descripcion");
         modeloTablaSignos.addColumn("IMC");
-        
-        
         int numSignos = paciente.getListConsultas().size(); //2
         modeloTablaSignos.setNumRows(numSignos);
         
-        
         for (int i = 0; i < numSignos; i++) {
             SignosVitales signos = paciente.getListConsultas().get(i).getSignosVitales();
-            
-            modeloTablaSignos.setValueAt(signos.getIdSignosVitales(), i, 0);
-            modeloTablaSignos.setValueAt(signos.getPresionArterial(), i, 1);
-            modeloTablaSignos.setValueAt(signos.getFrecuenciaCardiaca(), i, 2);
-            modeloTablaSignos.setValueAt(signos.getFrecuenciaRespiratoria(), i, 3);
-            modeloTablaSignos.setValueAt(signos.getTemperatura(), i, 4);
-            modeloTablaSignos.setValueAt(signos.getPeso(), i, 5);
-            modeloTablaSignos.setValueAt(signos.getTalla(), i, 6);
-            modeloTablaSignos.setValueAt(signos.getDescripcion(), i, 7);
-            modeloTablaSignos.setValueAt(signos.getImc(), i, 8);
-            
+ 
+            modeloTablaSignos.setValueAt(signos.getPresionArterial(), i, 0);
+            modeloTablaSignos.setValueAt(signos.getFrecuenciaCardiaca(), i, 1);
+            modeloTablaSignos.setValueAt(signos.getFrecuenciaRespiratoria(), i, 2);
+            modeloTablaSignos.setValueAt(signos.getTemperatura(), i, 3);
+            modeloTablaSignos.setValueAt(signos.getPeso(), i, 4);
+            modeloTablaSignos.setValueAt(signos.getTalla(), i, 5);
+            modeloTablaSignos.setValueAt(signos.getDescripcion(), i, 6);
+            modeloTablaSignos.setValueAt(signos.getImc(), i, 7);  
         }
-        
     }
     
     private void cargarModeloConsulta() {        
-        modeloTablaConsulta.addColumn("Identificador");
         modeloTablaConsulta.addColumn("Fecha Consulta");
         modeloTablaConsulta.addColumn("Motivo de Consulta");
         modeloTablaConsulta.addColumn("Diagnostico");
@@ -75,37 +66,33 @@ public class HistorialFrame extends javax.swing.JFrame {
         for (int i = 0; i < numConsulta; i++) {
             Consulta consulta = paciente.getListConsultas().get(i);
             
-            modeloTablaConsulta.setValueAt(consulta.getIdConsulta(), i, 0);
-            modeloTablaConsulta.setValueAt(consulta.getFechaConsulta(), i, 1);
-            modeloTablaConsulta.setValueAt(consulta.getMotivoConsulta(), i, 2);
-            modeloTablaConsulta.setValueAt(consulta.getDiagnostico(), i, 3);
-            modeloTablaConsulta.setValueAt(consulta.getReceta(), i, 4);
-            modeloTablaConsulta.setValueAt(consulta.getIndicaciones(), i, 5);
+            modeloTablaConsulta.setValueAt(consulta.getFechaConsulta(), i, 0);
+            modeloTablaConsulta.setValueAt(consulta.getMotivoConsulta(), i, 1);
+            modeloTablaConsulta.setValueAt(consulta.getDiagnostico(), i, 2);
+            modeloTablaConsulta.setValueAt(consulta.getReceta(), i, 3);
+            modeloTablaConsulta.setValueAt(consulta.getIndicaciones(), i, 4);
         }
     }
     
-    private void cargarEnfermedades() {
-        modeloTablaEnfermedad.addColumn("Identificador");
+    public void cargarEnfermedades() {
         modeloTablaEnfermedad.addColumn("Patologico");
         modeloTablaEnfermedad.addColumn("No patologico");
         modeloTablaEnfermedad.addColumn("Clinico");
         modeloTablaEnfermedad.addColumn("Quirurjico");
         modeloTablaEnfermedad.addColumn("Hereditario");
-        
         int numEnfermedad = paciente.getListEnfermedades().size();
         modeloTablaEnfermedad.setNumRows(numEnfermedad);
         
         for (int i = 0; i < numEnfermedad; i++) {
             Enfermedades enfermedad = paciente.getListEnfermedades().get(i);
-            
-            modeloTablaEnfermedad.setValueAt(enfermedad.getIdEnfermedad(), i, 0);
-            modeloTablaEnfermedad.setValueAt(enfermedad.getPatologico(), i, 1);
-            modeloTablaEnfermedad.setValueAt(enfermedad.getNoPatologico(), i, 2);
-            modeloTablaEnfermedad.setValueAt(enfermedad.getClinico(), i, 3);
-            modeloTablaEnfermedad.setValueAt(enfermedad.getQuirurjico(), i, 4);
-            modeloTablaEnfermedad.setValueAt(enfermedad.getHereditario(), i, 5);
+            modeloTablaEnfermedad.setValueAt(enfermedad.getPatologico(), i, 0);
+            modeloTablaEnfermedad.setValueAt(enfermedad.getNoPatologico(), i, 1);
+            modeloTablaEnfermedad.setValueAt(enfermedad.getClinico(), i, 2);
+            modeloTablaEnfermedad.setValueAt(enfermedad.getQuirurjico(), i, 3);
+            modeloTablaEnfermedad.setValueAt(enfermedad.getHereditario(), i, 4);
         }
     }
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -180,19 +167,11 @@ public class HistorialFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void mostrarDatos() {  
-      //Enfermedades
-        /*txtPatogco.setText("Patologico: " + enfermedad.get(0).getPatologico());
-        txtNoPatolgico.setText("No Patologico: " + enfermedad.get(0).getNoPatologico());
-        txtClinc.setText("Clinico: " + enfermedad.get(0).getClinico());
-        txtQuiruj.setText("Quirurjico: " + enfermedad.get(0).getQuirurjico());
-        txtHeredita.setText("Hereditario: " + enfermedad.get(0).getHereditario());*/
-        
+    public void mostrarDatos() {   
         cargarModeloConsulta();
         cargarModeloSignosVitales();
         cargarEnfermedades();
-        
-           
+   
     }
     
 
