@@ -84,9 +84,7 @@ public class Enfermedades {
 
     @Override
     public String toString() {
-        return "Enfermedades{" + "idEnfermedad=" + idEnfermedad + ", patologico=" 
-                + patologico + ", noPatologico=" + noPatologico + ", clinico=" 
-                + clinico + ", quirurjico=" + quirurjico + ", hereditario=" + hereditario + '}';
+        return "%d %s %s %s %s %s".formatted(idEnfermedad, patologico, noPatologico, clinico, quirurjico, hereditario);
     }
 
     

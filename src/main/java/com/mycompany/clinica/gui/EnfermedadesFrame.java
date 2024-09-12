@@ -154,6 +154,7 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
         String clinico = descripcionesEnfermedades.get("clinico");
         String quirurjico = descripcionesEnfermedades.get("quirurjico");
         String hereditario = descripcionesEnfermedades.get("hereditario");
+        
         if (patologico == null && !paciente.getListEnfermedades().isEmpty()) {
             patologico = paciente.getListEnfermedades().get(0).getPatologico();
         } else if(noPatologico == null && !paciente.getListEnfermedades().isEmpty()) {
@@ -183,7 +184,6 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
     public void setEnfermedad(String enfermedad) {
         this.enfermedad = enfermedad;
     }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardarEnfermedad;
