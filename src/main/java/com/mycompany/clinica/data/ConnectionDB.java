@@ -11,10 +11,11 @@ import java.sql.SQLException;
  */
 public class ConnectionDB {
     
-    private static String URL = "jdbc:postgresql://";
+    private static String URL = "jdbc:postgresql://localhost:5432/clinica_praxell";
     private static String USERNAME = "postgres";
-    private static String PASSWORD = " ";
+    private static String PASSWORD = "1234";
     
+    //Pilito2024
     
     private static Connection connection;
     

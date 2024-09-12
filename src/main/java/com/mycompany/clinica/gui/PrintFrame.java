@@ -76,42 +76,31 @@ public class PrintFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnImprimirRecetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirRecetaActionPerformed
-        
         try {
             Connection conn = ConnectionDB.getInstance();
             
             JasperReport report = null;
             //InputStream inputStream = getClass().getResourceAsStream("/com/mycompany/clinica/report/recet.jrxml");
-            report = (JasperReport) JRLoader.loadObject(getClass().getResource("/com/mycompany/clinica/report/recet.jasper"));
-            
-            //report = JasperCompileManager.compileReport(inputStream);
-            
+            report = (JasperReport) JRLoader.loadObject(getClass().getResource("/com/mycompany/clinica/report/recet.jasper"));            
+            //report = JasperCompileManager.compileReport(inputStream);            
             String sqlQuery = "SELECT p.nombre AS nombre, p.cedula AS cedula, c.diagnostico AS diagnostico, c.receta AS receta, c.indicaciones AS indicaciones "
-                    + "FROM paciente p INNER JOIN consulta c ON p.id_paciente = c.id_paciente WHERE p.id_paciente=?";
-            
+                    + "FROM paciente p INNER JOIN consulta c ON p.id_paciente = c.id_paciente WHERE p.id_paciente=?";            
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setInt(1, paciente.getIdPaciente());
             ResultSet rs = ps.executeQuery();
-            
-            
-            
             JRDataSource dataSource = new JRResultSetDataSource(rs);
-            
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("nombre", paciente.getNombre());
             parameters.put("cedula", paciente.getCedula()); 
             parameters.put("diagnostico", paciente.getListConsultas().get(0).getDiagnostico()); 
             parameters.put("receta", paciente.getListConsultas().get(0).getReceta()); 
             parameters.put("indicaciones", paciente.getListConsultas().get(0).getIndicaciones());
-            parameters.put("logo", this.getClass().getResourceAsStream("/images/logo.jpeg")); 
-            
+            parameters.put("logo", this.getClass().getResourceAsStream("/images/logo.jpeg"));             
             JasperPrint jprint = JasperFillManager.fillReport(report, parameters, dataSource);
-            //JasperPrintManager.printReport(jprint, true);
-            
+            //JasperPrintManager.printReport(jprint, true);            
             JasperViewer viewer = new JasperViewer(jprint, true);
             viewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-            viewer.setVisible(true);
-            
+            viewer.setVisible(true);           
             
         } catch (JRException jr) {
             jr.printStackTrace();
@@ -120,8 +109,6 @@ public class PrintFrame extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_btnImprimirRecetaActionPerformed
-
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnImprimirReceta;
