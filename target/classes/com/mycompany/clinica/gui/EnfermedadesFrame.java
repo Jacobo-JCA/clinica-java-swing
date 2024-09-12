@@ -3,7 +3,9 @@ package com.mycompany.clinica.gui;
 import com.mycompany.clinica.model.Enfermedades;
 import com.mycompany.clinica.model.Paciente;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import javax.swing.JOptionPane;
 
 /**
@@ -125,9 +127,11 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
             descripcionesEnfermedades.put(this.enfermedad, descript);
             JOptionPane.showMessageDialog(null, messages.get(this.enfermedad), "Información", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
+            
             if(this.enfermedad.equals("quirurjico") && pacienteFrame.pacienteSeleccionado != null) {
                 this.agregarEnfermedadesPaciente();
             }
+            
             if(this.enfermedad.equals("hereditario") && pacienteFrame.pacienteSeleccionado == null) {
                 this.agregarEnfermedadesPaciente();
                 this.dispose();
@@ -139,11 +143,19 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
     }
     
     private void agregarEnfermedadesPaciente() {
+        /*List<Enfermedades> enfermedades = paciente.getListEnfermedades();
+        String patologico = obtenerDescripcionEnfermedad(enfermedad, Enfermedades::getPatologico, enfermedades);
+        String noPatologico = obtenerDescripcionEnfermedad(enfermedad, Enfermedades::getNoPatologico, enfermedades);
+        String clinico = obtenerDescripcionEnfermedad(enfermedad, Enfermedades::getClinico, enfermedades);
+        String quirurjico = obtenerDescripcionEnfermedad(enfermedad, Enfermedades::getQuirurjico, enfermedades);
+        String hereditario = obtenerDescripcionEnfermedad(enfermedad, Enfermedades::getHereditario, enfermedades);*/
+        
         String patologico = descripcionesEnfermedades.get("patologico");
         String noPatologico = descripcionesEnfermedades.get("no patologico");
         String clinico = descripcionesEnfermedades.get("clinico");
         String quirurjico = descripcionesEnfermedades.get("quirurjico");
         String hereditario = descripcionesEnfermedades.get("hereditario");
+        System.out.println("enfer" + paciente.getListEnfermedades());
         if (patologico == null && !paciente.getListEnfermedades().isEmpty()) {
             patologico = paciente.getListEnfermedades().get(0).getPatologico();
         } else if(noPatologico == null && !paciente.getListEnfermedades().isEmpty()) {
@@ -157,9 +169,22 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
         }
         Enfermedades enfermedad = new Enfermedades(patologico, noPatologico, clinico, quirurjico, hereditario);
         paciente.addEnfermedad(enfermedad);
-        JOptionPane.showMessageDialog(null, "Enfermedades agregadas al paciente.", "Información", JOptionPane.INFORMATION_MESSAGE);
-
+        mostrarMensaje("Enfermedades agregadas al paciente.", "Información", JOptionPane.INFORMATION_MESSAGE);
         descripcionesEnfermedades.clear();
+    }
+    
+    private String obtenerDescripcionEnfermedad(String clave, Function<Enfermedades, String> obtener, List<Enfermedades> enfermedades) {
+        String descripcion = this.descripcionesEnfermedades.get(clave);
+        if(descripcion == null && !enfermedades.isEmpty()) {
+            for(Enfermedades enfermedad : enfermedades) {
+                descripcion = obtener.apply(enfermedad);
+            }
+        }
+        return descripcion;
+    }
+    
+    private void mostrarMensaje(String mensaje, String titulo, int tipoMensaje) {
+        JOptionPane.showMessageDialog(null, mensaje, titulo, tipoMensaje);
     }
     
     public void setEnfermedad(String enfermedad) {

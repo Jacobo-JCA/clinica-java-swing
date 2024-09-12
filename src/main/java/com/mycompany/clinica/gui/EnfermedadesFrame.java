@@ -143,26 +143,18 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
     }
     
     private void agregarEnfermedadesPaciente() {
-        List<Enfermedades> enfermedadesPaciente = paciente.getListEnfermedades();
-        
-        if(enfermedadesPaciente == null || enfermedadesPaciente.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "El paciente no tiene enfermedades registradas.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
-        String patologico = obtenerDescripcionEnfermedad(enfermedad, Enfermedades::getPatologico, enfermedadesPaciente);
-        String noPatologico = obtenerDescripcionEnfermedad(enfermedad, Enfermedades::getNoPatologico, enfermedadesPaciente);
-        String clinico = obtenerDescripcionEnfermedad(enfermedad, Enfermedades::getClinico, enfermedadesPaciente);
-        String quirurjico = obtenerDescripcionEnfermedad(enfermedad, Enfermedades::getQuirurjico, enfermedadesPaciente);
-        String hereditario = obtenerDescripcionEnfermedad(enfermedad, Enfermedades::getHereditario, enfermedadesPaciente);
+        String patologico = obtenerDescripcionEnfermedad(enfermedad);
+        String noPatologico = obtenerDescripcionEnfermedad(enfermedad);
+        String clinico = obtenerDescripcionEnfermedad(enfermedad);
+        String quirurjico = obtenerDescripcionEnfermedad(enfermedad);
+        String hereditario = obtenerDescripcionEnfermedad(enfermedad);
         
         /*String patologico = descripcionesEnfermedades.get("patologico");
         String noPatologico = descripcionesEnfermedades.get("no patologico");
         String clinico = descripcionesEnfermedades.get("clinico");
         String quirurjico = descripcionesEnfermedades.get("quirurjico");
-        String hereditario = descripcionesEnfermedades.get("hereditario");*/
-        
-        /*if (patologico == null && !paciente.getListEnfermedades().isEmpty()) {
+        String hereditario = descripcionesEnfermedades.get("hereditario");
+        if (patologico == null && !paciente.getListEnfermedades().isEmpty()) {
             patologico = paciente.getListEnfermedades().get(0).getPatologico();
         } else if(noPatologico == null && !paciente.getListEnfermedades().isEmpty()) {
             noPatologico = paciente.getListEnfermedades().get(0).getNoPatologico();
@@ -179,16 +171,8 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
         descripcionesEnfermedades.clear();
     }
     
-    private String obtenerDescripcionEnfermedad(String clave, Function<Enfermedades, String> obtenerEnfermedad, List<Enfermedades> enfermedades) {
+    private String obtenerDescripcionEnfermedad(String clave) {
         String descripcion = this.descripcionesEnfermedades.get(clave);
-        if(descripcion == null) {
-            for(Enfermedades enfermedad : enfermedades) {
-                descripcion = obtenerEnfermedad.apply(enfermedad);
-                if(descripcion != null && !descripcion.isEmpty()) {
-                    break;
-                }
-            }
-        }
         return descripcion;
     }
     

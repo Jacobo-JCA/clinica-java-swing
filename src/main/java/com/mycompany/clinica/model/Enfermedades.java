@@ -5,7 +5,6 @@ package com.mycompany.clinica.model;
  * @author jacob
  */
 public class Enfermedades {
-    
     private int idEnfermedad;
     private String patologico;
     private String noPatologico;
