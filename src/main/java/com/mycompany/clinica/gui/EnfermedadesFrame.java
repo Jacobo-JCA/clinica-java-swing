@@ -125,7 +125,7 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
         );
         if(messages.containsKey(this.enfermedad)) {
             descripcionesEnfermedades.put(this.enfermedad, descript);
-            JOptionPane.showMessageDialog(null, messages.get(this.enfermedad), "Información", JOptionPane.INFORMATION_MESSAGE);
+            mostrarMensaje(messages.get(this.enfermedad), "Información", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
             
             if(this.enfermedad.equals("quirurjico") && pacienteFrame.pacienteSeleccionado != null) {
@@ -137,7 +137,7 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
                 this.dispose();
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Tipo de enfermedad no reconocido", "Error", JOptionPane.ERROR_MESSAGE);
+            mostrarMensaje("Tipo de enfermedad no reconocido", "Error", JOptionPane.ERROR_MESSAGE);
         }
         descripcion.setText("");
     }
