@@ -3,7 +3,9 @@ package com.mycompany.clinica.gui;
 import com.mycompany.clinica.model.Enfermedades;
 import com.mycompany.clinica.model.Paciente;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import javax.swing.JOptionPane;
 
 /**
@@ -75,7 +77,7 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    /*
     private void btnGuardarEnfermedadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarEnfermedadActionPerformed
         String descript = descripcion.getText();
         if (this.enfermedad.equals("patologico")) {
@@ -111,15 +113,56 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
         }
         descripcion.setText("");
     }//GEN-LAST:event_btnGuardarEnfermedadActionPerformed
-
+    */
+    private void btnGuardarEnfermedadActionPerformed(java.awt.event.ActionEvent evt) {                                                     
+        String descript = descripcion.getText();
+        Map<String, String> messages = Map.of(
+                "patologico", "Descripción de patologico guardada",
+                "no patologico", "Descripción de no patológico guardada.",
+                "clinico", "Descripción de clínico guardada.",
+                "quirurjico", "Descripción de quirúrgico guardada.",
+                "hereditario", "Descripción de hereditario guardada."
+        );
+        if(messages.containsKey(this.enfermedad)) {
+            descripcionesEnfermedades.put(this.enfermedad, descript);
+            JOptionPane.showMessageDialog(null, messages.get(this.enfermedad), "Información", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+            
+            if(this.enfermedad.equals("quirurjico") && pacienteFrame.pacienteSeleccionado != null) {
+                this.agregarEnfermedadesPaciente();
+            }
+            
+            if(this.enfermedad.equals("hereditario") && pacienteFrame.pacienteSeleccionado == null) {
+                this.agregarEnfermedadesPaciente();
+                this.dispose();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Tipo de enfermedad no reconocido", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        descripcion.setText("");
+    }
+    
     private void agregarEnfermedadesPaciente() {
-        String patologico = descripcionesEnfermedades.get("patologico");
+        List<Enfermedades> enfermedadesPaciente = paciente.getListEnfermedades();
+        
+        if(enfermedadesPaciente == null || enfermedadesPaciente.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El paciente no tiene enfermedades registradas.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        String patologico = obtenerDescripcionEnfermedad(enfermedad, Enfermedades::getPatologico, enfermedadesPaciente);
+        String noPatologico = obtenerDescripcionEnfermedad(enfermedad, Enfermedades::getNoPatologico, enfermedadesPaciente);
+        String clinico = obtenerDescripcionEnfermedad(enfermedad, Enfermedades::getClinico, enfermedadesPaciente);
+        String quirurjico = obtenerDescripcionEnfermedad(enfermedad, Enfermedades::getQuirurjico, enfermedadesPaciente);
+        String hereditario = obtenerDescripcionEnfermedad(enfermedad, Enfermedades::getHereditario, enfermedadesPaciente);
+        
+        /*String patologico = descripcionesEnfermedades.get("patologico");
         String noPatologico = descripcionesEnfermedades.get("no patologico");
         String clinico = descripcionesEnfermedades.get("clinico");
         String quirurjico = descripcionesEnfermedades.get("quirurjico");
-        String hereditario = descripcionesEnfermedades.get("hereditario");
+        String hereditario = descripcionesEnfermedades.get("hereditario");*/
         
-        if (patologico == null && !paciente.getListEnfermedades().isEmpty()) {
+        /*if (patologico == null && !paciente.getListEnfermedades().isEmpty()) {
             patologico = paciente.getListEnfermedades().get(0).getPatologico();
         } else if(noPatologico == null && !paciente.getListEnfermedades().isEmpty()) {
             noPatologico = paciente.getListEnfermedades().get(0).getNoPatologico();
@@ -129,12 +172,28 @@ public class EnfermedadesFrame extends javax.swing.JDialog {
             quirurjico = paciente.getListEnfermedades().get(0).getQuirurjico();
         }  else if(hereditario == null && !paciente.getListEnfermedades().isEmpty()) {
             hereditario = paciente.getListEnfermedades().get(0).getHereditario();
-        }     
+        }*/
         Enfermedades enfermedad = new Enfermedades(patologico, noPatologico, clinico, quirurjico, hereditario);
         paciente.addEnfermedad(enfermedad);
-        JOptionPane.showMessageDialog(null, "Enfermedades agregadas al paciente.", "Información", JOptionPane.INFORMATION_MESSAGE);
-
+        mostrarMensaje("Enfermedades agregadas al paciente.", "Información", JOptionPane.INFORMATION_MESSAGE);
         descripcionesEnfermedades.clear();
+    }
+    
+    private String obtenerDescripcionEnfermedad(String clave, Function<Enfermedades, String> obtenerEnfermedad, List<Enfermedades> enfermedades) {
+        String descripcion = this.descripcionesEnfermedades.get(clave);
+        if(descripcion == null) {
+            for(Enfermedades enfermedad : enfermedades) {
+                descripcion = obtenerEnfermedad.apply(enfermedad);
+                if(descripcion != null && !descripcion.isEmpty()) {
+                    break;
+                }
+            }
+        }
+        return descripcion;
+    }
+    
+    private void mostrarMensaje(String mensaje, String titulo, int tipoMensaje) {
+        JOptionPane.showMessageDialog(null, mensaje, titulo, tipoMensaje);
     }
     
     public void setEnfermedad(String enfermedad) {
