@@ -1,8 +1,10 @@
 package com.mycompany.clinica.model.service.impl;
 
+import com.mycompany.clinica.execption.NegocioException;
 import com.mycompany.clinica.model.data.BaseDatos;
 import com.mycompany.clinica.model.entity.SignosVitales;
 import com.mycompany.clinica.model.service.CrudSignosVitales;
+import java.util.List;
 
 public class SignosVitalesService implements CrudSignosVitales {
     private final BaseDatos db = BaseDatos.getInstanceDB();
@@ -20,16 +22,16 @@ public class SignosVitalesService implements CrudSignosVitales {
     }
     
     @Override
-    public void guardar(SignosVitales signosVitales, int idConsulta) {
-        if(validarCampos(signosVitales) == null) {
-            db.insertSignosVitales(signosVitales, idConsulta);
-            return;
+    public int guardar(SignosVitales signosVitales, int idConsulta) {
+        String mensaje = validarCampos(signosVitales);
+        if(mensaje != null) {
+            throw new NegocioException(mensaje);
         }
-        throw new IllegalArgumentException("Los datos de los signos vitales no son válidos");
+        return db.insertSignosVitales(signosVitales, idConsulta);
     }
 
     @Override
-    public SignosVitales obtenerSignoVitalePorId(int idConsulta) {
-       return db.obtenerSignosVitales(idConsulta);
+    public List<SignosVitales> obtenerSignosVitales(int idConsulta) {
+        return db.obtenerSignosVitales(idConsulta);
     }
 }

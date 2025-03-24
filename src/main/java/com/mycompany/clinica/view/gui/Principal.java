@@ -1,9 +1,10 @@
 package com.mycompany.clinica.view.gui;
 
-
-import com.mycompany.clinica.config.ControllerFactory;
-import com.mycompany.clinica.controller.ConsultaController;
+import com.mycompany.clinica.common.SesionContexto;
+import com.mycompany.clinica.view.gui.utils.ControllerFactory;
 import com.mycompany.clinica.controller.PacienteController;
+import com.mycompany.clinica.controller.RegistroControllerCentral;
+import com.mycompany.clinica.common.MensajeInformativo;
 import java.beans.PropertyVetoException;
 import java.time.Duration;
 import java.time.Instant;
@@ -14,10 +15,9 @@ import javax.swing.UIManager;
  * @author jacob
  */
 public class Principal extends javax.swing.JFrame {
-    private VistaPaciente<PacienteFrame> vistaFrame;
-    PacienteController pacienteController;
-    ConsultaController consultaController;
-    
+    private PacienteFrame vistaFrame;
+    private PacienteController pacienteController;
+
     public Principal() {
         initComponents();
         this.setResizable(false);
@@ -39,6 +39,7 @@ public class Principal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         grupoModulos.add(btnPaciente);
+        btnPaciente.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         btnPaciente.setText("Paciente");
         btnPaciente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -46,6 +47,7 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
+        btnHistorial.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         btnHistorial.setText("Historial Paciente");
         btnHistorial.setToolTipText("Informacion del paciente seleccionado");
         btnHistorial.addActionListener(new java.awt.event.ActionListener() {
@@ -54,6 +56,7 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
+        btnPrint.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         btnPrint.setText("Imprimir");
         btnPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -89,7 +92,7 @@ public class Principal extends javax.swing.JFrame {
         contenedorModulos.setLayout(contenedorModulosLayout);
         contenedorModulosLayout.setHorizontalGroup(
             contenedorModulosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1005, Short.MAX_VALUE)
+            .addGap(0, 988, Short.MAX_VALUE)
         );
         contenedorModulosLayout.setVerticalGroup(
             contenedorModulosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -118,25 +121,24 @@ public class Principal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    private void conectarDependencias() {
+        ControllerFactory controllerFactory = ControllerFactory.getInstance();
+        if (vistaFrame == null || vistaFrame.isClosed()) {
+            vistaFrame = ((PacienteFrame)controllerFactory.getVistaPaciente());
+            pacienteController = controllerFactory.crearPacienteController();
+            vistaFrame.setPacienteController(pacienteController);
+            addContenerdor(vistaFrame);
+        }
+    }
     
-    private void addContenerdor(VistaPaciente<PacienteFrame> vistaFrame) {
-        contenedorModulos.add(vistaFrame.getFrame());
-        vistaFrame.getFrame().setVisible(true);
+    private void addContenerdor(PacienteFrame vistaFrame) {
+        contenedorModulos.add(vistaFrame);
+        vistaFrame.setVisible(true);
         try {
-            vistaFrame.getFrame().setSelected(true);
+            vistaFrame.setSelected(true);
         } catch (PropertyVetoException e) {
             e.printStackTrace();
         } 
-    }
-        
-    private void conectarDependencias() {
-        if (vistaFrame == null || vistaFrame.getFrame().isClosed()) {
-            ControllerFactory controllerFactory = ControllerFactory.getInstance();
-            vistaFrame = controllerFactory.getVistaPaciente();
-            pacienteController = controllerFactory.crearPacienteController();
-            ((PacienteFrame)vistaFrame).setControllerPaciente(pacienteController);
-            addContenerdor(vistaFrame);
-        }
     }
     
     private void btnPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPacienteActionPerformed
@@ -148,19 +150,16 @@ public class Principal extends javax.swing.JFrame {
         pacienteController.cargarTodosPacientes();                       
     }//GEN-LAST:event_btnPacienteActionPerformed
 
-    //        }else {
-//            JOptionPane.showMessageDialog(null, "Seleccione un Paciente antes de ver su Historial!", "Información", JOptionPane.INFORMATION_MESSAGE);
-//            contenedorModulos.getDesktopManager().maximizeFrame(pacienteFrame);
-//        }
-    
-//HistorialFrame historialFrame;
     private void btnHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistorialActionPerformed
-//        if (pacienteFrame != null && pacienteFrame.pacienteSeleccionado != null) {
-//            historialFrame = new HistorialFrame(pacienteFrame.pacienteSeleccionado);
-//            historialFrame.setVisible(true);
-//        } else {
-//            JOptionPane.showMessageDialog(null, "Seleccione un Paciente antes de ver su Historial!", "Información", JOptionPane.INFORMATION_MESSAGE);
-//        }
+        ControllerFactory controllerFctory = ControllerFactory.getInstance();
+        RegistroControllerCentral registroCentral = controllerFctory.crearRegistroControllerCentral();
+        SesionContexto sesionContexto = registroCentral.getSesionContexto();
+        if (sesionContexto.getPaciente() != null) {
+            HistorialFrame historial = new HistorialFrame(registroCentral);
+            historial.setVisible(true);
+        } else {
+            MensajeInformativo.mostrarError("Debes seleccionar un paciente primero!");
+        }
     }//GEN-LAST:event_btnHistorialActionPerformed
 
     //PrintFrame printFrame;
@@ -177,8 +176,6 @@ public class Principal extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
-        /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -195,8 +192,6 @@ public class Principal extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Principal().setVisible(true);  

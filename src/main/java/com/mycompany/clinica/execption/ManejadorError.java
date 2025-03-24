@@ -13,7 +13,7 @@ public class ManejadorError {
         }  else if (e instanceof SQLException) {
             return "Error de base de datos: " + e.getMessage();
         } else {
-            return "Error inesperado: " + e.getMessage();
+            return e.getMessage();
         }
     }
 }

@@ -1,21 +1,26 @@
 package com.mycompany.clinica.config;
 
+import com.mycompany.clinica.common.SesionContexto;
 import com.mycompany.clinica.controller.ConsultaController;
+import com.mycompany.clinica.controller.EnfermedadController;
 import com.mycompany.clinica.controller.PacienteController;
+import com.mycompany.clinica.controller.RegistroControllerCentral;
 import com.mycompany.clinica.controller.SignoVitalController;
+import com.mycompany.clinica.model.service.CrudEnfermedad;
 
 import com.mycompany.clinica.model.service.impl.ConsultaService;
+import com.mycompany.clinica.model.service.impl.EnfermedadService;
 import com.mycompany.clinica.model.service.impl.PacienteService;
 import com.mycompany.clinica.model.service.impl.SignosVitalesService;
 import com.mycompany.clinica.view.gui.PacienteFrame;
-import com.mycompany.clinica.view.gui.VistaPaciente;
 
 public class ControllerFactory {
     private static ControllerFactory controller;
     private final PacienteService pacienteService = new PacienteService();
     private final ConsultaService consultaService = new ConsultaService();
+    private final CrudEnfermedad crudEnfermedad = new EnfermedadService();
     private final SignosVitalesService signosVitalesService = new SignosVitalesService();
-    private VistaPaciente<PacienteFrame> vistaPaciente;
+    private PacienteFrame vistaPaciente;
     
     private ControllerFactory() {
     }
@@ -27,7 +32,7 @@ public class ControllerFactory {
         return controller;
     }
     
-    public VistaPaciente<PacienteFrame> getVistaPaciente() {
+    public PacienteFrame getVistaPaciente() {
         if(vistaPaciente == null) {
             vistaPaciente = new PacienteFrame();
         }
@@ -35,16 +40,29 @@ public class ControllerFactory {
     }
     
     public SignoVitalController crearSignoVitalController() {
-        return new SignoVitalController(signosVitalesService, getVistaPaciente());
+        SesionContexto sesionContexto = SesionContexto.getInstance();
+        return new SignoVitalController(signosVitalesService, getVistaPaciente(), sesionContexto);
     }
     
     public ConsultaController crearConsultaController() {
-        return new ConsultaController(getVistaPaciente(), consultaService, crearSignoVitalController());
+        SesionContexto sesionContexto = SesionContexto.getInstance();
+        return new ConsultaController(consultaService, sesionContexto);
+    }
+    
+    public EnfermedadController crearEnfermedadController() {
+        SesionContexto sesionContexto = SesionContexto.getInstance();
+        return new EnfermedadController(crudEnfermedad, sesionContexto);
+    }
+    
+    public RegistroControllerCentral crearRegistroControllerCentral() {
+        SesionContexto sesionContexto = SesionContexto.getInstance();
+        return new RegistroControllerCentral(crearConsultaController(), crearSignoVitalController(), crearEnfermedadController(), sesionContexto);
     }
     
     public PacienteController crearPacienteController() {
-        SignoVitalController signoVitalController = new SignoVitalController(signosVitalesService, vistaPaciente);
-        ConsultaController consultaController = new ConsultaController(vistaPaciente, consultaService, signoVitalController);  
-        return new PacienteController(pacienteService, getVistaPaciente(), consultaController);
+        SesionContexto sesionContexto = SesionContexto.getInstance();
+        RegistroControllerCentral registroCentral = new RegistroControllerCentral(crearConsultaController(), 
+                crearSignoVitalController(), crearEnfermedadController(), sesionContexto);
+        return new PacienteController(pacienteService, getVistaPaciente(), registroCentral, sesionContexto);
     }
 }

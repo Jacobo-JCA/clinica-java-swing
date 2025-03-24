@@ -1,19 +1,30 @@
 package com.mycompany.clinica.controller;
 
-import com.mycompany.clinica.execption.ValidacionObjeto;
-import com.mycompany.clinica.execption.ValidacionException;
+import com.mycompany.clinica.common.SesionContexto;
+import com.mycompany.clinica.execption.NegocioException;
 import com.mycompany.clinica.model.entity.SignosVitales;
 import com.mycompany.clinica.model.service.CrudSignosVitales;
 import com.mycompany.clinica.view.gui.PacienteFrame;
-import com.mycompany.clinica.view.gui.VistaPaciente;
+import com.mycompany.clinica.view.gui.SignosFrame;
+import java.util.List;
+import javax.swing.JDialog;
 
 public class SignoVitalController {
     private final CrudSignosVitales signoVitalService;
-    private VistaPaciente<PacienteFrame> vistaPaciente;
+    private final SignosFrame signosFrame;
+    private final SesionContexto sesionContexto;
     
-    public SignoVitalController(CrudSignosVitales signoVitalService, VistaPaciente<PacienteFrame> vistaPaciente) {
+    public SignoVitalController(CrudSignosVitales signoVitalService, PacienteFrame vistaPaciente, SesionContexto sesionContexto) {
         this.signoVitalService = signoVitalService;
-        this.vistaPaciente = vistaPaciente;
+        this.sesionContexto = sesionContexto;
+        this.signosFrame = new SignosFrame(null, true, this, sesionContexto);     
+    }
+    
+    public void mostrarVentana() {
+        signosFrame.setLocationRelativeTo(null);
+        signosFrame.setVisible(true);
+        signosFrame.setLocation(600, 150);
+        signosFrame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
     
     private String calcularImc(double peso, double talla) {
@@ -28,36 +39,32 @@ public class SignoVitalController {
         }
         return "Obesidad";
     }
-    
-    public SignosVitales convertirFormularioASignoVital(String presionArterial, String frecuenciaCardiaca, 
-                                                  String frecuenciaRespiratoria, String temperatura, 
-                                                  String peso, String talla, String descripcion) throws NumberFormatException {
-        double pesoFormat = Double.parseDouble(peso);
-        double tallaFormat = Double.parseDouble(talla);
+
+    public SignosVitales convertirDatosSignoVital(String[] campos) {
+        double pesoFormat = Double.parseDouble(campos[4]);
+        double tallaFormat = Double.parseDouble(campos[5]);
         String imc = calcularImc(pesoFormat, tallaFormat);
         return new SignosVitales(
-            presionArterial,
-            frecuenciaCardiaca,
-            frecuenciaRespiratoria,
-            temperatura,
+            campos[0],
+            campos[1],
+            campos[2],
+            campos[3],
             pesoFormat,
             tallaFormat,
-            descripcion,
+            campos[6],
             imc
         );
     }
     
-    public boolean validarSignosVitales(int idConsulta) {
-        SignosVitales signoVital = vistaPaciente.obtenerCamposSignoVital(idConsulta);
-        return ValidacionObjeto.validarCampos(signoVital);
+    public void guardarSignoVital(SignosVitales signosVitales) {
+        int idConsulta = sesionContexto.getConsulta().getIdConsulta();
+        if(idConsulta == 0) {
+            throw new NegocioException("Primero seleccione o guarde una consulta");
+        }
+        signoVitalService.guardar(signosVitales, idConsulta);
     }
     
-    public void guardarSignoVital(int idConsulta) {
-        try {
-            SignosVitales signoVital = vistaPaciente.obtenerCamposSignoVital(idConsulta);
-            signoVitalService.guardar(signoVital, idConsulta);
-        } catch (NumberFormatException e) {
-            vistaPaciente.mostrarError("Error en los campos: " + e.getMessage());
-        }
+    public List<SignosVitales> obtenerSignosVitales(int idConsulta) {
+        return signoVitalService.obtenerSignosVitales(idConsulta);
     }
 }

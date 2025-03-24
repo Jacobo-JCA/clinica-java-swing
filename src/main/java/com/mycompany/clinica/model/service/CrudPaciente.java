@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface CrudPaciente {
     int guardar(Paciente paciente);
-    Paciente obtenerPorCedula(String cedula);
+    List<Paciente> obtenerPacientesPorCampo(String campo);
     Paciente obtenerPorId(int id);
     List<Paciente> obtenerPacientes();
     void actualizar(Paciente paciente);

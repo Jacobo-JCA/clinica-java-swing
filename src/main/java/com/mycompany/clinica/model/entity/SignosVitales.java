@@ -110,7 +110,5 @@ public class SignosVitales {
                 ", presionArterial=" + presionArterial + ", frecuenciaCardiaca=" + frecuenciaCardiaca + 
                 ", frecuenciaRespiratoria=" + frecuenciaRespiratoria + ", temperatura=" + temperatura + 
                 ", peso=" + peso + ", talla=" + talla + ", descripcion=" + descripcion + ", imc=" + imc + '}';
-    }
-    
-    
+    }  
 }

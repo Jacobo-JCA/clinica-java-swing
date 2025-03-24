@@ -1,147 +1,154 @@
 package com.mycompany.clinica.controller;
 
+import com.mycompany.clinica.common.GenericSwingWorker;
+import com.mycompany.clinica.common.SesionContexto;
 import com.mycompany.clinica.execption.ManejadorError;
-import com.mycompany.clinica.model.entity.Consulta;
-import com.mycompany.clinica.model.entity.Enfermedades;
 import com.mycompany.clinica.model.entity.Paciente;
-import com.mycompany.clinica.model.entity.SignosVitales;
 import com.mycompany.clinica.model.service.CrudPaciente;
 import com.mycompany.clinica.view.gui.PacienteFrame;
-import com.mycompany.clinica.view.gui.PacienteListener;
-import com.mycompany.clinica.view.gui.VistaPaciente;
-import java.time.Duration;
-import java.time.Instant;
+import com.mycompany.clinica.common.MensajeInformativo;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import javax.swing.SwingWorker;
-
+import java.util.Optional;
 
 public class PacienteController {
-    private CrudPaciente pacienteService;
-    private ConsultaController consultaController;
-    private VistaPaciente<PacienteFrame> vistaPaciente;
-    private PacienteListener listener;
+    private final CrudPaciente pacienteService;
+    private final PacienteFrame vistaPaciente;
+    private final SesionContexto sesionContexto;
+    private final RegistroControllerCentral registroCentral;
 
-    public PacienteController(CrudPaciente pacienteService, VistaPaciente<PacienteFrame> vistaPaciente,
-            ConsultaController consultaController) {
+    public PacienteController(CrudPaciente pacienteService, PacienteFrame vistaPaciente,
+            RegistroControllerCentral registroCentral, SesionContexto sesionContexto) {
         this.pacienteService = pacienteService;
         this.vistaPaciente = vistaPaciente;
-        this.consultaController = consultaController;
+        this.registroCentral = registroCentral;
+        this.sesionContexto = sesionContexto;
     }
-    
-//    public PacienteController(CrudPaciente pacienteService, VistaPaciente<PacienteFrame> vistaPaciente) {
-//        this.pacienteService = pacienteService;
-//        this.vistaPaciente = vistaPaciente;
-//    }
 
     public void cargarTodosPacientes() {
-        SwingWorker<List<Paciente>, Void> worker = new SwingWorker<List<Paciente>, Void>() {
-            @Override
-            protected List<Paciente> doInBackground() throws Exception {
-                Instant inicio = Instant.now();
-                List<Paciente> pacientes = pacienteService.obtenerPacientes();
-                Instant fin = Instant.now();
-                long tiemposMs = Duration.between(inicio, fin).toMillis();
-                System.out.println("Tiempos de carga de pacientes: " + tiemposMs + " ms");
-                return pacientes;
-            }
-            
-            @Override
-            protected void done() {
-                try {
-                    List<Paciente> pacientes = get();
-                    vistaPaciente.actualizarTabla(pacientes);
-                } catch (Exception e) {
-                    vistaPaciente.mostrarError("Error al cargar pacientes: " + e.getMessage());
-                }
-            }
-        };
+        GenericSwingWorker<List<Paciente>> worker = new GenericSwingWorker<>(
+                () -> {
+                    List<Paciente> pacientes = pacienteService.obtenerPacientes();
+                    return pacientes;
+                },
+                pacientes -> vistaPaciente.actualizarTabla(pacientes),
+                e -> MensajeInformativo.mostrarError("Error al cargar pacientes: " + e.getMessage())
+        );
         worker.execute();
     }
-    
-    public Paciente convertirFormularioAEntidad(String cedula, String nombre, String apellido, String direccion, 
-                               String email, String genero, String expedienteStr, String ciudad, 
-                               String estado, String fechaNacStr, String telefono, String ocupacion)
-        throws NumberFormatException, DateTimeParseException {
-        
-        return new Paciente(
-            cedula,
-            nombre,
-            apellido,
-            direccion,
-            email,
-            Period.between(LocalDate.parse(fechaNacStr), LocalDate.now()).getYears(),
-            genero,
-            Integer.parseInt(expedienteStr),
-            ciudad,
-            estado,
-            LocalDate.parse(fechaNacStr),
-            telefono,
-            ocupacion
-        );
-    }
-    
-    private int guardarPaciente() {
-        int idPaciente = 0;
-        try {
-            Paciente paciente = vistaPaciente.obtenerCamposPaciente();
-            if(consultaController.validarConsulta(paciente.getIdPaciente())) {
-                idPaciente = pacienteService.guardar(paciente);
-                vistaPaciente.mostrarConfirmacion("Paciente guardado exitosamente");
-            }
-            return idPaciente;
-        } catch (Exception e) {
-            String mensajeError = ManejadorError.obtenerMensajeError(e);
-            vistaPaciente.mostrarError(mensajeError);
-            return -1;
+
+    private void verificarPaciente(Paciente paciente) {
+        Paciente pacienteSesion = sesionContexto.getPaciente();
+        if (pacienteSesion != null) {
+            paciente.setIdPaciente(pacienteSesion.getIdPaciente());
+        } else {
+            paciente.setIdPaciente(0);
         }
     }
-    
-    public void registroCompleto() {
+
+    private Paciente convertirFormularioAEntidad(List<String> campos) {
+        if (campos.stream().anyMatch(String::isEmpty)) {
+            MensajeInformativo.mostrarError("Todos los campos son obligatorios.");
+            return null;
+        }
+        LocalDate fechaNacimiento;
         try {
-            int idPaciente = guardarPaciente();
-            if (idPaciente > 0) {
-                consultaController.guardarConsultaYSignoVital(idPaciente);
-            }
-        } catch (Exception e) {
-            String mensajeError = ManejadorError.obtenerMensajeError(e);
-            vistaPaciente.mostrarError(mensajeError);
+            fechaNacimiento = LocalDate.parse(campos.get(9));
+        } catch (DateTimeParseException e) {
+            MensajeInformativo.mostrarError("La fecha de nacimiento es inválida o no se a ingresado el campo..");
+            return null;
+        }
+        Paciente paciente = new Paciente();
+        paciente.setCedula(campos.get(0));
+        paciente.setNombre(campos.get(1));
+        paciente.setApellido(campos.get(2));
+        paciente.setDireccion(campos.get(3));
+        paciente.setEmail(campos.get(4));
+        paciente.setEdad(Period.between(fechaNacimiento, LocalDate.now()).getYears());
+        paciente.setGenero(campos.get(5));
+        paciente.setExpediente(Integer.parseInt(campos.get(6)));
+        paciente.setCiudad(campos.get(7));
+        paciente.setEstado(campos.get(8));
+        paciente.setFechaNacimiento(fechaNacimiento);
+        paciente.setTelefono(campos.get(10));
+        paciente.setOcupacion(campos.get(11));
+        verificarPaciente(paciente);
+        return paciente;
+    }
+
+    private Optional<Boolean> esNuevo(Paciente paciente) {
+        if (paciente == null) {
+            return Optional.empty();
+        }
+        if (paciente.getIdPaciente() == -1 || paciente.getIdPaciente() == 0) {
+            return Optional.of(true);
+        }
+        Paciente pacienteDb = pacienteService.obtenerPorId(paciente.getIdPaciente());
+        return Optional.of(pacienteDb == null);
+    }
+
+    private void guardarPacienteCompleto(Paciente paciente) {
+        int idGenereado = pacienteService.guardar(paciente);
+        if (idGenereado != -1) {
+            sesionContexto.setPaciente(paciente);
+            registroCentral.guardarRegistroCompleto();
+            MensajeInformativo.mostrarConfirmacion("Paciente y registros guardados exitosamente!");
+        } else {
+            MensajeInformativo.mostrarError("Error al guardar el paciente.");
         }
     }
-    
+
+    private void actualizarPacienteCompleto(Paciente paciente) {
+        pacienteService.actualizar(paciente);
+        sesionContexto.setPaciente(paciente);
+        registroCentral.guardarRegistroCompleto();
+        MensajeInformativo.mostrarConfirmacion("Datos actualizados correctamente");
+    }
+
+    public void procesarDatosPaciente(List<String> datos) {
+        try {
+            Paciente paciente = convertirFormularioAEntidad(datos);
+            if(paciente == null) {
+                return;
+            }
+            Optional<Boolean> resultado = esNuevo(paciente);
+            if (resultado.isEmpty()) {
+                return;
+            }
+            if (resultado.get()) {
+                guardarPacienteCompleto(paciente);
+            } else {
+                actualizarPacienteCompleto(paciente);
+            }
+            cargarTodosPacientes();
+        } catch (Exception e) {
+            ManejadorError.obtenerMensajeError(e);
+        }
+    }
+
     public void seleccionarPaciente(int idPaciente) {
         Paciente paciente = pacienteService.obtenerPorId(idPaciente);
-        if (paciente != null) {
-            listener.onPacienteSeleccionado(paciente);
-            vistaPaciente.mostrarDetallesPaciente(paciente);
-        } else {
-            vistaPaciente.mostrarError("Paciente no encontrado");
+        if (paciente == null) {
+            MensajeInformativo.mostrarError("Paciente no encontrado");
+            return;
         }
+        sesionContexto.setPaciente(paciente);
+        vistaPaciente.mostrarDetallesPaciente(paciente);
     }
-    
-    public void cargarPacienteSeleccionado(int idPaciente) {
-        Paciente paciente = pacienteService.obtenerPorId(idPaciente);
-        if (paciente != null) {
-            vistaPaciente.mostrarDetallesPaciente(paciente);
-        } else {
-            vistaPaciente.mostrarError("Paciente no encontrado");
+
+    public void buscarPacientes(String campo) {
+        try {
+            List<Paciente> pacientes = pacienteService.obtenerPacientesPorCampo(campo);
+            vistaPaciente.actualizarTabla(pacientes);
+        } catch (Exception e) {
+            MensajeInformativo.mostrarError("Error en la busqueda: " + e.getMessage());
         }
     }
 
-    public void eliminarPaciente(int idPaciente) {
-        pacienteService.eliminar(idPaciente);
-        vistaPaciente.actualizarTabla(pacienteService.obtenerPacientes());
-    }
-    
-    public void agregarConsultaYSignosVitales(int idPaciente, Consulta consulta, SignosVitales signos) {
-        //consultaService.guardarConsulta(idPaciente, consulta, signos);
-        //vistaPaciente.mostrarConfirmacion("Enfermedad agregada");
-    }
-
-    public void agregarEnfermedad(int idPaciente, Enfermedades enfermedad) {
-        //enfermedadService.guardarEnfermedad(idPaciente, enfermedad);
-        //vistaPaciente.mostrarConfirmacion("Enfermedad agregada");
-    }
+//    public void eliminarPaciente(int idPaciente) {
+//        pacienteService.eliminar(idPaciente);
+//        vistaPaciente.actualizarTabla(pacienteService.obtenerPacientes());
+//    }
 }

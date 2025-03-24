@@ -1,24 +1,22 @@
 package com.mycompany.clinica.view.gui;
 
-import com.mycompany.clinica.config.ControllerFactory;
-import com.mycompany.clinica.execption.ManejadorError;
+import com.mycompany.clinica.controller.ConsultaController;
 import com.mycompany.clinica.execption.ValidacionException;
 import com.mycompany.clinica.model.entity.Consulta;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
+import com.mycompany.clinica.common.MensajeInformativo;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.JOptionPane;
 
 /**
  *
  * @author jacob
  */
 public class ConsultaFrame extends javax.swing.JDialog {
-    private final ControllerFactory controller = ControllerFactory.getInstance();
+    private ConsultaController consulaController;
     
-    public ConsultaFrame(java.awt.Frame parent, boolean modal) {
+    public ConsultaFrame(java.awt.Frame parent, boolean modal, ConsultaController consultaController) {
         super(parent, modal);
+        this.consulaController = consultaController;
         initComponents();
     }
 
@@ -28,31 +26,37 @@ public class ConsultaFrame extends javax.swing.JDialog {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        textDiagnostico = new javax.swing.JTextArea();
+        campoDiagnostico = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        textReceta = new javax.swing.JTextArea();
+        campoReceta = new javax.swing.JTextArea();
         btnGuadarConsulta = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        txtIndicaciones = new javax.swing.JTextArea();
+        campoIndicaciones = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        campoFecha = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        campoMotivoConsulta = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel1.setText("Diagnostico:");
 
-        textDiagnostico.setColumns(20);
-        textDiagnostico.setRows(5);
-        jScrollPane1.setViewportView(textDiagnostico);
+        campoDiagnostico.setColumns(20);
+        campoDiagnostico.setRows(5);
+        jScrollPane1.setViewportView(campoDiagnostico);
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel2.setText("RP:");
 
-        textReceta.setColumns(20);
-        textReceta.setRows(5);
-        jScrollPane2.setViewportView(textReceta);
+        campoReceta.setColumns(20);
+        campoReceta.setRows(5);
+        jScrollPane2.setViewportView(campoReceta);
 
+        btnGuadarConsulta.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         btnGuadarConsulta.setText("Guadar");
         btnGuadarConsulta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -60,12 +64,22 @@ public class ConsultaFrame extends javax.swing.JDialog {
             }
         });
 
-        txtIndicaciones.setColumns(20);
-        txtIndicaciones.setRows(5);
-        jScrollPane3.setViewportView(txtIndicaciones);
+        campoIndicaciones.setColumns(20);
+        campoIndicaciones.setRows(5);
+        jScrollPane3.setViewportView(campoIndicaciones);
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel3.setText("Indicaciones");
+
+        jLabel4.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        jLabel4.setText("Fecha de Consulta(YYYY-MM-dd):");
+
+        jLabel5.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        jLabel5.setText("Motivo Consulta:");
+
+        campoMotivoConsulta.setColumns(20);
+        campoMotivoConsulta.setRows(5);
+        jScrollPane4.setViewportView(campoMotivoConsulta);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -73,97 +87,105 @@ public class ConsultaFrame extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnGuadarConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(134, 134, 134))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(7, 7, 7)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
+                            .addComponent(campoFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane3)
                             .addComponent(jScrollPane2)
-                            .addComponent(jScrollPane3))
-                        .addGap(78, 78, 78)
-                        .addComponent(btnGuadarConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                            .addComponent(jScrollPane4))))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(68, 68, 68)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(67, 67, 67)
-                .addComponent(jLabel3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(campoFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(36, 36, 36)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(49, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnGuadarConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(16, 16, 16))))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(45, 45, 45)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(22, 22, 22)
+                        .addComponent(btnGuadarConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(29, 29, 29))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public List<String> obtenerCamposConsulta() {
+        List<String> datos = Arrays.asList(
+            campoMotivoConsulta.getText(),
+            campoFecha.getText(),
+            campoDiagnostico.getText(),
+            campoReceta.getText(),
+            campoIndicaciones.getText()
+        );
+        return datos;
+    }
+    
     private void btnGuadarConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuadarConsultaActionPerformed
         try {
-            Consulta consulta = obtenerCamposConsulta();
-            if (consulta != null) {
-                JOptionPane.showMessageDialog(null, "Consulta insertada correctamente!", "Información", 
-                        JOptionPane.INFORMATION_MESSAGE);
-                this.dispose();
+            List<String> datos = obtenerCamposConsulta();
+            if (datos.stream().anyMatch(String::isEmpty)) {
+                throw new ValidacionException("Todos los campos son requeridos");
             }
-        } catch (ValidacionException e) {
-            String error = ManejadorError.obtenerMensajeError(e);
-            controller.getVistaPaciente().mostrarError(error);
+            Consulta consulta = consulaController.convertirFormularioAEntidad(datos);
+            consulaController.getSesionContext().setConsulta(consulta);
+            MensajeInformativo.mostrarConfirmacion("Consulta validada. Los datos se guardarán al registrar el paciente.");
+            this.dispose();
+        } catch (Exception e) {
+            MensajeInformativo.mostrarError(e.getMessage());
         }
     }//GEN-LAST:event_btnGuadarConsultaActionPerformed
 
-    public Consulta obtenerCamposConsulta() {
-        List<String> camposVista = controller.getVistaPaciente().obtenerCamposConsultaVista();
-        LocalDate fecha;
-        try {
-            fecha = LocalDate.parse(camposVista.get(1));
-        } catch(DateTimeParseException e) {
-            throw new ValidacionException("Formato de fecha inválido. Por favor, use el formato YYYY-MM-dd, o ingrese el campo fecha");
-        }
-        List<String> campos = Arrays.asList(
-            textDiagnostico.getText(),
-            textReceta.getText(),
-            txtIndicaciones.getText()
-        );
-        if(campos.stream().anyMatch(String::isEmpty) && camposVista.stream().anyMatch(String::isEmpty)) {
-            throw new ValidacionException("Todos los campos son requeridos");
-        }
-        return new Consulta(
-            camposVista.get(0),
-            fecha,
-            campos.get(0),
-            campos.get(1),
-            campos.get(2)
-        );
-    }
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuadarConsulta;
+    private javax.swing.JTextArea campoDiagnostico;
+    private javax.swing.JTextField campoFecha;
+    private javax.swing.JTextArea campoIndicaciones;
+    private javax.swing.JTextArea campoMotivoConsulta;
+    private javax.swing.JTextArea campoReceta;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea textDiagnostico;
-    private javax.swing.JTextArea textReceta;
-    private javax.swing.JTextArea txtIndicaciones;
+    private javax.swing.JScrollPane jScrollPane4;
     // End of variables declaration//GEN-END:variables
 
 }

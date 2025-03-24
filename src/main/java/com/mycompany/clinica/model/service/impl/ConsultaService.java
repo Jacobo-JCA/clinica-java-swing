@@ -1,10 +1,8 @@
 package com.mycompany.clinica.model.service.impl;
 import com.mycompany.clinica.execption.NegocioException;
-import com.mycompany.clinica.execption.TecnicoException;
 import com.mycompany.clinica.model.data.BaseDatos;
 import com.mycompany.clinica.model.entity.Consulta;
 import com.mycompany.clinica.model.service.CrudConsulta;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -39,7 +37,7 @@ public class ConsultaService implements CrudConsulta {
     }
     
     @Override
-    public List<Consulta> obtenerConsulta(int idPaciente) {
-        return db.obtenerConsulta(idPaciente);
+    public List<Consulta> obtenerConsultas(int idPaciente) {
+        return db.obtenerConsultas(idPaciente);
     }
 }

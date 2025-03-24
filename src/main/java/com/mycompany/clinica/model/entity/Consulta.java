@@ -2,6 +2,8 @@
 package com.mycompany.clinica.model.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -14,7 +16,7 @@ public class Consulta {
     private String diagnostico;
     private String receta;
     private String indicaciones;
-    private SignosVitales signosVitales;
+    private List<SignosVitales> signosVitales;
 
     public Consulta() {
     }
@@ -25,6 +27,7 @@ public class Consulta {
         this.diagnostico = diagnostico;
         this.receta = receta;
         this.indicaciones = indicaciones;
+        this.signosVitales = new ArrayList<>();
     }
 
     public int getIdConsulta() {
@@ -75,13 +78,11 @@ public class Consulta {
         this.indicaciones = indicaciones;
     }
 
-    public SignosVitales getSignosVitales() {
+    public List<SignosVitales> getSignosVitales() {
         return signosVitales;
     }
 
-    public void setSignosVitales(SignosVitales signosVitales) {
+    public void setSignosVitales(List<SignosVitales> signosVitales) {
         this.signosVitales = signosVitales;
     }
-
-    
 }

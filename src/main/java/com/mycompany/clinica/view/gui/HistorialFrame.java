@@ -1,91 +1,146 @@
-
 package com.mycompany.clinica.view.gui;
 
+import com.mycompany.clinica.common.GenericSwingWorker;
+import com.mycompany.clinica.common.SesionContexto;
+import com.mycompany.clinica.controller.RegistroControllerCentral;
 import com.mycompany.clinica.model.entity.Consulta;
 import com.mycompany.clinica.model.entity.Enfermedades;
-import com.mycompany.clinica.model.entity.Paciente;
 import com.mycompany.clinica.model.entity.SignosVitales;
-import java.util.ArrayList;
+import com.mycompany.clinica.common.MensajeInformativo;
+import com.mycompany.clinica.view.gui.utils.HistorialData;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 public class HistorialFrame extends javax.swing.JFrame {
-    Paciente paciente;
-    DefaultTableModel modeloTablaSignos = new DefaultTableModel();
-    DefaultTableModel modeloTablaConsulta = new DefaultTableModel();
-    DefaultTableModel modeloTablaEnfermedad = new DefaultTableModel();
-    
-    
-    public HistorialFrame() {
-            initComponents();
-            this.setLocationRelativeTo(null);
+
+    private final RegistroControllerCentral registroCentral;
+    private final DefaultTableModel modeloTablaSignos = new DefaultTableModel();
+    private final DefaultTableModel modeloTablaConsulta = new DefaultTableModel();
+    private final DefaultTableModel modeloTablaEnfermedad = new DefaultTableModel();
+
+    public HistorialFrame(RegistroControllerCentral registroCentral) {
+        initComponents();
+        this.registroCentral = registroCentral;
+        configurarTablas();
+        cargarDatos();
+        this.setLocationRelativeTo(null);
+    }
+
+    private void configurarTablas() {
+        modeloTablaConsulta.setColumnIdentifiers(new Object[]{
+            "Fecha Consulta", "Motivo de Consulta", "Diagnostico", "Receta", "Indicaciones"
+        });
+        tablaConsultas.setModel(modeloTablaConsulta);
+
+        // Tabla de Signos Vitales
+        modeloTablaSignos.setColumnIdentifiers(new Object[]{
+            "Presion Arterial", "Frecuencia Cardiaca", "Frecuencia Respiratoria",
+            "Temperatura", "Peso", "Talla", "Descripcion", "IMC"
+        });
+        tablaSignos.setModel(modeloTablaSignos);
+
+        // Tabla de Enfermedades
+        modeloTablaEnfermedad.setColumnIdentifiers(new Object[]{
+            "Patologico", "No patologico", "Clinico", "Quirurjico", "Hereditario"
+        });
+        tablaEnfermedades.setModel(modeloTablaEnfermedad);
+    }
+
+    private void cargarDatos() {
+        SesionContexto sesionContexto = registroCentral.getSesionContexto();
+        if (sesionContexto.getPaciente() == null) {
+            MensajeInformativo.mostrarError("No hay paciente seleccionado");
+            return;
+        }
+        int idPaciente = sesionContexto.getPaciente().getIdPaciente();
+        GenericSwingWorker<HistorialData> worker = new GenericSwingWorker<>(
+                () -> {
+                    HistorialData data = new HistorialData();
+                    data.setConsultas(registroCentral.obtenerConsultasConSignos(idPaciente));
+                    data.setEnfermedades(registroCentral.obtenerEnfermedadesPaciente(idPaciente));
+                    return data;
+                },
+                data -> {
+                    limpiarTablas();
+                    cargarConsultas(data.getConsultas());
+                    cargarSignosVitales(data.getConsultas());
+                    cargarEnfermedades(data.getEnfermedades());
+                },
+                e -> MensajeInformativo.mostrarError("Error al cargar datos: " + e.getMessage())
+        );
+        worker.execute();
     }
     
-    private void cargarModeloSignosVitales() {  
-        modeloTablaSignos.addColumn("Presion Arterial");
-        modeloTablaSignos.addColumn("Frecuencia Cardiaca");
-        modeloTablaSignos.addColumn("Frecuencia Respiratoria");
-        modeloTablaSignos.addColumn("Temperatura");
-        modeloTablaSignos.addColumn("Peso");
-        modeloTablaSignos.addColumn("Talla");
-        modeloTablaSignos.addColumn("Descripcion");
-        modeloTablaSignos.addColumn("IMC");
-        int numSignos = paciente.getListConsultas().size(); //2
-        modeloTablaSignos.setNumRows(numSignos);
-        
-        for (int i = 0; i < numSignos; i++) {
-            SignosVitales signos = paciente.getListConsultas().get(i).getSignosVitales();
- 
-            modeloTablaSignos.setValueAt(signos.getPresionArterial(), i, 0);
-            modeloTablaSignos.setValueAt(signos.getFrecuenciaCardiaca(), i, 1);
-            modeloTablaSignos.setValueAt(signos.getFrecuenciaRespiratoria(), i, 2);
-            modeloTablaSignos.setValueAt(signos.getTemperatura(), i, 3);
-            modeloTablaSignos.setValueAt(signos.getPeso(), i, 4);
-            modeloTablaSignos.setValueAt(signos.getTalla(), i, 5);
-            modeloTablaSignos.setValueAt(signos.getDescripcion(), i, 6);
-            modeloTablaSignos.setValueAt(signos.getImc(), i, 7);  
+    private void limpiarTablas() {
+        modeloTablaConsulta.setRowCount(0);
+        modeloTablaSignos.setRowCount(0);
+        modeloTablaEnfermedad.setRowCount(0);
+    }
+
+    private void cargarConsultas(List<Consulta> consultas) {
+        modeloTablaConsulta.setRowCount(0);
+        for (Consulta consulta : consultas) {
+            modeloTablaConsulta.addRow(new Object[]{
+                consulta.getFechaConsulta(),
+                consulta.getMotivoConsulta(),
+                consulta.getDiagnostico(),
+                consulta.getReceta(),
+                consulta.getIndicaciones()
+            });
         }
     }
-    
-    private void cargarModeloConsulta() {        
-        modeloTablaConsulta.addColumn("Fecha Consulta");
-        modeloTablaConsulta.addColumn("Motivo de Consulta");
-        modeloTablaConsulta.addColumn("Diagnostico");
-        modeloTablaConsulta.addColumn("Receta");
-        modeloTablaConsulta.addColumn("Indicaciones");
-        
-        int numConsulta = paciente.getListConsultas().size();
-        modeloTablaConsulta.setNumRows(numConsulta);
-        
-        for (int i = 0; i < numConsulta; i++) {
-            Consulta consulta = paciente.getListConsultas().get(i);
-            
-            modeloTablaConsulta.setValueAt(consulta.getFechaConsulta(), i, 0);
-            modeloTablaConsulta.setValueAt(consulta.getMotivoConsulta(), i, 1);
-            modeloTablaConsulta.setValueAt(consulta.getDiagnostico(), i, 2);
-            modeloTablaConsulta.setValueAt(consulta.getReceta(), i, 3);
-            modeloTablaConsulta.setValueAt(consulta.getIndicaciones(), i, 4);
+
+    private void cargarSignosVitales(List<Consulta> consultas) {
+        modeloTablaSignos.setRowCount(0);
+        for (Consulta consulta : consultas) {
+            for (SignosVitales signos : consulta.getSignosVitales()) {
+                modeloTablaSignos.addRow(new Object[]{
+                    signos.getPresionArterial(),
+                    signos.getFrecuenciaCardiaca(),
+                    signos.getFrecuenciaRespiratoria(),
+                    signos.getTemperatura(),
+                    signos.getPeso(),
+                    signos.getTalla(),
+                    signos.getDescripcion(),
+                    signos.getImc()
+                });
+            }
         }
     }
-    
-    public void cargarEnfermedades() {
-        modeloTablaEnfermedad.addColumn("Patologico");
-        modeloTablaEnfermedad.addColumn("No patologico");
-        modeloTablaEnfermedad.addColumn("Clinico");
-        modeloTablaEnfermedad.addColumn("Quirurjico");
-        modeloTablaEnfermedad.addColumn("Hereditario");
-        int numEnfermedad = paciente.getListEnfermedades().size();
-        modeloTablaEnfermedad.setNumRows(numEnfermedad);
-        
-        for (int i = 0; i < numEnfermedad; i++) {
-            Enfermedades enfermedad = paciente.getListEnfermedades().get(i);
-            modeloTablaEnfermedad.setValueAt(enfermedad.getPatologico(), i, 0);
-            modeloTablaEnfermedad.setValueAt(enfermedad.getNoPatologico(), i, 1);
-            modeloTablaEnfermedad.setValueAt(enfermedad.getClinico(), i, 2);
-            modeloTablaEnfermedad.setValueAt(enfermedad.getQuirurjico(), i, 3);
-            modeloTablaEnfermedad.setValueAt(enfermedad.getHereditario(), i, 4);
+
+    private void cargarEnfermedades(List<Enfermedades> enfermedades) {
+        modeloTablaEnfermedad.setRowCount(0);
+        for (Enfermedades enfermedad : enfermedades) {
+            modeloTablaEnfermedad.addRow(new Object[]{
+                enfermedad.getPatologico(),
+                enfermedad.getNoPatologico(),
+                enfermedad.getClinico(),
+                enfermedad.getQuirurjico(),
+                enfermedad.getHereditario()
+            });
         }
     }
-   
+
+//    private void cargarModeloConsulta() {
+//        modeloTablaConsulta.addColumn("Fecha Consulta");
+//        modeloTablaConsulta.addColumn("Motivo de Consulta");
+//        modeloTablaConsulta.addColumn("Diagnostico");
+//        modeloTablaConsulta.addColumn("Receta");
+//        modeloTablaConsulta.addColumn("Indicaciones");
+//
+//        int numConsulta = paciente.getListConsultas().size();
+//        modeloTablaConsulta.setNumRows(numConsulta);
+//
+//        for (int i = 0; i < numConsulta; i++) {
+//            Consulta consulta = paciente.getListConsultas().get(i);
+//
+//            modeloTablaConsulta.setValueAt(consulta.getFechaConsulta(), i, 0);
+//            modeloTablaConsulta.setValueAt(consulta.getMotivoConsulta(), i, 1);
+//            modeloTablaConsulta.setValueAt(consulta.getDiagnostico(), i, 2);
+//            modeloTablaConsulta.setValueAt(consulta.getReceta(), i, 3);
+//            modeloTablaConsulta.setValueAt(consulta.getIndicaciones(), i, 4);
+//        }
+//    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -158,20 +213,6 @@ public class HistorialFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    public void mostrarDatos() {   
-        cargarModeloConsulta();
-        cargarModeloSignosVitales();
-        cargarEnfermedades();
-   
-    }
-
-    public void setPaciente(Paciente paciente) {
-        this.paciente = paciente;
-        if (this.paciente != null) {
-            mostrarDatos();  // Cargar los datos solo si el paciente no es null
-        }
-    } 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

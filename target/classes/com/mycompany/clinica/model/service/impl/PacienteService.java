@@ -40,16 +40,10 @@ public class PacienteService implements CrudPaciente {
     @Override
     public int guardar(Paciente paciente) {
         String message = validarCampos(paciente);
-        if(message == null) {
-            return db.insertPaciente(paciente);
-        } else {
+        if(message != null) {
             throw new ValidacionException(message);
         }
-    }
-
-    @Override
-    public Paciente obtenerPorCedula(String cedula) {
-        return db.buscarPacientePorCedula(cedula);
+        return db.insertPaciente(paciente);
     }
 
     @Override
@@ -70,5 +64,10 @@ public class PacienteService implements CrudPaciente {
     @Override
     public Paciente obtenerPorId(int id) {
         return db.buscarPacientePorId(id);
+    }
+
+    @Override
+    public List<Paciente> obtenerPacientesPorCampo(String campo) {
+        return db.obtenerPacientesPorCampo(campo);
     }
 }

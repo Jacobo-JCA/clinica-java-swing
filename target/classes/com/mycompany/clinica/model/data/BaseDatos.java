@@ -12,8 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,24 +20,24 @@ import javax.swing.JOptionPane;
  * @author jacob
  */
 public class BaseDatos {
+
     private static BaseDatos instance;
-    
+
     public static BaseDatos getInstanceDB() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new BaseDatos();
         }
         return instance;
     }
-    
+
     private BaseDatos() {
     }
-    
+
     public int insertPaciente(Paciente paciente) {
         try (PreparedStatement sqlInsertar = ConnectionDB.getInstance()
                 .prepareStatement("INSERT INTO paciente (cedula, nombre, apellido, direccion, "
-                + "email, edad, genero, expediente, ciudad, estado, fecha_nacimiento, telefono, ocupacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
-                Statement.RETURN_GENERATED_KEYS)) {
-
+                        + "email, edad, genero, expediente, ciudad, estado, fecha_nacimiento, telefono, ocupacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        Statement.RETURN_GENERATED_KEYS)) {
             sqlInsertar.setString(1, paciente.getCedula());
             sqlInsertar.setString(2, paciente.getNombre());
             sqlInsertar.setString(3, paciente.getApellido());
@@ -65,8 +64,8 @@ public class BaseDatos {
                     throw new SQLException("Inserte el paciente, ID no obtenido.");
                 }
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
             return -1;
         }
     }
@@ -94,30 +93,40 @@ public class BaseDatos {
 
                 paciente = new Paciente(dni, nombre, apellido, direccion, email, edad, genero, expediente, ciudad, estado, fechaNacimiento, telefono, ocupacion);
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            throw new TecnicoException("Error al guardar en base de datos", e);
         }
         return paciente;
     }
-    
-    public void insertEnfermedades(Enfermedades enfermedad, int idPaciente) {
+
+    public int insertEnfermedades(Enfermedades enfermedad, int idPaciente) {
         try (PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("INSERT INTO enfermedades_paciente(patologico, no_patologico, "
-                + "clinico, quirurjico, hereditario, id_paciente) VALUES (?, ?, ?, ?, ?, ?)")) {
+                + "clinico, quirurjico, hereditario, id_paciente) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             pst.setString(1, enfermedad.getPatologico());
             pst.setString(2, enfermedad.getNoPatologico());
             pst.setString(3, enfermedad.getClinico());
             pst.setString(4, enfermedad.getQuirurjico());
             pst.setString(5, enfermedad.getHereditario());
             pst.setInt(6, idPaciente);
-            pst.executeUpdate();
+            int affectedRows = pst.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Inserte la enfermedad, filas no afectadas.");
+            }
+            ResultSet generatedKeys = pst.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                enfermedad.setIdEnfermedad(generatedKeys.getInt(1));
+                return generatedKeys.getInt(1);
+            } else {
+                throw new SQLException("Inserte la enfermedad, ID no obtenido.");
+            }
         } catch (SQLException e) {
             throw new TecnicoException("Error al guardar en base de datos", e);
         }
     }
 
-    public void insertSignosVitales(SignosVitales signosVitales, int idConsulta) {
-        try(PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("INSERT INTO signos_vitales(presion_arterial, frecuencia_cardiaca, frecuencia_respiratoria, "
-                + "temperatura, peso, talla, descripcion, imc, id_consulta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {    
+    public int insertSignosVitales(SignosVitales signosVitales, int idConsulta) {
+        try (PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("INSERT INTO signos_vitales(presion_arterial, frecuencia_cardiaca, frecuencia_respiratoria, "
+                + "temperatura, peso, talla, descripcion, imc, id_consulta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             pst.setString(1, signosVitales.getPresionArterial());
             pst.setString(2, signosVitales.getFrecuenciaCardiaca());
             pst.setString(3, signosVitales.getFrecuenciaRespiratoria());
@@ -127,14 +136,25 @@ public class BaseDatos {
             pst.setString(7, signosVitales.getDescripcion());
             pst.setString(8, signosVitales.getImc());
             pst.setInt(9, idConsulta);
-            pst.executeUpdate();
+            int affectRows = pst.executeUpdate();
+            if (affectRows == 0) {
+                throw new SQLException("Inserte los Signos Vitales, filas no afectadas.");
+            }
+            ResultSet generatedKeys = pst.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                signosVitales.setIdSignosVitales(generatedKeys.getInt(1));
+                return generatedKeys.getInt(1);
+            } else {
+                throw new SQLException("Inserte los signos vitales, ID no obtenido.");
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
-        } 
+            throw new TecnicoException("Error al guardar en base de datos", e);
+        }
     }
-    
+
+    // capturar, declarar
     public int insertConsulta(Consulta consulta, int idPaciente) {
-        try(PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("INSERT INTO consulta(id_paciente, fecha_consulta, motivo, "
+        try (PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("INSERT INTO consulta(id_paciente, fecha_consulta, motivo, "
                 + "diagnostico, receta, indicaciones) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             pst.setInt(1, idPaciente);
             Date fechaConsultaSQL = Date.valueOf(consulta.getFechaConsulta());
@@ -148,7 +168,7 @@ public class BaseDatos {
                 throw new SQLException("No se afecto la fila");
             }
             ResultSet generatedKeys = pst.getGeneratedKeys();
-            if(generatedKeys.next()) {
+            if (generatedKeys.next()) {
                 consulta.setIdConsulta(generatedKeys.getInt(1));
                 return generatedKeys.getInt(1);
             } else {
@@ -158,10 +178,10 @@ public class BaseDatos {
             throw new TecnicoException("Error al insertar la consulta en la base de datos", e);
         }
     }
-    
-    public  ArrayList<Paciente> obtenerPacientes() {
-        ArrayList<Paciente> listaPaciente = new ArrayList<>();
-        try(PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("SELECT * FROM paciente LIMIT 20")) {
+
+    public List<Paciente> obtenerPacientes() {
+        List<Paciente> listaPaciente = new ArrayList<>();
+        try (PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("SELECT * FROM paciente LIMIT 20")) {
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 int idPaciente = rs.getInt("id_paciente");
@@ -179,128 +199,114 @@ public class BaseDatos {
                 LocalDate fechaNacimiento = fechaNacimientoSQL.toLocalDate();
                 String telefono = rs.getString("telefono");
                 String ocupacion = rs.getString("ocupacion");
-
                 Paciente paciente = new Paciente(idPaciente, cedula, nombre, apellido, direccion, email, edad, genero,
                         expediente, ciudad, estado, telefono, fechaNacimiento, ocupacion);
-                
-//                paciente.setListEnfermedades(obtenerEnfermedades(paciente.getIdPaciente()));
-//                paciente.setListConsultas(obtenerConsulta(paciente.getIdPaciente()));
-                
                 listaPaciente.add(paciente);
-            }  
-
-        } catch (SQLException s) {
-            s.printStackTrace();
-        } 
-        return listaPaciente;
-    }
-    
-    public ArrayList<Consulta> obtenerConsulta(int idPaciente) {
-        ArrayList<Consulta> consultas = new ArrayList<>();
-        
-        try(PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("SELECT * FROM consulta WHERE id_paciente = ?")) {
-            pst.setInt(1, idPaciente);
-            ResultSet rs = pst.executeQuery();
-            
-            while(rs.next()) {
-                Date date = rs.getDate(3);
-                LocalDate localDate = date.toLocalDate();
-                
-                Consulta consulta = new Consulta(rs.getString(4), localDate, rs.getString(5), rs.getString(6), rs.getString(7));
-                consulta.setIdConsulta(rs.getInt(1));
-                consulta.setSignosVitales(obtenerSignosVitales(consulta.getIdConsulta()));
-                
-                consultas.add(consulta);
             }
-
         } catch (SQLException s) {
-            s.printStackTrace();
-        } 
-        return consultas;
-    }
-    
-    public SignosVitales obtenerSignosVitales(int idConsulta) {
-        SignosVitales signosVitales = new SignosVitales();
-        
-        try(PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("SELECT * FROM signos_vitales WHERE id_consulta = ?")){
-
-            pst.setInt(1, idConsulta);
-            ResultSet rs = pst.executeQuery();
-            
-            if (rs.next()) {
-                signosVitales = new SignosVitales(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), 
-                        rs.getDouble(6), rs.getDouble(7), rs.getString(8), rs.getString(9));
-                signosVitales.setIdSignosVitales(rs.getInt(1));
-                
-            }else {
-                System.out.println("No hay info de signos");
-            }
-        }catch (SQLException s) {
             s.printStackTrace();
         }
-        return signosVitales;
+        return listaPaciente;
     }
-    
-    public ArrayList<Enfermedades> obtenerEnfermedades(int idPaciente) {
-        ArrayList<Enfermedades> enfermedades = new ArrayList<>();
-        
-        try(PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("SELECT * FROM enfermedades_paciente WHERE id_paciente = ?")) {
-            
+
+    public List<Consulta> obtenerConsultas(int idPaciente) {
+        List<Consulta> consultas = new ArrayList<>();
+        try (PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("SELECT * FROM consulta WHERE id_paciente = ?")) {
             pst.setInt(1, idPaciente);
             ResultSet rs = pst.executeQuery();
-            
-            while(rs.next()) {
-                Enfermedades enfermedad = 
-                        new Enfermedades(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(7));
-                
-                enfermedades.add(enfermedad);
-            }   
-           
+            while (rs.next()) {
+                Date date = rs.getDate(3);
+                LocalDate localDate = date.toLocalDate();
+                Consulta consulta = new Consulta(rs.getString(4), localDate, rs.getString(5), rs.getString(6), rs.getString(7));
+                consulta.setIdConsulta(rs.getInt(1));
+                consultas.add(consulta);
+            }
         } catch (SQLException s) {
             s.printStackTrace();
-        } 
+        }
+        return consultas;
+    }
+
+    public List<SignosVitales> obtenerSignosVitales(int idConsulta) {
+        System.out.println("Buscando signos para consulta ID: " + idConsulta);
+        List<SignosVitales> signos = new ArrayList<>();
+        try (PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("SELECT * FROM signos_vitales WHERE id_consulta = ?")) {
+            pst.setInt(1, idConsulta);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                SignosVitales sv = new SignosVitales(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+                        rs.getDouble(6), rs.getDouble(7), rs.getString(8), rs.getString(9));
+                sv.setIdSignosVitales(rs.getInt(1));
+                signos.add(sv);
+            }
+        } catch (SQLException s) {
+            s.printStackTrace();
+        }
+        System.out.println("Signos encontrados: " + signos.size());
+        return signos;
+    }
+
+    public List<Enfermedades> obtenerEnfermedades(int idPaciente) {
+        System.out.println("Buscando enfermedades para paciente ID: " + idPaciente);
+        List<Enfermedades> enfermedades = new ArrayList<>();
+        try (PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("SELECT * FROM enfermedades_paciente WHERE id_paciente = ?")) {
+            pst.setInt(1, idPaciente);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                Enfermedades enfermedad = new Enfermedades(
+                        rs.getString("patologico"),
+                        rs.getString("no_patologico"),
+                        rs.getString("clinico"),
+                        rs.getString("quirurjico"),
+                        rs.getString("hereditario")
+                );
+                enfermedad.setIdEnfermedad(rs.getInt("id_enfermedad"));
+                enfermedades.add(enfermedad);
+            }
+
+        } catch (SQLException s) {
+            s.printStackTrace();
+        }
+        System.out.println("Enfermedades encontradas: " + enfermedades.size());
         return enfermedades;
     }
-  
+
     public Paciente buscarPacientePorId(int id) {
+        String sql = "SELECT * FROM paciente WHERE id_paciente = ?";
         Paciente paciente = null;
-        String sql = "SELECT * FROM paciente WHERE id = ?";
-        
-        try(PreparedStatement ps = ConnectionDB.getInstance().prepareStatement(sql)) {
+        try (PreparedStatement ps = ConnectionDB.getInstance().prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+            if (rs.next()) {
+                int idPaciente = rs.getInt("id_paciente");
                 String cedula = rs.getString("cedula");
-                String nombre = rs.getString("nombre"); 
-                String apellido = rs.getString("apellido");         
-                String direccion = rs.getString("direccion"); 
+                String nombre = rs.getString("nombre");
+                String apellido = rs.getString("apellido");
+                String direccion = rs.getString("direccion");
                 String email = rs.getString("email");
                 int edad = rs.getInt("edad");
                 String genero = rs.getString("genero");
                 int expediente = rs.getInt("expediente");
-                String ciudad = rs.getString("ciudad"); 
-                String estado = rs.getString("estado"); 
-                LocalDate fechaNacimiento = rs.getDate("fecha_nacimiento").toLocalDate(); 
-                String telefono = rs.getString("telefono"); ;
+                String ciudad = rs.getString("ciudad");
+                String estado = rs.getString("estado");
+                LocalDate fechaNacimiento = rs.getDate("fecha_nacimiento").toLocalDate();
+                String telefono = rs.getString("telefono");
                 String ocupacion = rs.getString("ocupacion");
-                
-                paciente = new Paciente(cedula, nombre, apellido, direccion, email, edad, genero,
-                                            expediente, ciudad, estado, fechaNacimiento, telefono, ocupacion);
+                paciente = new Paciente(idPaciente, cedula, nombre, apellido, direccion, email, edad, genero,
+                        expediente, ciudad, estado, telefono, fechaNacimiento, ocupacion);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(BaseDatos.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException e) {
+            throw new TecnicoException("Error al obtener la consulta en la base de datos", e);
         }
         return paciente;
     }
-    
-    public ArrayList<Paciente> obtenerPacientesPorCampo(String campo) {
-        ArrayList<Paciente> listPacientes = new ArrayList<>();
-        
-        try(PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("SELECT * FROM paciente WHERE nombre LIKE'%"+campo+"%'" + "OR apellido LIKE'%"+campo+"%'" + "ORDER BY nombre")) {
-           
+
+    public List<Paciente> obtenerPacientesPorCampo(String campo) {
+        List<Paciente> listPacientes = new ArrayList<>();
+        try (PreparedStatement pst = ConnectionDB.getInstance().
+                prepareStatement("SELECT * FROM paciente WHERE nombre LIKE'%" + campo + "%'" + "OR apellido LIKE'%" + campo + "%'" + "ORDER BY nombre")) {
             ResultSet rs = pst.executeQuery();
-            
-            while(rs.next()) {
+            while (rs.next()) {
                 int idPaciente = rs.getInt("id_paciente");
                 String cedula = rs.getString("cedula");
                 String nombre = rs.getString("nombre");
@@ -316,21 +322,20 @@ public class BaseDatos {
                 LocalDate fechaNacimiento = fechaNacimientoSQL.toLocalDate();
                 String telefono = rs.getString("telefono");
                 String ocupacion = rs.getString("ocupacion");
-                
-                Paciente paciente = new Paciente(idPaciente, cedula, nombre, apellido, direccion, email, edad, genero, expediente, ciudad, estado, telefono, fechaNacimiento, ocupacion);
+                Paciente paciente = new Paciente(idPaciente, cedula, nombre, apellido, direccion, email, edad, genero,
+                        expediente, ciudad, estado, telefono, fechaNacimiento, ocupacion);
                 listPacientes.add(paciente);
             }
-        }catch(SQLException s) {
+        } catch (SQLException s) {
             s.printStackTrace();
         }
         return listPacientes;
     }
-    
-    //Updating
-    public void actualizarPaciente(Paciente paciente) {
-        try (PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("UPDATE paciente SET nombre = ?, apellido = ?, direccion = ?, expediente = ?, ciudad = ?, genero = ?, "
-                + "ocupacion=?, estado=?, telefono=?, email = ? WHERE id_paciente = ?")) {
 
+    public void actualizarPaciente(Paciente paciente) {
+        try (PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("UPDATE paciente SET nombre = ?, apellido = ?, "
+                + "direccion = ?, expediente = ?, ciudad = ?, genero = ?, "
+                + "ocupacion=?, estado=?, telefono=?, email = ? WHERE id_paciente = ?")) {
             pst.setString(1, paciente.getNombre());
             pst.setString(2, paciente.getApellido());
             pst.setString(3, paciente.getDireccion());
@@ -344,20 +349,17 @@ public class BaseDatos {
             pst.setInt(11, paciente.getIdPaciente());
             pst.executeUpdate();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al actualizar paciente: " + e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+            throw new TecnicoException("Error al actualizar en la base de datos", e);
         }
     }
-    
-    public void deletePaciente(int id) {
-        try(PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("DELETE FROM paciente WHERE id_paciente = ?")) {
 
+    public void deletePaciente(int id) {
+        try (PreparedStatement pst = ConnectionDB.getInstance().prepareStatement("DELETE FROM paciente WHERE id_paciente = ?")) {
             pst.setInt(1, id);
             pst.executeUpdate();
-
         } catch (SQLException s) {
             s.printStackTrace();
-        } 
+        }
     }
 
 }

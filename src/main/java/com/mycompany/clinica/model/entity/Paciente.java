@@ -42,8 +42,8 @@ public class Paciente {
         this.ocupacion = ocupacion;
     }
 
-    public Paciente(int idPaciente, String cedula, String nombre, String apellido, String direccion, String email, int edad, String genero, int expediente, 
-            String ciudad, String estado, String telefono, LocalDate fechaNacimiento, String ocupacion) {
+    public Paciente(int idPaciente, String cedula, String nombre, String apellido, String direccion, String email, int edad,
+            String genero, int expediente, String ciudad, String estado, String telefono, LocalDate fechaNacimiento, String ocupacion) {
         this.idPaciente = idPaciente;
         this.cedula = cedula;
         this.nombre = nombre;
@@ -67,7 +67,6 @@ public class Paciente {
         this.genero = genero;
         this.ciudad = ciudad;
         this.expediente = expediente;
-        this.email = email;
     }
    
     public int getIdPaciente() {

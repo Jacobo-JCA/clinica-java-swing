@@ -1,19 +1,22 @@
 package com.mycompany.clinica.view.gui;
-
-import com.mycompany.clinica.config.ControllerFactory;
+import com.mycompany.clinica.common.SesionContexto;
 import com.mycompany.clinica.controller.SignoVitalController;
 import com.mycompany.clinica.execption.ManejadorError;
 import com.mycompany.clinica.execption.ValidacionException;
 import com.mycompany.clinica.model.entity.SignosVitales;
+import com.mycompany.clinica.common.MensajeInformativo;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
 
 public class SignosFrame extends javax.swing.JDialog {
-    private SignoVitalController signoVitalController;
+    private SignoVitalController signosController;
+    private SesionContexto sesionContexto;
     
-    public SignosFrame(java.awt.Frame parent, boolean modal) {
+    public SignosFrame(java.awt.Frame parent, boolean modal, SignoVitalController signoVitalController, SesionContexto sesionContexto) {
         super(parent, modal);
+        this.signosController = signoVitalController;
+        this.sesionContexto = sesionContexto;
         initComponents();
     }
 
@@ -38,6 +41,7 @@ public class SignosFrame extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel1.setText("Presion Arterial:");
 
         textArterial.addActionListener(new java.awt.event.ActionListener() {
@@ -46,8 +50,10 @@ public class SignosFrame extends javax.swing.JDialog {
             }
         });
 
+        jLabel2.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel2.setText("Frecuencia Cardiaca: ");
 
+        jLabel3.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel3.setText("Frecuencia Respiratoria:");
 
         textRespiratoria.addActionListener(new java.awt.event.ActionListener() {
@@ -56,8 +62,10 @@ public class SignosFrame extends javax.swing.JDialog {
             }
         });
 
+        jLabel4.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel4.setText("Temperatura:");
 
+        jLabel5.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel5.setText("Peso:");
 
         textPeso.addActionListener(new java.awt.event.ActionListener() {
@@ -66,8 +74,10 @@ public class SignosFrame extends javax.swing.JDialog {
             }
         });
 
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Talla:");
 
+        jLabel7.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel7.setText("Descripcion:");
 
         btnGuardarSignos.setText("Guardar");
@@ -82,32 +92,41 @@ public class SignosFrame extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(37, 37, 37)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textCardiaca, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textArterial, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textRespiratoria, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textTemperatura, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(114, 114, 114)
+                        .addGap(135, 135, 135)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(textTalla, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textPeso, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(textTalla, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
-                                .addComponent(textPeso))
-                            .addComponent(textDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 103, Short.MAX_VALUE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(37, 37, 37)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(37, 37, 37)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(29, 29, 29)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(textCardiaca, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(textArterial, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(textRespiratoria, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(textTemperatura, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(textDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(80, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnGuardarSignos, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -132,24 +151,24 @@ public class SignosFrame extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(textTemperatura, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(textPeso, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(textTalla)))
-                .addGap(29, 29, 29)
+                        .addGap(35, 35, 35)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textPeso, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(textDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(51, 51, 51)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(textTalla, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(52, 52, 52)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
                 .addComponent(btnGuardarSignos, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
@@ -164,39 +183,31 @@ public class SignosFrame extends javax.swing.JDialog {
     }//GEN-LAST:event_textPesoActionPerformed
 
     private void btnGuardarSignosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarSignosActionPerformed
-        ControllerFactory controller = ControllerFactory.getInstance();
         try {
-            SignosVitales signosVitales = obtenerCamposSignoVital();
-            if (signosVitales != null) {
-                controller.getVistaPaciente().mostrarConfirmacion("Signos vitales insertados correctamente!");
-                this.dispose();
-            }
+            String[] campos = obtenerCamposSignoVital();
+            SignosVitales signos = signosController.convertirDatosSignoVital(campos);
+            sesionContexto.setSignosVitales(signos);
+            MensajeInformativo.mostrarConfirmacion("Se han ingresado los datos de Signos Vitales!!");
+            this.dispose();
         } catch (ValidacionException e) {
-            ManejadorError.obtenerMensajeError(e);
-            controller.getVistaPaciente().mostrarError(e.getMessage());
+            MensajeInformativo.mostrarError(e.getMessage());
         }
     }//GEN-LAST:event_btnGuardarSignosActionPerformed
-
-    public SignosVitales obtenerCamposSignoVital() {
-        List<String> campos = Arrays.asList(
-                textArterial.getText(), 
-                textCardiaca.getText(), 
-                textRespiratoria.getText(), 
-                textTemperatura.getText(), 
-                textPeso.getText(), 
-                textTalla.getText(), 
-                textDescripcion.getText());
-        if(campos.stream().anyMatch(String::isEmpty)) {
+    
+    private String[] obtenerCamposSignoVital() {
+        String[] campos = {
+            textArterial.getText(), 
+            textCardiaca.getText(), 
+            textRespiratoria.getText(), 
+            textTemperatura.getText(), 
+            textPeso.getText(), 
+            textTalla.getText(), 
+            textDescripcion.getText()
+        };
+        if(Arrays.stream(campos).anyMatch(String::isEmpty)) {
             throw new ValidacionException("Todos los campos son requeridos");
         }
-        return signoVitalController.convertirFormularioASignoVital(
-                campos.get(0),
-                campos.get(1),
-                campos.get(2),
-                campos.get(3),
-                campos.get(4),
-                campos.get(5),
-                campos.get(6));
+        return campos;
     }
     
     private void textRespiratoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textRespiratoriaActionPerformed
@@ -220,11 +231,5 @@ public class SignosFrame extends javax.swing.JDialog {
     private javax.swing.JTextField textTalla;
     private javax.swing.JTextField textTemperatura;
     // End of variables declaration//GEN-END:variables
-    public void setSignoVitalController(SignoVitalController signoVitalController) {
-        this.signoVitalController = signoVitalController;
-    }
 
-//    public void setVistaFrame(VistaPaciente<PacienteFrame> vistaFrame) {
-//        this.vistaFrame = vistaFrame;
-//    }
 }

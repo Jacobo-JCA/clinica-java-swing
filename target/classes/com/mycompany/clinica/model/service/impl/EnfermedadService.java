@@ -1,13 +1,10 @@
 package com.mycompany.clinica.model.service.impl;
 
-import com.mycompany.clinica.execption.ManejadorError;
 import com.mycompany.clinica.execption.NegocioException;
-import com.mycompany.clinica.execption.TecnicoException;
-import com.mycompany.clinica.execption.ValidacionException;
 import com.mycompany.clinica.model.data.BaseDatos;
 import com.mycompany.clinica.model.entity.Enfermedades;
 import com.mycompany.clinica.model.service.CrudEnfermedad;
-import java.util.ArrayList;
+import java.util.List;
 
 public class EnfermedadService implements CrudEnfermedad {
     private final BaseDatos db = BaseDatos.getInstanceDB();
@@ -38,19 +35,16 @@ public class EnfermedadService implements CrudEnfermedad {
     }
     
     @Override
-    public void guardar(Enfermedades enfermedad, int idPaciente) {
+    public int guardar(Enfermedades enfermedad, int idPaciente) {
         String mensaje = validarCampos(enfermedad);
         if (mensaje != null) {
             throw new NegocioException(mensaje);
         }
-        db.insertEnfermedades(enfermedad, idPaciente);
+        return db.insertEnfermedades(enfermedad, idPaciente);
     }
 
     @Override
-    public ArrayList<Enfermedades> obtenerEnfermedades(int idPaciente) {
-        return null;
+    public List<Enfermedades> obtenerEnfermedades(int idPaciente) {
+        return db.obtenerEnfermedades(idPaciente);
     }
-
-    
-    
 }

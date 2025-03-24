@@ -11,8 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.WindowConstants;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -107,7 +105,6 @@ public class PrintFrame extends javax.swing.JFrame {
         } catch (SQLException sq) {
             sq.printStackTrace();
         }
-
     }//GEN-LAST:event_btnImprimirRecetaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
