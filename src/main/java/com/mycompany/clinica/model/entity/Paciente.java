@@ -2,6 +2,7 @@ package com.mycompany.clinica.model.entity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Paciente {   
     private int idPaciente;
@@ -18,8 +19,8 @@ public class Paciente {
     private String telefono;
     private LocalDate fechaNacimiento;
     private String ocupacion;
-    private ArrayList<Enfermedades> listEnfermedades = new ArrayList<>();
-    private ArrayList<Consulta> listConsultas = new ArrayList<>();
+    private List<Enfermedades> listEnfermedades = new ArrayList<>();
+    private List<Consulta> listConsultas = new ArrayList<>();
     
     public Paciente() {
     }
@@ -181,11 +182,11 @@ public class Paciente {
         this.ocupacion = ocupacion;
     }
 
-    public ArrayList<Enfermedades> getListEnfermedades() {
+    public List<Enfermedades> getListEnfermedades() {
         return this.listEnfermedades;
     }
 
-    public void setListEnfermedades(ArrayList<Enfermedades> listEnfermedades) {
+    public void setListEnfermedades(List<Enfermedades> listEnfermedades) {
         this.listEnfermedades = listEnfermedades;
     }
 
@@ -193,11 +194,11 @@ public class Paciente {
         this.listEnfermedades.add(enfermedad);
     }
 
-    public ArrayList<Consulta> getListConsultas() {
+    public List<Consulta> getListConsultas() {
         return listConsultas;
     }
 
-    public void setListConsultas(ArrayList<Consulta> listConsultas) {
+    public void setListConsultas(List<Consulta> listConsultas) {
         this.listConsultas = listConsultas;
     }
     

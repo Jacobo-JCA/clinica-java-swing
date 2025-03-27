@@ -5,9 +5,11 @@ import com.mycompany.clinica.view.gui.utils.ControllerFactory;
 import com.mycompany.clinica.controller.PacienteController;
 import com.mycompany.clinica.controller.RegistroControllerCentral;
 import com.mycompany.clinica.common.MensajeInformativo;
+import com.mycompany.clinica.model.entity.Paciente;
 import java.beans.PropertyVetoException;
 import java.time.Duration;
 import java.time.Instant;
+import javax.swing.JFrame;
 import javax.swing.UIManager;
 
 /**
@@ -17,6 +19,7 @@ import javax.swing.UIManager;
 public class Principal extends javax.swing.JFrame {
     private PacienteFrame vistaFrame;
     private PacienteController pacienteController;
+    PrintFrame printFrame;
 
     public Principal() {
         initComponents();
@@ -162,14 +165,14 @@ public class Principal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnHistorialActionPerformed
 
-    //PrintFrame printFrame;
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-//        if (pacienteFrame != null && pacienteFrame.pacienteSeleccionado != null) {
-//            printFrame = new PrintFrame(pacienteFrame.pacienteSeleccionado);
-//            printFrame.setVisible(true);
-//        } else {
-//            JOptionPane.showMessageDialog(null, "Seleccione un Paciente antes de imprimir la Receta!", "Información", JOptionPane.INFORMATION_MESSAGE);
-//        }
+        if (vistaFrame != null) {
+            printFrame = new PrintFrame();
+            printFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            printFrame.setVisible(true);
+        } else {
+            MensajeInformativo.mostrarError("Seleccione un Paciente antes de imprimir la Receta!");
+        }
     }//GEN-LAST:event_btnPrintActionPerformed
     
     /**

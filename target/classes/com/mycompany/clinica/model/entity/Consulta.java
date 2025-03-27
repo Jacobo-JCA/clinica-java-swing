@@ -29,6 +29,13 @@ public class Consulta {
         this.indicaciones = indicaciones;
         this.signosVitales = new ArrayList<>();
     }
+    
+    public Consulta(String diagnostico, String receta, String indicaciones, LocalDate fechaConsulta) {
+        this.diagnostico = diagnostico;
+        this.receta = receta;
+        this.indicaciones = indicaciones;
+        this.fechaConsulta = fechaConsulta;
+    }
 
     public int getIdConsulta() {
         return idConsulta;

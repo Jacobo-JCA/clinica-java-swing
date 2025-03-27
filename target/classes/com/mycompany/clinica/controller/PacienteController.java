@@ -110,9 +110,6 @@ public class PacienteController {
     public void procesarDatosPaciente(List<String> datos) {
         try {
             Paciente paciente = convertirFormularioAEntidad(datos);
-            if(paciente == null) {
-                return;
-            }
             Optional<Boolean> resultado = esNuevo(paciente);
             if (resultado.isEmpty()) {
                 return;
@@ -124,7 +121,8 @@ public class PacienteController {
             }
             cargarTodosPacientes();
         } catch (Exception e) {
-            ManejadorError.obtenerMensajeError(e);
+            String message = ManejadorError.obtenerMensajeError(e);
+            MensajeInformativo.mostrarError(message);
         }
     }
 

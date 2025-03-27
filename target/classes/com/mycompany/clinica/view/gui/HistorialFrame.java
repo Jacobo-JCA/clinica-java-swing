@@ -12,7 +12,6 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 public class HistorialFrame extends javax.swing.JFrame {
-
     private final RegistroControllerCentral registroCentral;
     private final DefaultTableModel modeloTablaSignos = new DefaultTableModel();
     private final DefaultTableModel modeloTablaConsulta = new DefaultTableModel();

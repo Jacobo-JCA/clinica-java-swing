@@ -271,6 +271,31 @@ public class BaseDatos {
         return enfermedades;
     }
 
+    private void obtenerConsultaRelacionada(Paciente paciente) {
+        int id = paciente.getIdPaciente();
+        if (paciente != null) {
+            List<Consulta> consultas = new ArrayList<>();
+            String sqlConsulta = "SELECT diagnostico, receta, indicaciones, fecha_consulta FROM consulta WHERE id_paciente = ?";
+            try (PreparedStatement psConsulta = ConnectionDB.getInstance().prepareStatement(sqlConsulta)) {
+                psConsulta.setInt(1, id);
+                ResultSet rsConsulta = psConsulta.executeQuery();
+                while (rsConsulta.next()) {
+                    String diagnostico = rsConsulta.getString("diagnostico");
+                    String receta = rsConsulta.getString("receta");
+                    String indicaciones = rsConsulta.getString("indicaciones");
+                    Date fechaSql = rsConsulta.getDate("fecha_consulta");
+                    LocalDate fechaConsulta = fechaSql.toLocalDate();
+                    // Asegúrate de tener un constructor o método en Consulta que reciba estos datos
+                    Consulta consulta = new Consulta(diagnostico, receta, indicaciones, fechaConsulta);
+                    consultas.add(consulta);
+                }
+            } catch (SQLException e) {
+                throw new TecnicoException("Error al obtener las consultas del paciente", e);
+            }
+            paciente.setListConsultas(consultas);
+        }
+    }
+
     public Paciente buscarPacientePorId(int id) {
         String sql = "SELECT * FROM paciente WHERE id_paciente = ?";
         Paciente paciente = null;
@@ -298,6 +323,7 @@ public class BaseDatos {
         } catch (SQLException e) {
             throw new TecnicoException("Error al obtener la consulta en la base de datos", e);
         }
+        obtenerConsultaRelacionada(paciente);
         return paciente;
     }
 

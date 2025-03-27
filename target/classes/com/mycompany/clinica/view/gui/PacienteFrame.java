@@ -11,10 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author jacob
- */
 public class PacienteFrame extends javax.swing.JInternalFrame {
     private PacienteController pacienteController;
     private DefaultTableModel modeloTabla;
