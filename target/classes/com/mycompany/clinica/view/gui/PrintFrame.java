@@ -2,14 +2,12 @@ package com.mycompany.clinica.view.gui;
 
 import com.mycompany.clinica.common.MensajeInformativo;
 import com.mycompany.clinica.common.SesionContexto;
-import com.mycompany.clinica.model.entity.Consulta;
-import com.mycompany.clinica.model.entity.Paciente;
-import java.io.InputStream;
+import com.mycompany.clinica.entity.Consulta;
+import com.mycompany.clinica.entity.Paciente;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.WindowConstants;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;

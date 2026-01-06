@@ -1,7 +1,7 @@
 package com.mycompany.clinica.view.gui.utils;
 
-import com.mycompany.clinica.model.entity.Consulta;
-import com.mycompany.clinica.model.entity.Enfermedades;
+import com.mycompany.clinica.entity.Consulta;
+import com.mycompany.clinica.entity.Enfermedades;
 import java.util.List;
 
 public class HistorialData {

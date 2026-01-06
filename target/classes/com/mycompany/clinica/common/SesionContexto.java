@@ -1,9 +1,9 @@
 package com.mycompany.clinica.common;
 
-import com.mycompany.clinica.model.entity.Consulta;
-import com.mycompany.clinica.model.entity.Enfermedades;
-import com.mycompany.clinica.model.entity.Paciente;
-import com.mycompany.clinica.model.entity.SignosVitales;
+import com.mycompany.clinica.entity.Consulta;
+import com.mycompany.clinica.entity.Enfermedades;
+import com.mycompany.clinica.entity.Paciente;
+import com.mycompany.clinica.entity.SignosVitales;
 
 public class SesionContexto {
     private Paciente paciente;

@@ -2,7 +2,7 @@ package com.mycompany.clinica.view.gui;
 
 import com.mycompany.clinica.controller.ConsultaController;
 import com.mycompany.clinica.execption.ValidacionException;
-import com.mycompany.clinica.model.entity.Consulta;
+import com.mycompany.clinica.entity.Consulta;
 import com.mycompany.clinica.common.MensajeInformativo;
 import java.util.Arrays;
 import java.util.List;

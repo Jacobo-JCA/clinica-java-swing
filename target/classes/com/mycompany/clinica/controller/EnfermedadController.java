@@ -2,8 +2,8 @@ package com.mycompany.clinica.controller;
 
 import com.mycompany.clinica.common.SesionContexto;
 import com.mycompany.clinica.execption.NegocioException;
-import com.mycompany.clinica.model.entity.Enfermedades;
-import com.mycompany.clinica.model.service.CrudEnfermedad;
+import com.mycompany.clinica.entity.Enfermedades;
+import com.mycompany.clinica.service.CrudEnfermedad;
 import com.mycompany.clinica.view.gui.EnfermedadesFrame;
 
 import java.util.List;

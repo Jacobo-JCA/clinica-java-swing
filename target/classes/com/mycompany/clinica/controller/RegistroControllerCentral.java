@@ -1,9 +1,9 @@
 package com.mycompany.clinica.controller;
 
 import com.mycompany.clinica.common.SesionContexto;
-import com.mycompany.clinica.model.entity.Consulta;
-import com.mycompany.clinica.model.entity.Enfermedades;
-import com.mycompany.clinica.model.entity.SignosVitales;
+import com.mycompany.clinica.entity.Consulta;
+import com.mycompany.clinica.entity.Enfermedades;
+import com.mycompany.clinica.entity.SignosVitales;
 import java.util.List;
 
 public class RegistroControllerCentral {

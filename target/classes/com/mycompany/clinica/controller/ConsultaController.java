@@ -1,9 +1,9 @@
 package com.mycompany.clinica.controller;
 
-import com.mycompany.clinica.model.entity.Consulta;
+import com.mycompany.clinica.entity.Consulta;
 import com.mycompany.clinica.common.SesionContexto;
 import com.mycompany.clinica.execption.NegocioException;
-import com.mycompany.clinica.model.service.CrudConsulta;
+import com.mycompany.clinica.service.CrudConsulta;
 import com.mycompany.clinica.view.gui.ConsultaFrame;
 import java.time.LocalDate;
 import java.util.List;

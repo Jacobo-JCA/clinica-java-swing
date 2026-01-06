@@ -3,7 +3,7 @@ package com.mycompany.clinica.view.gui;
 import com.mycompany.clinica.common.SesionContexto;
 import com.mycompany.clinica.controller.EnfermedadController;
 import com.mycompany.clinica.execption.ValidacionException;
-import com.mycompany.clinica.model.entity.Enfermedades;
+import com.mycompany.clinica.entity.Enfermedades;
 import com.mycompany.clinica.common.MensajeInformativo;
 import java.util.Arrays;
 import javax.swing.JOptionPane;

@@ -5,7 +5,7 @@ import com.mycompany.clinica.view.gui.utils.ControllerFactory;
 import com.mycompany.clinica.controller.PacienteController;
 import com.mycompany.clinica.controller.RegistroControllerCentral;
 import com.mycompany.clinica.common.MensajeInformativo;
-import com.mycompany.clinica.model.entity.Paciente;
+import com.mycompany.clinica.entity.Paciente;
 import java.beans.PropertyVetoException;
 import java.time.Duration;
 import java.time.Instant;

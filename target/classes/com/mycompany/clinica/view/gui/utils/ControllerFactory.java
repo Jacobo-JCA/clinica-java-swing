@@ -6,15 +6,15 @@ import com.mycompany.clinica.controller.EnfermedadController;
 import com.mycompany.clinica.controller.PacienteController;
 import com.mycompany.clinica.controller.RegistroControllerCentral;
 import com.mycompany.clinica.controller.SignoVitalController;
-import com.mycompany.clinica.model.service.CrudConsulta;
-import com.mycompany.clinica.model.service.CrudEnfermedad;
-import com.mycompany.clinica.model.service.CrudPaciente;
-import com.mycompany.clinica.model.service.CrudSignosVitales;
+import com.mycompany.clinica.service.CrudConsulta;
+import com.mycompany.clinica.service.CrudEnfermedad;
+import com.mycompany.clinica.service.CrudPaciente;
+import com.mycompany.clinica.service.CrudSignosVitales;
 
-import com.mycompany.clinica.model.service.impl.ConsultaService;
-import com.mycompany.clinica.model.service.impl.EnfermedadService;
-import com.mycompany.clinica.model.service.impl.PacienteService;
-import com.mycompany.clinica.model.service.impl.SignosVitalesService;
+import com.mycompany.clinica.service.impl.ConsultaService;
+import com.mycompany.clinica.service.impl.EnfermedadService;
+import com.mycompany.clinica.service.impl.PacienteService;
+import com.mycompany.clinica.service.impl.SignosVitalesService;
 import com.mycompany.clinica.view.gui.PacienteFrame;
 
 public class ControllerFactory {

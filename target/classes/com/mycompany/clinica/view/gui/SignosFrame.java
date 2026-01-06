@@ -3,7 +3,7 @@ import com.mycompany.clinica.common.SesionContexto;
 import com.mycompany.clinica.controller.SignoVitalController;
 import com.mycompany.clinica.execption.ManejadorError;
 import com.mycompany.clinica.execption.ValidacionException;
-import com.mycompany.clinica.model.entity.SignosVitales;
+import com.mycompany.clinica.entity.SignosVitales;
 import com.mycompany.clinica.common.MensajeInformativo;
 import java.util.Arrays;
 import java.util.List;

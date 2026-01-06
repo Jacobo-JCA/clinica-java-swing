@@ -5,7 +5,7 @@ import com.mycompany.clinica.controller.ConsultaController;
 import com.mycompany.clinica.controller.EnfermedadController;
 import com.mycompany.clinica.controller.PacienteController;
 import com.mycompany.clinica.controller.SignoVitalController;
-import com.mycompany.clinica.model.entity.Paciente;
+import com.mycompany.clinica.entity.Paciente;
 import com.mycompany.clinica.common.MensajeInformativo;
 import java.util.Arrays;
 import java.util.List;
