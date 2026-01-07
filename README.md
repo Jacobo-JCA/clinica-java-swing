@@ -7,11 +7,11 @@ El sistema está pensado desde la perspectiva de un consultorio médico, garanti
 ---
 
 ###  Contexto del dominio
-El dominio se modela a partir de como el médico registra la informacion durante la cita médica.
+Modele el dominio a partir de como el médico registra la informacion durante la cita médica.
 
 - Gestiona pacientes y su información personal.
 - Registra individualmente un paciente pero luego puede asociarlo a la consulta y estado de salud.
-- Se registra cada consulta de manera independiente y posteriormente la asocia al paciente.
+- Almacena cada consulta de manera independiente y posteriormente la asocia al paciente.
 - El médico solo registra los signos vitales una vez por cita y estos quedan asociados a la consulta.
 - El estado de salud del paciente se maneja como un historial clínico general.
 - No se utiliza un historial de enfermedades estructurado; en su lugar, el sistema permite registrar el **Health Status** para campos mas generales, priorizando flexibilidad y simplicidad.
@@ -19,7 +19,7 @@ El dominio se modela a partir de como el médico registra la informacion durante
 ---
 
 ###  Modelo de datos (Base de Datos)
-El modelo de base de datos se diseñó a partir del dominio previamente definido.
+El modelo de base de datos que diseñó fue a partir del dominio previamente definido.
 
 - La relación 1:1 se implementa colocando la FK en SignosVitales apuntando a Consulta, con restricción UNIQUE. Esto garantiza que cada consulta tenga exactamente un registro de signos vitales y evita múltiples registros se asocien a la misma consulta.
 - Las relaciones de tipo 1:N se implementan colocando la FK en las tablas dependientes (Consultation y Health_Status). Esto garantiza que un mismo paciente pueda tener múltiples registros asociados: varias consultas a lo largo del tiempo y múltiples estados de salud. De esta forma, la DB asegura integridad referencial y permite mantener un historial completo sin duplicar información en la tabla principal de pacientes.
@@ -28,7 +28,7 @@ El modelo de base de datos se diseñó a partir del dominio previamente definido
 
 ###  Arquitectura del sistema
 
-El proyecto utiliza una **arquitectura en capas (Layered Architecture)**, organizada de la siguiente manera:
+En el proyecto utilicé una **arquitectura en capas (Layered Architecture)**, organizada de la siguiente manera:
 ```text
 ┌───────────────────────────────┐
 │        Presentation           │
@@ -53,18 +53,18 @@ El proyecto utiliza una **arquitectura en capas (Layered Architecture)**, organi
 
 #### Justificación de la arquitectura
 
-Se eligió una arquitectura en capas con el objetivo de:
+Elegí la arquitectura por capas con el objetivo de:
 
-- Separar claramente las responsabilidades de cada componente.
+- Poder separar claramente las responsabilidades de cada componente.
 - Aislar la lógica de negocio del acceso a datos y de la capa de presentación.
 - Facilitar el mantenimiento y la evolución del sistema.
 - Permitir que los cambios en una capa tengan el menor impacto posible en las demás.
 
-Internamente, el proyecto sigue el patrón **MVC**, de forma distribuida, ya que es un patrón de presentacion:
+Internamente, el proyecto sigue el patrón **MVC** de forma distribuida, ya que es un patrón de presentacion:
 - El **Model** corresponde a las entidades y reglas de negocio ubicadas en la capa de dominio.
 - La **View** y el **Controller** forman parte de la capa de presentación, encargada de la interacción con el usuario.
 
-Esta estructura favorece un diseño limpio, entendible y alineado con buenas prácticas de desarrollo backend.
+Esta estructura me permite tener un diseño limpio, entendible y alineado con buenas prácticas de desarrollo backend.
 
 ---
 
