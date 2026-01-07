@@ -19,7 +19,7 @@ Modele el dominio a partir de como el médico registra la informacion durante la
 ---
 
 ###  Modelo de datos (Base de Datos)
-El modelo de base de datos que diseñó fue a partir del dominio previamente definido.
+El modelo de base de datos que diseñé fue a partir del dominio previamente definido.
 
 - La relación 1:1 se implementa colocando la FK en SignosVitales apuntando a Consulta, con restricción UNIQUE. Esto garantiza que cada consulta tenga exactamente un registro de signos vitales y evita múltiples registros se asocien a la misma consulta.
 - Las relaciones de tipo 1:N se implementan colocando la FK en las tablas dependientes (Consultation y Health_Status). Esto garantiza que un mismo paciente pueda tener múltiples registros asociados: varias consultas a lo largo del tiempo y múltiples estados de salud. De esta forma, la DB asegura integridad referencial y permite mantener un historial completo sin duplicar información en la tabla principal de pacientes.
