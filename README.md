@@ -1,12 +1,12 @@
 <h2 align="center">Consultorio Médico – Sistema de Gestión del Historial del Paciente</h2>
 
-### 📌 Descripción del proyecto
+###  Descripción del proyecto
 Este proyecto tiene como objetivo permitir al usuario gestionar el historial clínico de un paciente, centralizando la información relacionada con sus consultas médicas, signos vitales y estado general de salud.
 El sistema está pensado desde la perspectiva de un consultorio médico, donde el enfoque está en el seguimiento del estado de salud del paciente a lo largo del tiempo.
 
 ---
 
-### 🧠 Contexto del dominio
+###  Contexto del dominio
 El dominio se modela a partir de como el médico registra la informacion durante la cita médica.
 
 - El sistema gestiona pacientes y su información personal.
@@ -18,7 +18,7 @@ El dominio se modela a partir de como el médico registra la informacion durante
 
 ---
 
-### 🗄️ Modelo de datos (Base de Datos)
+###  Modelo de datos (Base de Datos)
 El modelo de base de datos se diseñó a partir del dominio previamente definido.
 Algunas decisiones clave del modelado:
 
@@ -32,7 +32,7 @@ Algunas decisiones clave del modelado:
 
  ---
 
-### 🏗️ Arquitectura del sistema
+###  Arquitectura del sistema
 
 El proyecto utiliza una **arquitectura en capas (Layered Architecture)**, organizada de la siguiente manera:
 ```text
