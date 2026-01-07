@@ -2,7 +2,7 @@
 
 ###  Descripción del proyecto
 Este proyecto tiene como objetivo permitir al usuario gestionar el historial clínico de un paciente, centralizando la información relacionada con sus consultas médicas, signos vitales y estado general de salud.
-El sistema está pensado desde la perspectiva de un consultorio médico, donde el enfoque está en el seguimiento del estado de salud del paciente a lo largo del tiempo.
+El sistema está pensado desde la perspectiva de un consultorio médico, garantizando que el médico tenga acceso inmediato al historial del paciente de forma cronológica y estructurada.
 
 ---
 
