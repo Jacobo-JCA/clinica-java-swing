@@ -53,7 +53,7 @@ En el proyecto utilicé una **arquitectura limpia (Clean Architecture)**, organi
 
 #### Justificación de la arquitectura
 
-Elegí la arquitectura por capas con el objetivo de:
+Elegí la arquitectura limpia con el objetivo de:
 
 - Poder separar claramente las responsabilidades de cada componente.
 - Aislar la lógica de negocio del acceso a datos y de la capa de presentación.
