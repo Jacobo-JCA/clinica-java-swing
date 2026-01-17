@@ -15,8 +15,8 @@
     <build>
         <resources>
             <resource>
-            <directory>src/main/java</directory>
-        </resource>
+                <directory>src/main/java</directory>
+            </resource>
         </resources>
         <plugins>
             <plugin>
@@ -53,9 +53,9 @@
     <dependencies>
   
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.7.3</version>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>9.4.0</version>
         </dependency>
         
         <dependency>
@@ -87,6 +87,6 @@
             <artifactId>JTattoo</artifactId>
             <version>1.6.13</version>
         </dependency>
-</dependencies>
+    </dependencies>
 
 </project>
