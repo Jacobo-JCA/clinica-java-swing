@@ -28,7 +28,7 @@ El modelo de base de datos que diseñé fue a partir del dominio previamente def
 
 ###  Arquitectura del sistema
 
-En el proyecto utilicé una **arquitectura en capas (Layered Architecture)**, organizada de la siguiente manera:
+En el proyecto utilicé una **arquitectura limpia (Clean Architecture)**, organizada de la siguiente manera:
 ```text
 ┌───────────────────────────────┐
 │        Presentation           │
