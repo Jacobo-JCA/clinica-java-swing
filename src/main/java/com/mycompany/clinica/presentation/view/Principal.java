@@ -149,7 +149,7 @@ public class Principal extends javax.swing.JFrame {
         Instant fin = Instant.now();
         long tiempoui = Duration.between(inicio, fin).toMillis();
         System.out.println("Tiempos de carga de la UI: " + tiempoui + " ms");
-        patientController.cargarTodosPacientes();                       
+        patientController.getAllPatients();
     }//GEN-LAST:event_btnPacienteActionPerformed
 
     private void btnHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistorialActionPerformed

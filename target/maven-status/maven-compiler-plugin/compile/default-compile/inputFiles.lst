@@ -1,8 +1,8 @@
 D:\project-clinic\clinica-java-swing\src\main\java\com\mycompany\clinica\aplication\context\SesionContexto.java
-D:\project-clinic\clinica-java-swing\src\main\java\com\mycompany\clinica\aplication\service\ConsultationServiceImpl.java
-D:\project-clinic\clinica-java-swing\src\main\java\com\mycompany\clinica\aplication\service\HealthStatusServiceImpl.java
-D:\project-clinic\clinica-java-swing\src\main\java\com\mycompany\clinica\aplication\service\PatientServiceImpl.java
-D:\project-clinic\clinica-java-swing\src\main\java\com\mycompany\clinica\aplication\service\VitalSignsServiceImpl.java
+D:\project-clinic\clinica-java-swing\src\main\java\com\mycompany\clinica\aplication\usecase\ConsultationServiceImpl.java
+D:\project-clinic\clinica-java-swing\src\main\java\com\mycompany\clinica\aplication\usecase\HealthStatusServiceImpl.java
+D:\project-clinic\clinica-java-swing\src\main\java\com\mycompany\clinica\aplication\usecase\PatientServiceImpl.java
+D:\project-clinic\clinica-java-swing\src\main\java\com\mycompany\clinica\aplication\usecase\VitalSignsServiceImpl.java
 D:\project-clinic\clinica-java-swing\src\main\java\com\mycompany\clinica\aplication\util\ValidationUtil.java
 D:\project-clinic\clinica-java-swing\src\main\java\com\mycompany\clinica\domain\entity\Consultation.java
 D:\project-clinic\clinica-java-swing\src\main\java\com\mycompany\clinica\domain\entity\HealthStatus.java

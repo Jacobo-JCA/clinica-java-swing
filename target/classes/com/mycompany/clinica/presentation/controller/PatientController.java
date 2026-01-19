@@ -6,11 +6,11 @@ import com.mycompany.clinica.infrastructure.execption.ManejadorError;
 import com.mycompany.clinica.domain.entity.Patient;
 import com.mycompany.clinica.presentation.view.PatientFrame;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 import com.mycompany.clinica.domain.service.PatientService;
+import com.mycompany.clinica.infrastructure.execption.DatabaseException;
 import com.mycompany.clinica.infrastructure.execption.ValidationException;
 
 public class PatientController {
@@ -22,10 +22,12 @@ public class PatientController {
         this.patientService = patientService;
         this.patientFrame = patientFrame;
         this.patientFrame.addSelectedButtonListener(e -> selectionPatientTable());
-        this.patientFrame.addSaveButtonListener(e -> savePatient());
+        this.patientFrame.addSaveButtonListener(e ->{
+            savePatient();
+        });
     }
 
-    public void cargarTodosPacientes() {
+    public void getAllPatients() {
         GenericSwingWorker<List<Patient>> worker = new GenericSwingWorker<>(
                 () -> {
                     List<Patient> patients = patientService.getAllPatients();
@@ -54,19 +56,20 @@ public class PatientController {
 
         try {
             LocalDate dateBirth = LocalDate.parse(fieldsPatient.get(9));
-            Patient patient = new Patient(
-                fieldsPatient.get(0), 
-                fieldsPatient.get(1), 
-                fieldsPatient.get(2), 
-                fieldsPatient.get(3), 
-                fieldsPatient.get(4),  
-                fieldsPatient.get(5), 
-                Integer.parseInt(fieldsPatient.get(6)),
-                fieldsPatient.get(7), 
-                fieldsPatient.get(8), 
-                fieldsPatient.get(10),
-                dateBirth,
-                fieldsPatient.get(11));
+            Patient patient = new Patient.Builder()
+                        .dni(fieldsPatient.get(0))
+                        .firstName(fieldsPatient.get(1))
+                        .lastName(fieldsPatient.get(2))
+                        .address(fieldsPatient.get(3))
+                        .email(fieldsPatient.get(4))
+                        .gender(fieldsPatient.get(5))
+                        .medicalRecordNumber(Integer.parseInt(fieldsPatient.get(6)))
+                        .city(fieldsPatient.get(7))
+                        .state(fieldsPatient.get(8))
+                        .dateOfBirth(dateBirth)
+                        .phoneNumber(fieldsPatient.get(10))
+                        .occupation(fieldsPatient.get(11))
+                        .build();
             return Optional.of(patient);
         } catch (DateTimeParseException e) {
             patientFrame.showError("La fecha de nacimiento es inválida o no se a ingresado el campo..");
@@ -87,12 +90,13 @@ public class PatientController {
 //    }
 
     private void savePatient() {
+        System.out.println("savePatient() ejecutado");
         try {
             Patient patient = convertFieldsToEntity().orElseThrow(() -> 
                     new IllegalArgumentException("Datos Inválidos, todos los campos son obligatorios"));
             patientService.savePatient(patient);
             patientFrame.showConfirmationSuccessful("Paciente guardado correctamente");
-        } catch (ValidationException | IllegalArgumentException e) {
+        } catch (ValidationException | IllegalArgumentException | DatabaseException e) {
             patientFrame.showError("Error al guardar el paciente: " + e.getMessage());
         }
     }

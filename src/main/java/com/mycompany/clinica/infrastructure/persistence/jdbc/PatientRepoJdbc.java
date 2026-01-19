@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class PatientRepoJdbc implements PatientRepo {
 
@@ -46,7 +47,7 @@ public class PatientRepoJdbc implements PatientRepo {
                 throw new DatabaseException("ID no obtenido: ");
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Error al insertar el paciente en la base de datos!");
+            throw new DatabaseException("Error al insertar el paciente en la base de datos!" + e);
         }
     }
 
@@ -56,99 +57,133 @@ public class PatientRepoJdbc implements PatientRepo {
         try (PreparedStatement pst = DatabaseConnection.getInstance().prepareStatement("SELECT * FROM patient LIMIT 20")) {
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                int patient_id = rs.getInt("patient_id");
-                String dni  = rs.getString("dni ");
-                String first_name = rs.getString("first_name");
-                String last_name = rs.getString("last_name");
+                int patientId = rs.getInt("patient_id");
+                String dni = rs.getString("dni");
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
                 String address = rs.getString("address");
                 String email = rs.getString("email");
                 String gender = rs.getString("gender");
-                int medical_record_number = rs.getInt("medical_record_number");
+                int medicalRecordNumber = rs.getInt("medical_record_number");
                 String city = rs.getString("city");
                 String state = rs.getString("state");
-                String phone_number = rs.getString("phone_number");
-                java.sql.Date fechaNacimientoSQL = rs.getDate("date_of_birth ");
-                LocalDate dateBirth = fechaNacimientoSQL.toLocalDate();
+                String phoneNumber = rs.getString("phone_number");
+                LocalDate dateBirth = rs.getDate("date_of_birth").toLocalDate();
                 String occupation = rs.getString("occupation");
-                Patient paciente = new Patient(
-                        patient_id, 
-                        dni, 
-                        first_name, 
-                        last_name, address, 
-                        email, 
-                        Period.between(dateBirth, LocalDate.now()).getYears(), 
-                        gender,
-                        medical_record_number, 
-                        city, state, phone_number, 
-                        dateBirth, 
-                        occupation);
-                listPatients.add(paciente);
+
+                Patient patient = new Patient.Builder()
+                        .patientId(patientId)
+                        .dni(dni)
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .address(address)
+                        .email(email)
+                        .age(Period.between(dateBirth, LocalDate.now()).getYears())
+                        .gender(gender)
+                        .medicalRecordNumber(medicalRecordNumber)
+                        .city(city)
+                        .state(state)
+                        .dateOfBirth(dateBirth)
+                        .phoneNumber(phoneNumber)
+                        .occupation(occupation)
+                        .build();               
+                listPatients.add(patient);
             }
             return listPatients;
         } catch (SQLException e) {
-            throw new DatabaseException("Error al insertar el paciente en la base de datos!");
+            throw new DatabaseException("Error al obtener pacientes en base de datos!");
         }
     }
     
       @Override
     public Patient getPatientByDni(String dni) {
-        Patient paciente = null;
+        Patient patient = null;
         try (PreparedStatement pst = DatabaseConnection.getInstance().prepareStatement("SELECT * FROM paciente WHERE cedula = ?")) {
             pst.setString(1, dni);
             ResultSet rs = pst.executeQuery();
             if (rs.next()) {
-                int patient_id = rs.getInt("patient_id");
+                int patientId = rs.getInt("patient_id");
                 String dniPatient = rs.getString("dni");
-                String first_name = rs.getString("nombre");
-                String last_name = rs.getString("apellido");
+                String firstName = rs.getString("nombre");
+                String lastName = rs.getString("apellido");
                 String address = rs.getString("direccion");
                 String email = rs.getString("email");
                 String gender = rs.getString("genero");
-                int medical_record_number = rs.getInt("expediente");
+                int medicalRecordNumber = rs.getInt("expediente");
                 String city = rs.getString("ciudad");
                 String state = rs.getString("estado");
                 LocalDate dateBirth = rs.getDate("fecha_nacimiento").toLocalDate();
-                String phone_number = rs.getString("telefono");
+                String phoneNumber = rs.getString("telefono");
                 String occupation = rs.getString("ocupacion");
 
-                paciente = new Patient(patient_id, dniPatient, first_name, last_name, address, email, Period.between(dateBirth, LocalDate.now()).getYears(), gender,
-                        medical_record_number, city, state, phone_number, dateBirth, occupation);
+                patient = new Patient.Builder()
+                        .patientId(patientId)
+                        .dni(dniPatient)
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .address(address)
+                        .email(email)
+                        .age(Period.between(dateBirth, LocalDate.now()).getYears())
+                        .gender(gender)
+                        .medicalRecordNumber(medicalRecordNumber)
+                        .city(city)
+                        .state(state)
+                        .dateOfBirth(dateBirth)
+                        .phoneNumber(phoneNumber)
+                        .occupation(occupation)
+                        .build();
+                
             }
+            return patient;
         } catch (SQLException e) {
             throw new DatabaseException("Error al guardar en base de datos");
         }
-        return paciente;
     }
     
     @Override
     public Patient getPatientById(int patientId) {
         String sql = "SELECT * FROM paciente WHERE id_paciente = ?";
-        Patient paciente = null;
+        Patient patient = null;
         try (PreparedStatement ps = DatabaseConnection.getInstance().prepareStatement(sql)) {
             ps.setInt(1, patientId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int idPaciente = rs.getInt("id_paciente");
-                String cedula = rs.getString("cedula");
-                String nombre = rs.getString("nombre");
-                String apellido = rs.getString("apellido");
-                String direccion = rs.getString("direccion");
+                int id = rs.getInt("id_paciente");
+                String dniPatient = rs.getString("cedula");
+                String firstName = rs.getString("nombre");
+                String lastName = rs.getString("apellido");
+                String address = rs.getString("direccion");
                 String email = rs.getString("email");
-                String genero = rs.getString("genero");
-                int expediente = rs.getInt("expediente");
-                String ciudad = rs.getString("ciudad");
-                String estado = rs.getString("estado");
+                String gender = rs.getString("genero");
+                int medicalRecordNumber = rs.getInt("expediente");
+                String city = rs.getString("ciudad");
+                String state = rs.getString("estado");
                 LocalDate dateBirth = rs.getDate("fecha_nacimiento").toLocalDate();
-                String telefono = rs.getString("telefono");
-                String ocupacion = rs.getString("ocupacion");
-                paciente = new Patient(idPaciente, cedula, nombre, apellido, direccion, email, Period.between(dateBirth, LocalDate.now()).getYears(), genero,
-                        expediente, ciudad, estado, telefono, dateBirth, ocupacion);
+                String phoneNumber = rs.getString("telefono");
+                String occupation = rs.getString("ocupacion");
+
+                patient = new Patient.Builder()
+                        .patientId(id)
+                        .dni(dniPatient)
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .address(address)
+                        .email(email)
+                        .age(Period.between(dateBirth, LocalDate.now()).getYears())
+                        .gender(gender)
+                        .medicalRecordNumber(medicalRecordNumber)
+                        .city(city)
+                        .state(state)
+                        .dateOfBirth(dateBirth)
+                        .phoneNumber(phoneNumber)
+                        .occupation(occupation)
+                        .build();
             }
         } catch (SQLException e) {
             throw new DatabaseException("Error al obtener el paciente en la base de datos");
         }
 //        obtenerConsultaRelacionada(paciente);
-        return paciente;
+        return patient;
     }
 
     @Override
@@ -158,23 +193,38 @@ public class PatientRepoJdbc implements PatientRepo {
                 prepareStatement("SELECT * FROM paciente WHERE nombre LIKE'%" + field + "%'" + "OR apellido LIKE'%" + field + "%'" + "ORDER BY nombre")) {
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                int idPaciente = rs.getInt("id_paciente");
-                String cedula = rs.getString("cedula");
-                String nombre = rs.getString("nombre");
-                String apellido = rs.getString("apellido");
-                String direccion = rs.getString("direccion");
+                int patientId = rs.getInt("id_paciente");
+                String dniPatient = rs.getString("cedula");
+                String firstName = rs.getString("nombre");
+                String lastName = rs.getString("apellido");
+                String address = rs.getString("direccion");
                 String email = rs.getString("email");
-                String genero = rs.getString("genero");
-                int expediente = rs.getInt("expediente");
-                String ciudad = rs.getString("ciudad");
-                String estado = rs.getString("estado");
+                String gender = rs.getString("genero");
+                int medicalRecordNumber = rs.getInt("expediente");
+                String city = rs.getString("ciudad");
+                String state = rs.getString("estado");
                 java.sql.Date fechaNacimientoSQL = rs.getDate("fecha_nacimiento");
                 LocalDate dateBirth = fechaNacimientoSQL.toLocalDate();
-                String telefono = rs.getString("telefono");
-                String ocupacion = rs.getString("ocupacion");
-                Patient paciente = new Patient(idPaciente, cedula, nombre, apellido, direccion, email, Period.between(dateBirth, LocalDate.now()).getYears(), genero,
-                        expediente, ciudad, estado, telefono, dateBirth, ocupacion);
-                listPacientes.add(paciente);
+                String phoneNumber = rs.getString("telefono");
+                String occupation = rs.getString("ocupacion");
+
+                Patient patient = new Patient.Builder()
+                        .patientId(patientId)
+                        .dni(dniPatient)
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .address(address)
+                        .email(email)
+                        .age(Period.between(dateBirth, LocalDate.now()).getYears())
+                        .gender(gender)
+                        .medicalRecordNumber(medicalRecordNumber)
+                        .city(city)
+                        .state(state)
+                        .dateOfBirth(dateBirth)
+                        .phoneNumber(phoneNumber)
+                        .occupation(occupation)
+                        .build();
+                listPacientes.add(patient);
             }
         } catch (SQLException s) {
             throw new DatabaseException("Error al obtener los pacientes en base de datos");

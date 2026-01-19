@@ -1,4 +1,4 @@
-package com.mycompany.clinica.aplication.service;
+package com.mycompany.clinica.aplication.usecase;
 
 import com.mycompany.clinica.infrastructure.execption.NegocioException;
 import com.mycompany.clinica.domain.entity.VitalSigns;

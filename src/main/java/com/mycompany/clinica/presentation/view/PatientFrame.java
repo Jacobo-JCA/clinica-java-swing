@@ -19,11 +19,11 @@ public class PatientFrame extends javax.swing.JInternalFrame implements View {
     public PatientFrame() {
         modeloTabla = new DefaultTableModel();
         initComponents();
-        cargarModeloTabla();
+        loadTable();
         this.setSize(1200, 710); 
     }
     
-    private void cargarModeloTabla() {
+    private void loadTable() {
         tablaPaciente.setModel(modeloTabla);
         modeloTabla.addColumn("ID");
         modeloTabla.addColumn("Nombre");
