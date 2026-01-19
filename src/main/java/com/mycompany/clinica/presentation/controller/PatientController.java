@@ -101,7 +101,7 @@ public class PatientController {
         }
     }
 
-    private void actualizarPacienteCompleto(Patient paciente) {
+    private void updatePatient(Patient paciente) {
 //        pacienteService.actualizar(paciente);
 //        sesionContexto.setPaciente(paciente);
 //        registroCentral.guardarRegistroCompleto();

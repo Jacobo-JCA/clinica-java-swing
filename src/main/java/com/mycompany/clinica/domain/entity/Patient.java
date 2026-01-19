@@ -7,21 +7,21 @@ import java.util.List;
 
 public class Patient {
     private int patientId;
-    private String dni;
-    private String firstName;
-    private String lastName;
-    private String address;
-    private String email;
-    private int age;
-    private String gender;
-    private int medicalRecordNumber;
-    private String city;
-    private String state;
-    private String phoneNumber;
-    private LocalDate dateOfBirth;
-    private String occupation;
-    private List<Consultation> consultationsList;
-    private List<HealthStatus> healthStatusList;
+    private final String dni;
+    private final String firstName;
+    private final String lastName;
+    private final String address;
+    private final String email;
+    private final int age;
+    private final String gender;
+    private final int medicalRecordNumber;
+    private final String city;
+    private final String state;
+    private final String phoneNumber;
+    private final LocalDate dateOfBirth;
+    private final String occupation;
+    private final List<Consultation> consultationsList;
+    private final List<HealthStatus> healthStatusList;
     
     private Patient(Builder builder) {
         this.patientId = builder.patientId;
