@@ -28,7 +28,7 @@ El modelo de base de datos que diseñé fue a partir del dominio previamente def
 
 ###  Arquitectura del sistema
 
-En el proyecto utilicé una **arquitectura en capas (Layered Architecture)**, organizada de la siguiente manera:
+En el proyecto utilicé una **arquitectura limpia (Clean Architecture)**, organizada de la siguiente manera:
 ```text
 ┌───────────────────────────────┐
 │        Presentation           │
@@ -53,7 +53,7 @@ En el proyecto utilicé una **arquitectura en capas (Layered Architecture)**, or
 
 #### Justificación de la arquitectura
 
-Elegí la arquitectura por capas con el objetivo de:
+Elegí la arquitectura limpia con el objetivo de:
 
 - Poder separar claramente las responsabilidades de cada componente.
 - Aislar la lógica de negocio del acceso a datos y de la capa de presentación.
