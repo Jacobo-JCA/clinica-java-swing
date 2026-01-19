@@ -63,7 +63,7 @@ public class PatientServiceImpl implements PatientService {
     public void updatePatient(Patient patient) {
         patientRepo.updatePatient(patient);
     }
-
+ 
     @Override
     public void deletePatient(int patientId) {
         patientRepo.deletePatient(patientId);

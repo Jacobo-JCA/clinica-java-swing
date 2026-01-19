@@ -3,7 +3,6 @@ package com.mycompany.clinica.presentation.view;
 import com.mycompany.clinica.presentation.view.utils.ControllerFactory;
 import com.mycompany.clinica.presentation.controller.ConsultationController;
 import com.mycompany.clinica.presentation.controller.HealthStatusController;
-import com.mycompany.clinica.presentation.controller.PatientController;
 import com.mycompany.clinica.presentation.controller.VitalSignsController;
 import com.mycompany.clinica.domain.entity.Patient;
 import com.mycompany.clinica.presentation.view.contract.View;
@@ -15,14 +14,14 @@ import javax.swing.table.DefaultTableModel;
 
 public class PatientFrame extends javax.swing.JInternalFrame implements View {
     private DefaultTableModel modeloTabla;
-    
+
     public PatientFrame() {
         modeloTabla = new DefaultTableModel();
         initComponents();
         loadTable();
-        this.setSize(1200, 710); 
+        this.setSize(1200, 710);
     }
-    
+
     private void loadTable() {
         tablaPaciente.setModel(modeloTabla);
         modeloTabla.addColumn("ID");
@@ -453,7 +452,7 @@ public class PatientFrame extends javax.swing.JInternalFrame implements View {
     public void addSelectedButtonListener(ActionListener listener) {
         btnSeleccionar.addActionListener(listener);
     }
-    
+
     public int getSelectedPatientId() {
         int row = tablaPaciente.getSelectedRow();
         if (row == -1) {
@@ -461,17 +460,17 @@ public class PatientFrame extends javax.swing.JInternalFrame implements View {
         }
         return (int) modeloTabla.getValueAt(row, 0);
     }
-    
+
     @Override
-    public void showError(String message) { 
-        NotificationMessage.showError(message); 
+    public void showError(String message) {
+        NotificationMessage.showError(message);
     }
-    
+
     @Override
     public void showConfirmationSuccessful(String message) {
         NotificationMessage.showConfirmationSuccessful(message);
     }
-    
+
     private void btnSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarActionPerformed
 
     }//GEN-LAST:event_btnSeleccionarActionPerformed
@@ -566,25 +565,25 @@ public class PatientFrame extends javax.swing.JInternalFrame implements View {
     public void addSaveButtonListener(ActionListener listener) {
         btnGuardarPaciente.addActionListener(listener);
     }
-     
+
     public List<String> getFieldsPatient() {
         List<String> fields = Arrays.asList(
-            campoCedula.getText(),
-            campoNombre.getText(),
-            campoApellido.getText(),
-            campoDireccion.getText(),
-            campoEmail.getText(),
-            campoGenero.getText(),
-            campoExpediente.getText(),
-            campoCiudad.getText(),
-            campoEstado.getText(),
-            campoFechaNacimiento.getText(),
-            campoTelefono.getText(),
-            campoOcuapacion.getText()
+                campoCedula.getText(),
+                campoNombre.getText(),
+                campoApellido.getText(),
+                campoDireccion.getText(),
+                campoEmail.getText(),
+                campoGenero.getText(),
+                campoExpediente.getText(),
+                campoCiudad.getText(),
+                campoEstado.getText(),
+                campoFechaNacimiento.getText(),
+                campoTelefono.getText(),
+                campoOcuapacion.getText()
         );
         return fields;
     }
-       
+
 //    private void eliminarPacienteTabla(Paciente paciente) {
 //         for (int i = 0; i < listaPacientes.size(); i++) {
 //            if (listaPacientes.get(i).getIdPaciente() == pacienteSeleccionado.getIdPaciente()) {
@@ -599,10 +598,9 @@ public class PatientFrame extends javax.swing.JInternalFrame implements View {
 //
 //        modeloTabla.fireTableDataChanged();
 //    }
-    
     private void limpiarTabla() {
         int numFilas = modeloTabla.getRowCount();
-        if(numFilas > 0) {
+        if (numFilas > 0) {
             for (int i = numFilas - 1; i >= 0; i--) {
                 modeloTabla.removeRow(i);
             }
@@ -651,7 +649,7 @@ public class PatientFrame extends javax.swing.JInternalFrame implements View {
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTable tablaPaciente;
     // End of variables declaration//GEN-END:variables
-    
+
     public void showPatientDetails(Patient patient) {
         campoCedula.setText(patient.getDni());
         campoNombre.setText(patient.getFirstName());
@@ -667,7 +665,7 @@ public class PatientFrame extends javax.swing.JInternalFrame implements View {
         campoOcuapacion.setText(patient.getOccupation());
     }
 
-    public void actualizarTabla(List<Patient> patients) {
+    public void updateTable(List<Patient> patients) {
         modeloTabla.setRowCount(0);
         for (Patient p : patients) {
             modeloTabla.addRow(new Object[]{
@@ -681,4 +679,20 @@ public class PatientFrame extends javax.swing.JInternalFrame implements View {
             });
         }
     }
+
+    public void updateRow(Patient updatedPatient) {
+        for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+            int id = (int) modeloTabla.getValueAt(i, 0); // columna 0 = patientId
+            if (id == updatedPatient.getPatientId()) {
+                modeloTabla.setValueAt(updatedPatient.getFirstName(), i, 1);
+                modeloTabla.setValueAt(updatedPatient.getLastName(), i, 2);
+                modeloTabla.setValueAt(updatedPatient.getGender(), i, 3);
+                modeloTabla.setValueAt(updatedPatient.getCity(), i, 4);
+                modeloTabla.setValueAt(updatedPatient.getMedicalRecordNumber(), i, 5);
+                modeloTabla.setValueAt(updatedPatient.getAge(), i, 6);
+                break;
+            }
+        }
+    }
+
 }
