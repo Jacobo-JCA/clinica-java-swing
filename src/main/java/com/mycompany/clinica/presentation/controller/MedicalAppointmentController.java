@@ -11,7 +11,6 @@ public class MedicalAppointmentController {
     private final MedicalAppointmentViewFX view;
     private final MedicalAppointmentService medicalAppointmentService;
 
-    // Paciente actual (obligatorio para las citas)
     private int patientId;
 
     public MedicalAppointmentController(
@@ -27,18 +26,12 @@ public class MedicalAppointmentController {
         loadAppointments();
     }
 
-    // ===============================
-    // Inicializar listeners
-    // ===============================
     private void initListeners() {
         view.addSaveButtonListener(e -> saveAppointment());
         view.addSelectButtonListener(e -> selectAppointment());
         view.addDeleteButtonListener(e -> deleteAppointment());
     }
 
-    // ===============================
-    // Acciones
-    // ===============================
     private void saveAppointment() {
 
         LocalDateTime appointmentDate = view.getAppointmentDateTime();
@@ -95,14 +88,10 @@ public class MedicalAppointmentController {
             return;
         }
 
-        // Aquí puedes:
-        // - cargar datos al formulario
-        // - o solo mostrar info
         view.showConfirmationSuccessful("Cita seleccionada correctamente.");
     }
 
     private void deleteAppointment() {
-        // ⚠️ No tienes delete en el repo aún
         view.showError("Funcionalidad no implementada todavía.");
     }
 }

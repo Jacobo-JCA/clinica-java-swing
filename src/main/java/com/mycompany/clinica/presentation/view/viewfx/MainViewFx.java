@@ -43,17 +43,13 @@ public class MainViewFx {
             );
             Parent view = loader.load();
             
-            // 👇 GUARDAR LA REFERENCIA
             patientViewFX = loader.getController();
             
-            // Crear el controller
             patientController = ControllerFactory.getInstance()
                 .getPatienteController(patientViewFX);
             
-            // Cambiar la vista
             contentArea.getChildren().setAll(view);
             
-            // 👇 CARGAR DATOS DE LA BASE DE DATOS
             patientController.getAllPatients();
             
         } catch (Exception e) {
@@ -63,13 +59,11 @@ public class MainViewFx {
     }
     
     private void loadMedicalAppointmentView() {
-        // Verificar que se haya cargado la vista de pacientes
         if (patientViewFX == null) {
             System.err.println("⚠️ Debe cargar primero la vista de pacientes");
             return;
         }
         
-        // Obtener el paciente seleccionado
         Patient selected = patientViewFX.getSelectedPatient();
         if (selected == null) {
             patientViewFX.showError("Seleccione un paciente primero");

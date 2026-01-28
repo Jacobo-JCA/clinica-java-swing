@@ -18,28 +18,23 @@ import java.util.List;
 
 public class MedicalAppointmentViewFX implements View {
     private MedicalAppointmentController controller; 
-    // ===== Campos del formulario =====
     @FXML private DatePicker campoFecha;
     @FXML private ComboBox<LocalTime> campoHora;
     @FXML private TextField campoTipoCita;
 
-    // ===== Botones =====
     @FXML private Button btnGuardar;
     @FXML private Button btnLimpiar;
     @FXML private Button btnSeleccionar;
     @FXML private Button btnEliminar;
 
-    // ===== Tabla =====
     @FXML private TableView<MedicalAppointment> tablaCitas;
     @FXML private TableColumn<MedicalAppointment, String> colFecha;
     @FXML private TableColumn<MedicalAppointment, String> colHora;
     @FXML private TableColumn<MedicalAppointment, String> colTipo;
 
-    // ===== Lista observable =====
     private final ObservableList<MedicalAppointment> citas =
             FXCollections.observableArrayList();
 
-    // ===== Initialize =====
     @FXML
     public void initialize() {
 
@@ -73,8 +68,6 @@ public class MedicalAppointmentViewFX implements View {
         cargarHoras();
     }
 
-    // ===== Métodos públicos para el Controller =====
-
     public void addSaveButtonListener(EventHandler<ActionEvent> handler) {
         btnGuardar.setOnAction(handler);
     }
@@ -91,7 +84,6 @@ public class MedicalAppointmentViewFX implements View {
         citas.setAll(appointments);
     }
 
-    // ===== Obtener datos del formulario =====
     public LocalDateTime getAppointmentDateTime() {
         LocalDate fecha = campoFecha.getValue();
         LocalTime hora = campoHora.getValue();
@@ -107,7 +99,6 @@ public class MedicalAppointmentViewFX implements View {
         return campoTipoCita.getText();
     }
 
-    // ===== Utilidades =====
     private void cargarHoras() {
         for (int h = 8; h <= 18; h++) {
             campoHora.getItems().add(LocalTime.of(h, 0));
