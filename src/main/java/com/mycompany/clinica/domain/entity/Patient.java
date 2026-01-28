@@ -23,7 +23,7 @@ public class Patient {
     private final List<Consultation> consultationsList;
     private final List<HealthStatus> healthStatusList;
     
-    private Patient(Builder builder) {
+    private Patient(BuilderPatient builder) {
         this.patientId = builder.patientId;
         this.dni = builder.dni;
         this.firstName = builder.firstName;
@@ -43,7 +43,7 @@ public class Patient {
         this.healthStatusList = new ArrayList<>(builder.healthStatusList);
     }
     
-    public static class Builder {
+    public static class BuilderPatient {
         private int patientId;
         private String dni;
         private String firstName;
@@ -61,85 +61,85 @@ public class Patient {
         private List<Consultation> consultationsList = new ArrayList<>();
         private List<HealthStatus> healthStatusList = new ArrayList<>();
         
-        public Builder() {
+        public BuilderPatient() {
         }
 
-        public Builder patientId(int patientId) {
+        public BuilderPatient patientId(int patientId) {
             this.patientId = patientId;
             return this;
         }
 
-        public Builder dni(String dni) {
+        public BuilderPatient dni(String dni) {
             this.dni = dni;
             return this;
         }
 
-        public Builder firstName(String firstName) {
+        public BuilderPatient firstName(String firstName) {
             this.firstName = firstName;
             return this;
         }
 
-        public Builder lastName(String lastName) {
+        public BuilderPatient lastName(String lastName) {
             this.lastName = lastName;
             return this;
         }
 
-        public Builder address(String address) {
+        public BuilderPatient address(String address) {
             this.address = address;
             return this;
         }
 
-        public Builder email(String email) {
+        public BuilderPatient email(String email) {
             this.email = email;
             return this;
         }
 
-        public Builder age(int age) {
+        public BuilderPatient age(int age) {
             this.age = age;
             return this;
         }
 
-        public Builder gender(String gender) {
+        public BuilderPatient gender(String gender) {
             this.gender = gender;
             return this;
         }
 
-        public Builder medicalRecordNumber(int medicalRecordNumber) {
+        public BuilderPatient medicalRecordNumber(int medicalRecordNumber) {
             this.medicalRecordNumber = medicalRecordNumber;
             return this;
         }
 
-        public Builder city(String city) {
+        public BuilderPatient city(String city) {
             this.city = city;
             return this;
         }
 
-        public Builder state(String state) {
+        public BuilderPatient state(String state) {
             this.state = state;
             return this;
         }
 
-        public Builder phoneNumber(String phoneNumber) {
+        public BuilderPatient phoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;
             return this;
         }
 
-        public Builder dateOfBirth(LocalDate dateOfBirth) {
+        public BuilderPatient dateOfBirth(LocalDate dateOfBirth) {
             this.dateOfBirth = dateOfBirth;
             return this;
         }
 
-        public Builder occupation(String occupation) {
+        public BuilderPatient occupation(String occupation) {
             this.occupation = occupation;
             return this;
         }
 
-        public Builder addConsultation(Consultation consultation) {
+        public BuilderPatient addConsultation(Consultation consultation) {
             this.consultationsList.add(consultation);
             return this;
         }
 
-        public Builder addHealthStatus(HealthStatus healthStatus) {
+        public BuilderPatient addHealthStatus(HealthStatus healthStatus) {
             this.healthStatusList.add(healthStatus);
             return this;
         }

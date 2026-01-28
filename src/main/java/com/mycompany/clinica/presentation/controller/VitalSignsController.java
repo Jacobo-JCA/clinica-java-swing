@@ -40,21 +40,21 @@ public class VitalSignsController {
         return "Obesidad";
     }
 
-    public VitalSigns convertirDatosSignoVital(String[] campos) {
-        double pesoFormat = Double.parseDouble(campos[4]);
-        double tallaFormat = Double.parseDouble(campos[5]);
-        String imc = calcularImc(pesoFormat, tallaFormat);
-        return new VitalSigns(
-            campos[0],
-            campos[1],
-            campos[2],
-            campos[3],
-            pesoFormat,
-            tallaFormat,
-            campos[6],
-            imc
-        );
-    }
+//    public VitalSigns convertirDatosSignoVital(String[] campos) {
+//        double pesoFormat = Double.parseDouble(campos[4]);
+//        double tallaFormat = Double.parseDouble(campos[5]);
+//        String imc = calcularImc(pesoFormat, tallaFormat);
+//        return new VitalSigns(
+//            campos[0],
+//            campos[1],
+//            campos[2],
+//            campos[3],
+//            pesoFormat,
+//            tallaFormat,
+//            campos[6],
+//            imc
+//        );
+//    }
     
 //    public void guardarSignoVital(VitalSigns signosVitales) {
 //        int idConsulta = sesionContexto.();

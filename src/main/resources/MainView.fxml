@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.layout.Region?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.mycompany.clinica.presentation.view.viewfx.MainViewFx"
+            style="-fx-background-color: #F5F7FA;">
+    
+    <!-- ================================ HEADER ================================ -->
+    <top>
+        <HBox alignment="CENTER_LEFT" 
+              spacing="20"
+              style="-fx-background-color: linear-gradient(to right, #667eea 0%, #764ba2 100%);
+                     -fx-padding: 20 30;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);">
+            
+            <!-- Logo/Icono -->
+            <Circle radius="25" 
+                    style="-fx-fill: white; -fx-stroke: rgba(255,255,255,0.3); -fx-stroke-width: 2;"/>
+            
+            <VBox spacing="2">
+                <Label text="CLÍNICA PRAXELL"
+                       style="-fx-font-size: 24px;
+                              -fx-font-weight: bold;
+                              -fx-text-fill: white;
+                              -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 2, 0, 0, 1);"/>
+                <Label text="Sistema de Gestión Médica"
+                       style="-fx-font-size: 13px;
+                              -fx-text-fill: rgba(255,255,255,0.9);"/>
+            </VBox>
+            
+            <!-- Spacer -->
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <!-- Usuario info -->
+            <HBox alignment="CENTER" spacing="10">
+                <Circle radius="18" 
+                        style="-fx-fill: white; -fx-stroke: rgba(255,255,255,0.5); -fx-stroke-width: 2;"/>
+                <VBox spacing="0">
+                    <Label text="Admin"
+                           style="-fx-font-size: 13px;
+                                  -fx-font-weight: bold;
+                                  -fx-text-fill: white;"/>
+                    <Label text="Administrador"
+                           style="-fx-font-size: 11px;
+                                  -fx-text-fill: rgba(255,255,255,0.8);"/>
+                </VBox>
+            </HBox>
+        </HBox>
+    </top>
+    
+    <!-- ================================ SIDEBAR ================================ -->
+    <left>
+        <VBox spacing="8"
+              style="-fx-background-color: #FFFFFF;
+                     -fx-padding: 25 20;
+                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 2, 0);
+                     -fx-min-width: 240;">
+            
+            <!-- Título del menú -->
+            <Label text="NAVEGACIÓN"
+                   style="-fx-font-size: 11px;
+                          -fx-font-weight: bold;
+                          -fx-text-fill: #94A3B8;
+                          -fx-padding: 10 0 5 10;"/>
+            
+            <Separator style="-fx-background-color: #E2E8F0;"/>
+            
+            <!-- Botón Pacientes -->
+            <Button text="👤  Pacientes" 
+                    fx:id="btnPacientes"
+                    maxWidth="Infinity"
+                    style="-fx-background-color: #667eea;
+                           -fx-text-fill: white;
+                           -fx-font-size: 14px;
+                           -fx-font-weight: bold;
+                           -fx-padding: 15 20;
+                           -fx-background-radius: 10;
+                           -fx-cursor: hand;
+                           -fx-effect: dropshadow(gaussian, rgba(102,126,234,0.4), 8, 0, 0, 2);
+                           -fx-alignment: CENTER-LEFT;">
+                <tooltip>
+                    <Tooltip text="Gestionar pacientes"/>
+                </tooltip>
+            </Button>
+            
+            <!-- Botón Citas Médicas -->
+            <Button text="📅  Citas Médicas" 
+                    fx:id="btnCitas"
+                    maxWidth="Infinity"
+                    style="-fx-background-color: #F8F9FA;
+                           -fx-text-fill: #475569;
+                           -fx-font-size: 14px;
+                           -fx-font-weight: 600;
+                           -fx-padding: 15 20;
+                           -fx-background-radius: 10;
+                           -fx-cursor: hand;
+                           -fx-border-color: #E2E8F0;
+                           -fx-border-width: 1;
+                           -fx-border-radius: 10;
+                           -fx-alignment: CENTER-LEFT;">
+                <tooltip>
+                    <Tooltip text="Gestionar citas médicas"/>
+                </tooltip>
+            </Button>
+            
+            <!-- Spacer -->
+            <Region VBox.vgrow="ALWAYS"/>
+            
+            <!-- Info adicional -->
+            <VBox spacing="5"
+                  style="-fx-background-color: #F1F5F9;
+                         -fx-padding: 15;
+                         -fx-background-radius: 10;">
+                <VBox.margin>
+                    <Insets top="0" right="0" bottom="40" left="0"/>
+                </VBox.margin>
+                <Label text="💡 Consejo"
+                       style="-fx-font-size: 11px;
+                              -fx-font-weight: bold;
+                              -fx-text-fill: #64748B;"/>
+                <Label text="Siempre Ingrese o presione un paciente"
+                       wrapText="true"
+                       style="-fx-font-size: 10px;
+                              -fx-text-fill: #94A3B8;"/>
+            </VBox>
+        </VBox>
+    </left>
+    
+    <!-- ================================ CONTENIDO ================================ -->
+    <center>
+        <StackPane fx:id="contentArea" 
+                   style="-fx-background-color: #F5F7FA;
+                          -fx-padding: 25;">
+            
+            <!-- Mensaje de bienvenida inicial -->
+            <VBox alignment="CENTER" spacing="20">
+                <Label text="👋"
+                       style="-fx-font-size: 60px;"/>
+                <Label text="Bienvenido al Sistema de Gestión"
+                       style="-fx-font-size: 24px;
+                              -fx-font-weight: bold;
+                              -fx-text-fill: #1E293B;"/>
+                <Label text="Selecciona una opción del menú para comenzar"
+                       style="-fx-font-size: 14px;
+                              -fx-text-fill: #64748B;"/>
+            </VBox>
+        </StackPane>
+    </center>
+    
+    <!-- ================================ FOOTER ================================ -->
+    <bottom>
+        <HBox alignment="CENTER" 
+              spacing="20"
+              style="-fx-background-color: #FFFFFF;
+                     -fx-padding: 12 30;
+                     -fx-border-color: #E2E8F0;
+                     -fx-border-width: 1 0 0 0;">
+            <Label text="© 2026 Clínica Praxell"
+                   style="-fx-font-size: 11px;
+                          -fx-text-fill: #94A3B8;"/>
+            <Label text="•"
+                   style="-fx-text-fill: #CBD5E1;"/>
+            <Label text="Versión 1.0.0"
+                   style="-fx-font-size: 11px;
+                          -fx-text-fill: #94A3B8;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Estado: 🟢 Conectado"
+                   style="-fx-font-size: 11px;
+                          -fx-text-fill: #10B981;
+                          -fx-font-weight: 600;"/>
+        </HBox>
+    </bottom>
+    
+</BorderPane>

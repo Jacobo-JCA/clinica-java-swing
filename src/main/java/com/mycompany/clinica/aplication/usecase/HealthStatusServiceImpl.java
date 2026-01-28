@@ -40,16 +40,16 @@ public class HealthStatusServiceImpl implements HealthStatusService {
     }
     
     @Override
-    public int guardar(HealthStatus healthStatus, int patientId) {
+    public int guardar(HealthStatus healthStatus, int medicalAppointmentId) {
         String mensaje = validarCampos(healthStatus);
         if (mensaje != null) {
             throw new NegocioException(mensaje);
         }
-        return healthStatusRepo.insertHealthStatus(healthStatus, patientId);
+        return healthStatusRepo.insertHealthStatus(healthStatus, medicalAppointmentId);
     }
 
     @Override
-    public List<HealthStatus> getAllHealthStatus(int patientId) {
-        return healthStatusRepo.getAllHealthStatus(patientId);
+    public List<HealthStatus> getAllHealthStatus(int medicalAppointmentId) {
+        return healthStatusRepo.getAllHealthStatus(medicalAppointmentId);
     }
 }

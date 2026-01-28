@@ -1,71 +1,42 @@
 package com.mycompany.clinica.presentation.view.utils;
 
-import com.mycompany.clinica.aplication.context.SesionContexto;
-import com.mycompany.clinica.presentation.controller.ConsultationController;
-import com.mycompany.clinica.presentation.controller.HealthStatusController;
-import com.mycompany.clinica.presentation.controller.PatientController;
-import com.mycompany.clinica.presentation.controller.RegistroControllerCentral;
-import com.mycompany.clinica.presentation.controller.VitalSignsController;
-import com.mycompany.clinica.aplication.usecase.ConsultationServiceImpl;
-import com.mycompany.clinica.aplication.usecase.HealthStatusServiceImpl;
+import com.mycompany.clinica.aplication.usecase.MedicalAppoinmentServiceImpl;
 import com.mycompany.clinica.aplication.usecase.PatientServiceImpl;
-import com.mycompany.clinica.aplication.usecase.VitalSignsServiceImpl;
+import com.mycompany.clinica.domain.repo.MedicalAppointmentRepo;
 import com.mycompany.clinica.domain.repo.PatientRepo;
-import com.mycompany.clinica.presentation.view.PatientFrame;
-import com.mycompany.clinica.domain.service.ConsultationService;
+import com.mycompany.clinica.domain.service.MedicalAppointmentService;
 import com.mycompany.clinica.domain.service.PatientService;
-import com.mycompany.clinica.domain.service.VitalSignsService;
-import com.mycompany.clinica.domain.service.HealthStatusService;
+import com.mycompany.clinica.infrastructure.persistence.jdbc.MedicalAppointmentJdbc;
 import com.mycompany.clinica.infrastructure.persistence.jdbc.PatientRepoJdbc;
+import com.mycompany.clinica.presentation.controller.MedicalAppointmentController;
+import com.mycompany.clinica.presentation.controller.PatientController;
+import com.mycompany.clinica.presentation.view.viewfx.MedicalAppointmentViewFX;
+import com.mycompany.clinica.presentation.view.viewfx.PatientViewFX;
 
 public class ControllerFactory {
-    private static ControllerFactory controller;
-    PatientRepo patientRepo = new PatientRepoJdbc();
-    private final PatientService pacienteService = new PatientServiceImpl(patientRepo);
-//    private final ConsultationServiceImpl consultaService = new ConsultationServiceImpl();
-//    private final HealthStatusServiceImpl crudEnfermedad = new HealthStatusServiceImpl();
-//    private final VitalSignsService signosVitalesService = new VitalSignsServiceImpl();
-    private PatientFrame patientFrame;
-    
-    private ControllerFactory() {
-    }
-    
+    private static ControllerFactory instance;
+    private final PatientRepo patientRepo = new PatientRepoJdbc();
+    private final PatientService patientService = new PatientServiceImpl(patientRepo);
+    private final MedicalAppointmentRepo medicalAppointmentRepo = new MedicalAppointmentJdbc();
+    private final MedicalAppointmentService appointmentService = new MedicalAppoinmentServiceImpl(medicalAppointmentRepo);
+
+    private ControllerFactory() {}
+
     public static ControllerFactory getInstance() {
-        if(controller == null) {
-            controller = new ControllerFactory();
+        if (instance == null) {
+            instance = new ControllerFactory();
         }
-        return controller;
+        return instance;
     }
-    
-    public PatientFrame getPatientFrame() {
-        if(patientFrame == null) {
-            patientFrame = new PatientFrame();
-        }
-        return patientFrame;
+
+    public PatientController getPatienteController(PatientViewFX patientViewFX) {
+        return new PatientController(patientService, patientViewFX);
     }
-//    
-//    public VitalSignsController crearSignoVitalController() {
-//        SesionContexto sesionContexto = SesionContexto.getInstance();
-//        return new VitalSignsController(signosVitalesService, getVistaPaciente(), sesionContexto);
-//    }
-//    
-//    public ConsultationController crearConsultaController() {
-//        SesionContexto sesionContexto = SesionContexto.getInstance();
-//        return new ConsultationController(consultaService, sesionContexto);
-//    }
-//    
-//    public HealthStatusController crearEnfermedadController() {
-//        SesionContexto sesionContexto = SesionContexto.getInstance();
-//        return new HealthStatusController(crudEnfermedad, sesionContexto);
-//    }
-//    
-//    public RegistroControllerCentral crearRegistroControllerCentral() {
-//        SesionContexto sesionContexto = SesionContexto.getInstance();
-//        return new RegistroControllerCentral(crearConsultaController(), crearSignoVitalController(), crearEnfermedadController(), sesionContexto);
-//    }
-//    
-    public PatientController getPatienteController() {
-        SesionContexto sesionContexto = SesionContexto.getInstance();
-        return new PatientController(pacienteService, patientFrame);
+
+    public MedicalAppointmentService getAppointmentService() {
+        return appointmentService;
     }
 }
+
+
+

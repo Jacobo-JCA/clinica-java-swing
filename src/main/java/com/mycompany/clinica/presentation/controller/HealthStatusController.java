@@ -27,15 +27,15 @@ public class HealthStatusController {
         enfermedadesFrame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
     
-    public HealthStatus convertirDatosEnfermedades(String[] campos) {
-        return new HealthStatus(
-            campos[0],
-            campos[1],
-            campos[2],
-            campos[3],
-            campos[4]
-            );
-    }
+//    public HealthStatus convertirDatosEnfermedades(String[] campos) {
+//        return new HealthStatus(
+//            campos[0],
+//            campos[1],
+//            campos[2],
+//            campos[3],
+//            campos[4]
+//            );
+//    }
 
 //    public void guardarEnfermedad(HealthStatus enfermedades) {
 //        int idPaciente = sesionContexto.getPaciente().getIdPaciente();

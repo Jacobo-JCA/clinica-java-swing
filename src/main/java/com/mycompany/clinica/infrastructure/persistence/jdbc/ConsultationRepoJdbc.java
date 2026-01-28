@@ -9,23 +9,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConsultationRepoJdbc implements ConsultationRepo {
 
     @Override
-    public int insertConsultation(Consultation consultation, int patientId) {
+    public int insertConsultation(Consultation consultation, int medicalAppointmentId) {
         try (PreparedStatement pst = DatabaseConnection.getInstance().prepareStatement("INSERT INTO consultation(reason_consultation, "
-                + "consultation_date, diagnosis, prescription, instructions, patient_id) " 
+                + "consultation_date, diagnosis, prescription, instructions, medical_appointmentId) " 
                 + "VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             pst.setString(1, consultation.getReasonConsultation()); 
             pst.setDate(2, Date.valueOf(consultation.getConsultationDate())); 
             pst.setString(3, consultation.getDiagnosis()); 
             pst.setString(4, consultation.getPrescription()); 
             pst.setString(5, consultation.getInstructions()); 
-            pst.setInt(6, consultation.getPatientId());
+            pst.setInt(6, consultation.getMedicalAppointmentId());
             int affectRow = pst.executeUpdate();
             if (affectRow == 0) {
                 throw new SQLException("No se afecto la fila");
@@ -43,45 +42,23 @@ public class ConsultationRepoJdbc implements ConsultationRepo {
     }
 
     @Override
-    public List<Consultation> getConsultationsByPatient(int patientId) {
+    public List<Consultation> getConsultationsByPatient(int medicalAppointmentId) {
         List<Consultation> consultations = new ArrayList<>();
-        String sqlConsulta = "SELECT diagnostico, receta, indicaciones, fecha_consulta FROM consulta WHERE id_paciente = ?";
+        String sqlConsulta = "SELECT diagnosis, prescription, instructions, consultation_date FROM consultation WHERE medical_appointmentId = ?";
         try (PreparedStatement ps = DatabaseConnection.getInstance().prepareStatement(sqlConsulta)) {
-            ps.setInt(1, patientId);
+            ps.setInt(1, medicalAppointmentId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                consultations.add(
-                        new Consultation(
-                                rs.getString("diagnostico"),
-                                rs.getString("receta"),
-                                rs.getString("indicaciones"),
-                                rs.getDate("fecha_consulta").toLocalDate())
-                );
+                consultations.add(new Consultation.BuilderConsultation()
+                .diagnosis(rs.getString("diagnosis"))
+                .prescription(rs.getString("prescription"))
+                .instructions(rs.getString("instructions"))
+                .consultationDate(rs.getDate("consultation_date").toLocalDate())
+                .build());
             }
             return consultations;
         } catch (SQLException e) {
             throw new DatabaseException("Error al obtener las consultas del paciente");
         }
-    }
-
-    @Override
-    public List<Consultation> getAllConsultation(int patientId) {
-        List<Consultation> consultations = new ArrayList<>();
-        try (PreparedStatement pst = DatabaseConnection.getInstance().prepareStatement("SELECT * FROM consulta WHERE id_paciente = ?")) {
-            pst.setInt(1, patientId);
-            ResultSet rs = pst.executeQuery();
-            while (rs.next()) {
-                Date date = rs.getDate(3);
-                LocalDate localDate = date.toLocalDate();
-                Consultation consultation = new Consultation(rs.getString(4), localDate, rs.getString(5), rs.getString(6), 
-                        rs.getString(7));
-                consultation.setConsultationId(rs.getInt(1));
-                consultations.add(consultation);
-            }
-        } catch (SQLException e) {
-            throw new DatabaseException("Error al obtener las consultas de base de datos: ");
-        }
-        return consultations;
-    }
-    
+    } 
 }

@@ -5,6 +5,5 @@ import java.util.List;
 
 public interface ConsultationRepo {
     int insertConsultation(Consultation consultation, int patientId);
-    List<Consultation> getAllConsultation(int patientId);
     List<Consultation> getConsultationsByPatient(int patientId);
 }

@@ -27,10 +27,10 @@ public class ConsultationController {
         consultaFrame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
     
-    public Consultation convertirFormularioAEntidad(List<String> campos) {
-        LocalDate fecha = LocalDate.parse(campos.get(1));
-        return new Consultation(campos.get(0), fecha, campos.get(2), campos.get(3), campos.get(4));
-    }
+//    public Consultation convertirFormularioAEntidad(List<String> campos) {
+//        LocalDate fecha = LocalDate.parse(campos.get(1));
+//        return new Consultation(campos.get(0), fecha, campos.get(2), campos.get(3), campos.get(4));
+//    }
     
 //    public void guardarConsulta(Consultation consulta) {
 //        int idPaciente = sesionContext.getPaciente().getIdPaciente();

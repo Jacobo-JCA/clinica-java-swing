@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.mycompany.clinica.presentation.view.viewfx.PatientViewFX"
+            style="-fx-background-color: #F4F6F8;">
+
+    <center>
+        <VBox spacing="25">
+            <padding>
+                <Insets top="5" right="25" bottom="15" left="25"/>
+            </padding>
+
+            <!-- ================= FORMULARIO ================= -->
+            <VBox spacing="20"
+                  style="-fx-background-color: #FFFFFF;
+                         -fx-background-radius: 14;
+                         -fx-border-radius: 14;
+                         -fx-border-color: #E0E0E0;
+                         -fx-padding: 25;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 14, 0, 0, 4);">
+
+                <Label text="Datos del Paciente"
+                       style="-fx-font-size: 20px;
+                              -fx-font-weight: bold;
+                              -fx-text-fill: #2E7D32;" />
+
+                <GridPane hgap="15" vgap="12">
+
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="33"/>
+                        <ColumnConstraints percentWidth="33"/>
+                        <ColumnConstraints percentWidth="34"/>
+                    </columnConstraints>
+
+                    <!-- FILA 1 -->
+                    <TextField fx:id="campoCedula" promptText="Cédula"
+                               GridPane.rowIndex="0" GridPane.columnIndex="0"
+                               style="-fx-background-color: #FAFAFA; -fx-border-color: #DADCE0; -fx-text-fill: #333333; -fx-background-radius: 8; -fx-border-radius: 8; -fx-padding: 8;"/>
+
+                    <TextField fx:id="campoNombre" promptText="Nombre"
+                               GridPane.rowIndex="0" GridPane.columnIndex="1"
+                               style="-fx-background-color: #FAFAFA; -fx-border-color: #DADCE0; -fx-text-fill: #333333; -fx-background-radius: 8; -fx-border-radius: 8; -fx-padding: 8;"/>
+
+                    <TextField fx:id="campoApellido" promptText="Apellido"
+                               GridPane.rowIndex="0" GridPane.columnIndex="2"
+                               style="-fx-background-color: #FAFAFA; -fx-border-color: #DADCE0; -fx-text-fill: #333333; -fx-background-radius: 8; -fx-border-radius: 8; -fx-padding: 8;"/>
+
+                    <!-- FILA 2 -->
+                    <TextField fx:id="campoGenero" promptText="Género"
+                               GridPane.rowIndex="1" GridPane.columnIndex="0"
+                               style="-fx-background-color: #FAFAFA; -fx-border-color: #DADCE0; -fx-text-fill: #333333; -fx-background-radius: 8; -fx-border-radius: 8; -fx-padding: 8;"/>
+
+                    <TextField fx:id="campoFechaNacimiento" promptText="Fecha Nacimiento (YYYY-MM-DD)"
+                               GridPane.rowIndex="1" GridPane.columnIndex="1"
+                               style="-fx-background-color: #FAFAFA; -fx-border-color: #DADCE0; -fx-text-fill: #333333; -fx-background-radius: 8; -fx-border-radius: 8; -fx-padding: 8;"/>
+
+                    <TextField fx:id="campoCiudad" promptText="Ciudad"
+                               GridPane.rowIndex="1" GridPane.columnIndex="2"
+                               style="-fx-background-color: #FAFAFA; -fx-border-color: #DADCE0; -fx-text-fill: #333333; -fx-background-radius: 8; -fx-border-radius: 8; -fx-padding: 8;"/>
+
+                    <!-- FILA 3 -->
+                    <TextField fx:id="campoExpediente" promptText="N° Expediente"
+                               GridPane.rowIndex="2" GridPane.columnIndex="0"
+                               style="-fx-background-color: #FAFAFA; -fx-border-color: #DADCE0; -fx-text-fill: #333333; -fx-background-radius: 8; -fx-border-radius: 8; -fx-padding: 8;"/>
+
+                    <TextField fx:id="campoTelefono" promptText="Teléfono"
+                               GridPane.rowIndex="2" GridPane.columnIndex="1"
+                               style="-fx-background-color: #FAFAFA; -fx-border-color: #DADCE0; -fx-text-fill: #333333; -fx-background-radius: 8; -fx-border-radius: 8; -fx-padding: 8;"/>
+
+                    <TextField fx:id="campoEmail" promptText="Email"
+                               GridPane.rowIndex="2" GridPane.columnIndex="2"
+                               style="-fx-background-color: #FAFAFA; -fx-border-color: #DADCE0; -fx-text-fill: #333333; -fx-background-radius: 8; -fx-border-radius: 8; -fx-padding: 8;"/>
+
+                    <!-- FILA 4 -->
+                    <TextField fx:id="campoDireccion" promptText="Dirección"
+                               GridPane.rowIndex="3" GridPane.columnIndex="0"
+                               style="-fx-background-color: #FAFAFA; -fx-border-color: #DADCE0; -fx-text-fill: #333333; -fx-background-radius: 8; -fx-border-radius: 8; -fx-padding: 8;"/>
+
+                    <TextField fx:id="campoOcupacion" promptText="Ocupación"
+                               GridPane.rowIndex="3" GridPane.columnIndex="1"
+                               style="-fx-background-color: #FAFAFA; -fx-border-color: #DADCE0; -fx-text-fill: #333333; -fx-background-radius: 8; -fx-border-radius: 8; -fx-padding: 8;"/>
+
+                    <TextField fx:id="campoEstado" promptText="Estado"
+                               GridPane.rowIndex="3" GridPane.columnIndex="2"
+                               style="-fx-background-color: #FAFAFA; -fx-border-color: #DADCE0; -fx-text-fill: #333333; -fx-background-radius: 8; -fx-border-radius: 8; -fx-padding: 8;"/>
+
+                </GridPane>
+
+                <HBox spacing="15" alignment="CENTER_RIGHT">
+                    <Button fx:id="btnLimpiar" text="Limpiar"
+                            style="-fx-background-color: #FBC02D;
+                                   -fx-text-fill: #333;
+                                   -fx-font-weight: bold;
+                                   -fx-background-radius: 8;
+                                   -fx-padding: 8 22;"/>
+                    <Button fx:id="btnGuardar" text="Guardar"
+                            style="-fx-background-color: #388E3C;
+                                   -fx-text-fill: white;
+                                   -fx-font-weight: bold;
+                                   -fx-background-radius: 8;
+                                   -fx-padding: 8 22;"/>
+                </HBox>
+            </VBox>
+
+            <!-- ================= TABLA ================= -->
+            <VBox spacing="20" VBox.vgrow="ALWAYS"
+                  style="-fx-background-color: #FFFFFF;
+                         -fx-background-radius: 14;
+                         -fx-border-radius: 14;
+                         -fx-border-color: #E0E0E0;
+                         -fx-padding: 25;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 14, 0, 0, 4);">
+
+                <Label text="Lista de Pacientes"
+                       style="-fx-font-size: 22px;
+                              -fx-font-weight: bold;
+                              -fx-text-fill: #1976D2;
+                              -fx-padding: 0 0 5 0;" />
+
+                <TableView fx:id="tablaPaciente"
+                           VBox.vgrow="ALWAYS"
+                           minHeight="100"
+                           style="-fx-background-radius: 10;
+                                  -fx-border-radius: 10;
+                                  -fx-border-color: #E0E0E0;">
+                    <columns>
+                        <TableColumn fx:id="colId" text="ID"/>
+                        <TableColumn fx:id="colNombre" text="Nombre"/>
+                        <TableColumn fx:id="colApellido" text="Apellido"/>
+                        <TableColumn fx:id="colGenero" text="Género"/>
+                        <TableColumn fx:id="colCiudad" text="Ciudad"/>
+                        <TableColumn fx:id="colExpediente" text="Expediente"/>
+                        <TableColumn fx:id="colEdad" text="Edad"/>
+                    </columns>
+                </TableView>
+
+                <HBox spacing="15" alignment="CENTER_RIGHT">
+                    <Button fx:id="btnEliminar" text="Eliminar"
+                            style="-fx-background-color: #D32F2F;
+                                   -fx-text-fill: white;
+                                   -fx-font-weight: bold;
+                                   -fx-background-radius: 8;
+                                   -fx-padding: 8 22;"/>
+                </HBox>
+
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

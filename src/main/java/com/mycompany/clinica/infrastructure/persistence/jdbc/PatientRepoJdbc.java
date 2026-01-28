@@ -70,7 +70,7 @@ public class PatientRepoJdbc implements PatientRepo {
                 LocalDate dateBirth = rs.getDate("date_of_birth").toLocalDate();
                 String occupation = rs.getString("occupation");
 
-                Patient patient = new Patient.Builder()
+                Patient patient = new Patient.BuilderPatient()
                         .patientId(patientId)
                         .dni(dni)
                         .firstName(firstName)
@@ -115,7 +115,7 @@ public class PatientRepoJdbc implements PatientRepo {
                 LocalDate dateBirth = rs.getDate("date_of_birth").toLocalDate();
                 String occupation = rs.getString("occupation");
 
-                patient = new Patient.Builder()
+                patient = new Patient.BuilderPatient()
                         .patientId(patientId)
                         .dni(dniPatient)
                         .firstName(firstName)
@@ -161,7 +161,7 @@ public class PatientRepoJdbc implements PatientRepo {
                 LocalDate dateBirth = rs.getDate("date_of_birth").toLocalDate();
                 String occupation = rs.getString("occupation");
 
-                patient = new Patient.Builder()
+                patient = new Patient.BuilderPatient()
                         .patientId(id)
                         .dni(dniPatient)
                         .firstName(firstName)
@@ -182,15 +182,16 @@ public class PatientRepoJdbc implements PatientRepo {
         } catch (SQLException e) {
             throw new DatabaseException("Error al obtener el paciente por su ID en base de datos");
         }
-//        obtenerConsultaRelacionada(paciente);
     }
 
     @Override
     public List<Patient> getAllPatientByField(String field) {
+        String sql = "SELECT * FROM patient WHERE first_name LIKE ? OR last_name LIKE ? ORDER BY first_name";
         List<Patient> patientList = new ArrayList<>();
-        try (PreparedStatement pst = DatabaseConnection.getInstance().
-                prepareStatement("SELECT * FROM patient WHERE first_name LIKE'%" + field + "%'" + "OR apellido LIKE'%" + field + "%'" + "ORDER BY nombre")) {
-            ResultSet rs = pst.executeQuery();
+        try (PreparedStatement ps = DatabaseConnection.getInstance().prepareStatement(sql)) {
+            ps.setString(1, "%" + field + "%");
+            ps.setString(2, "%" + field + "%");
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("patient_id");
                 String dniPatient = rs.getString("dni");
@@ -206,7 +207,7 @@ public class PatientRepoJdbc implements PatientRepo {
                 LocalDate dateBirth = rs.getDate("date_of_birth").toLocalDate();
                 String occupation = rs.getString("occupation");
 
-                Patient patient = new Patient.Builder()
+                Patient patient = new Patient.BuilderPatient()
                         .patientId(id)
                         .dni(dniPatient)
                         .firstName(firstName)
@@ -258,9 +259,12 @@ public class PatientRepoJdbc implements PatientRepo {
 
     @Override
     public void deletePatient(int patientId) {
-        try (PreparedStatement pst = DatabaseConnection.getInstance().prepareStatement("DELETE FROM paciente WHERE id_paciente = ?")) {
+        try (PreparedStatement pst = DatabaseConnection.getInstance().prepareStatement("DELETE FROM patient WHERE patient_id = ?")) {
             pst.setInt(1, patientId);
-            pst.executeUpdate();
+            int affectedRows = pst.executeUpdate();
+            if(affectedRows == 0) {
+                throw new DatabaseException("Campos no afectados en base de datos: ");
+            }
         } catch (SQLException s) {
             throw new DatabaseException("Error al eliminar en base de datos");
         }

@@ -14,10 +14,10 @@ import java.util.List;
 public class VitalSignsRepoJdbc implements VitalSignsRepo {
 
     @Override
-    public int insertVitalSigns(VitalSigns vitalSigns, int consultationId) {
+    public int insertVitalSigns(VitalSigns vitalSigns, int medicalAppointmentId) {
         try (PreparedStatement pst = DatabaseConnection.getInstance().prepareStatement("INSERT INTO signos_vitales(bloodPressure, "
                 + "heartRate, respiratoryRate, "
-                + "bodyTemperature, weight, height, description, imc, consultation_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+                + "bodyTemperature, weight, height, description, imc, medical_appointmentId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             pst.setString(1, vitalSigns.getBloodPressure());
             pst.setString(2, vitalSigns.getHeartRate());
             pst.setString(3, vitalSigns.getRespiratoryRate());
@@ -26,7 +26,7 @@ public class VitalSignsRepoJdbc implements VitalSignsRepo {
             pst.setDouble(6, vitalSigns.getHeight());
             pst.setString(7, vitalSigns.getDescription());
             pst.setString(8, vitalSigns.getImc());
-            pst.setInt(9, consultationId);
+            pst.setInt(9, medicalAppointmentId);
             int affectRows = pst.executeUpdate();
             if (affectRows == 0) {
                 throw new SQLException("Inserte los Signos Vitales, filas no afectadas.");
@@ -44,16 +44,24 @@ public class VitalSignsRepoJdbc implements VitalSignsRepo {
     }
 
     @Override
-    public List<VitalSigns> getAllVitalSigns(int consultationId) {
+    public List<VitalSigns> getAllVitalSigns(int medicalAppointmentId) {
         List<VitalSigns> vitalSignsList = new ArrayList<>();
-        try (PreparedStatement pst = DatabaseConnection.getInstance().prepareStatement("SELECT * FROM signos_vitales WHERE id_consulta = ?")) {
-            pst.setInt(1, consultationId);
+        try (PreparedStatement pst = DatabaseConnection.getInstance().prepareStatement("SELECT * FROM signos_vitales WHERE medical_appointmentId = ?")) {
+            pst.setInt(1, medicalAppointmentId);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                VitalSigns sv = new VitalSigns(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
-                        rs.getDouble(6), rs.getDouble(7), rs.getString(8), rs.getString(9));
-                sv.setVitalSignsId(rs.getInt(1));
-                vitalSignsList.add(sv);
+                VitalSigns vitalSigns = new VitalSigns.BuilderVitalSigns()
+                        .bloodPressure(rs.getString(2))
+                        .heartRate(rs.getString(3))
+                        .respiratoryRate(rs.getString(4))
+                        .bodyTemperature(rs.getString(5))
+                        .weight(rs.getDouble(6))
+                        .height(rs.getDouble(7))
+                        .description(rs.getString(8))
+                        .imc(rs.getString(9))
+                        .build();
+                vitalSigns.setVitalSignsId(rs.getInt(1));
+                vitalSignsList.add(vitalSigns);
             }
         } catch (SQLException e) {
             throw new DatabaseException("Error al consultar la lista de Signos Vitales de base de datos: ");

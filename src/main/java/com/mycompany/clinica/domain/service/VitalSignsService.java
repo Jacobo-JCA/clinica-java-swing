@@ -5,7 +5,7 @@ import com.mycompany.clinica.domain.entity.VitalSigns;
 import java.util.List;
 
 public interface VitalSignsService {
-    int guardar(VitalSigns signosVitales, int idConsulta);
-    List<VitalSigns> obtenerSignosVitales(int idConsulta);
+    int guardar(VitalSigns signosVitales, int medicalAppointmentId);
+    List<VitalSigns> obtenerSignosVitales(int medicalAppointmentId);
     String validarCampos(VitalSigns signosVitales);
 }

@@ -14,16 +14,16 @@ import java.util.List;
 public class HealthStatusRepoJdbc implements HealthStatusRepo {
 
     @Override
-    public int insertHealthStatus(HealthStatus healthStatus, int patientId) {
+    public int insertHealthStatus(HealthStatus healthStatus, int medicalAppointmentId) {
         try (PreparedStatement pst = DatabaseConnection.getInstance().prepareStatement(
                 "INSERT INTO enfermedades_paciente(pathological, noPathological, "
-                + "clinical, surgical, hereditary, patient_id) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+                + "clinical, surgical, hereditary, medical_appointmentId) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             pst.setString(1, healthStatus.getPathological());
             pst.setString(2, healthStatus.getNoPathological());
             pst.setString(3, healthStatus.getClinical());
             pst.setString(4, healthStatus.getSurgical());
             pst.setString(5, healthStatus.getHereditary());
-            pst.setInt(6, patientId);
+            pst.setInt(6, medicalAppointmentId);
             int affectedRows = pst.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Inserte la enfermedad, filas no afectadas.");
@@ -41,22 +41,21 @@ public class HealthStatusRepoJdbc implements HealthStatusRepo {
     }
 
     @Override
-    public List<HealthStatus> getAllHealthStatus(int patientId) {
-        System.out.println("Buscando enfermedades para paciente ID: " + patientId);
+    public List<HealthStatus> getAllHealthStatus(int medicalAppointmentId) {
         List<HealthStatus> healthStatusList = new ArrayList<>();
         try (PreparedStatement pst = DatabaseConnection.getInstance()
-                .prepareStatement("SELECT * FROM enfermedades_paciente WHERE id_paciente = ?")) {
-            pst.setInt(1, patientId);
+                .prepareStatement("SELECT * FROM health_status WHERE medical_appointmentId = ?")) {
+            pst.setInt(1, medicalAppointmentId);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                HealthStatus healthStatus = new HealthStatus(
-                        rs.getString("patologico"),
-                        rs.getString("no_patologico"),
-                        rs.getString("clinico"),
-                        rs.getString("quirurjico"),
-                        rs.getString("hereditario")
-                );
-                healthStatus.setHealthStatusId(rs.getInt("id_enfermedad"));
+                HealthStatus healthStatus = new HealthStatus.BuilderHealthStatus()
+                        .pathological(rs.getString("pathological"))
+                        .noPathological(rs.getString("no_pathological"))
+                        .clinical(rs.getString("clinical"))
+                        .surgical(rs.getString("surgical"))
+                        .hereditary(rs.getString("hereditary"))
+                        .build();
+                healthStatus.setHealthStatusId(rs.getInt("health_status_id"));
                 healthStatusList.add(healthStatus);
             }
 

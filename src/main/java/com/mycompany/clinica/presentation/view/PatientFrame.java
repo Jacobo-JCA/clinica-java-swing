@@ -1,9 +1,6 @@
 package com.mycompany.clinica.presentation.view;
 
 import com.mycompany.clinica.presentation.view.utils.ControllerFactory;
-import com.mycompany.clinica.presentation.controller.ConsultationController;
-import com.mycompany.clinica.presentation.controller.HealthStatusController;
-import com.mycompany.clinica.presentation.controller.VitalSignsController;
 import com.mycompany.clinica.domain.entity.Patient;
 import com.mycompany.clinica.presentation.view.contract.View;
 import com.mycompany.clinica.presentation.view.utils.NotificationMessage;

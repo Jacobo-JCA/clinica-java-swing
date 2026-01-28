@@ -36,16 +36,16 @@ public class ConsultationServiceImpl implements ConsultationService {
     }
     
     @Override
-    public int save(Consultation consultation, int patientId) {
+    public int save(Consultation consultation, int medicalAppointmentId) {
         String mensaje = validateFields(consultation);
         if (mensaje.isBlank()) {
             throw new NegocioException(mensaje);
         }
-        return consultationRepo.insertConsultation(consultation, patientId);
+        return consultationRepo.insertConsultation(consultation, medicalAppointmentId);
     }
     
     @Override
-    public List<Consultation> getConsultationByPatient(int patientId) {
-        return consultationRepo.getConsultationsByPatient(patientId);
+    public List<Consultation> getConsultationByPatient(int medicalAppointmentId) {
+        return consultationRepo.getConsultationsByPatient(medicalAppointmentId);
     }
 }

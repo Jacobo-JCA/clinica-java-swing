@@ -1,25 +1,34 @@
 package com.mycompany.clinica.presentation.view;
 
+import com.mycompany.clinica.presentation.view.viewfx.PatientViewFX;
 import com.mycompany.clinica.aplication.context.SesionContexto;
 import com.mycompany.clinica.presentation.view.utils.ControllerFactory;
 import com.mycompany.clinica.presentation.controller.PatientController;
 import com.mycompany.clinica.presentation.controller.RegistroControllerCentral;
 import com.mycompany.clinica.presentation.view.utils.NotificationMessage;
 import com.mycompany.clinica.domain.entity.Patient;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.beans.PropertyVetoException;
 import java.time.Duration;
 import java.time.Instant;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
+import javafx.embed.swing.JFXPanel;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+
 /**
  *
  * @author jacob
  */
 public class Principal extends javax.swing.JFrame {
-    private PatientFrame vistaFrame;
+//    private PatientFrame vistaFrame;
     private PatientController patientController;
     PrintFrame printFrame;
+    private JFXPanel fxPanel;
 
     public Principal() {
         initComponents();
@@ -124,32 +133,71 @@ public class Principal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void conectarDependencias() {
+//    private void addModuls(PatientFrame vistaFrame) {
+//        contenedorModulos.add(vistaFrame);
+//        vistaFrame.setVisible(true);
+//        try {
+//            vistaFrame.setSelected(true);
+//        } catch (PropertyVetoException e) {
+//            e.printStackTrace();
+//        } 
+//    }
+//    private void addModuls(Parent vistaFX) {
+//        if (fxPanel == null) {
+//            fxPanel = new JFXPanel();
+//            contenedorModulos.add(fxPanel);
+//        }
+//        javafx.application.Platform.runLater(() -> {
+//            fxPanel.setScene(new Scene(vistaFX));
+//        });
+//    }
+    
+    private void connectDependencies() {
         ControllerFactory controllerFactory = ControllerFactory.getInstance();
-        if (vistaFrame == null || vistaFrame.isClosed()) {
-            vistaFrame = ((PatientFrame)controllerFactory.getPatientFrame());
-            patientController = controllerFactory.getPatienteController();
-            addContenerdor(vistaFrame);
+        if (fxPanel == null) {
+            fxPanel = new JFXPanel();
+            fxPanel.setPreferredSize(new Dimension(800, 600));
+            contenedorModulos.setLayout(new BorderLayout());
+            contenedorModulos.add(fxPanel, BorderLayout.CENTER);
+            contenedorModulos.revalidate();
+            contenedorModulos.repaint();
+            this.revalidate(); 
+            this.repaint();
+            
+            javafx.application.Platform.runLater(() -> {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mycompany/clinica/presentation/view/viewfx/PatientView.fxml"));
+                    Parent root = loader.load();
+
+                    PatientViewFX vistaFX = loader.getController();
+                    patientController = controllerFactory.getPatienteController(vistaFX);
+                    // patientController.setView(vistaFX);
+
+                    fxPanel.setScene(new Scene(root));
+                    patientController.getAllPatients();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
     
-    private void addContenerdor(PatientFrame vistaFrame) {
-        contenedorModulos.add(vistaFrame);
-        vistaFrame.setVisible(true);
-        try {
-            vistaFrame.setSelected(true);
-        } catch (PropertyVetoException e) {
-            e.printStackTrace();
-        } 
-    }
+//    private void connectDependencies() {
+//        ControllerFactory controllerFactory = ControllerFactory.getInstance();
+//        if (vistaFrame == null || vistaFrame.isClosed()) {
+//            vistaFrame = ((PatientFrame)controllerFactory.getPatientFrame());
+//            patientController = controllerFactory.getPatienteController();
+//            addModuls(vistaFrame);
+//        }
+//    }
     
     private void btnPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPacienteActionPerformed
         Instant inicio = Instant.now();
-        conectarDependencias();
+        connectDependencies();
         Instant fin = Instant.now();
         long tiempoui = Duration.between(inicio, fin).toMillis();
         System.out.println("Tiempos de carga de la UI: " + tiempoui + " ms");
-        patientController.getAllPatients();
+        
     }//GEN-LAST:event_btnPacienteActionPerformed
 
     private void btnHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistorialActionPerformed
@@ -165,41 +213,41 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHistorialActionPerformed
 
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-        if (vistaFrame != null) {
-            printFrame = new PrintFrame();
-            printFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            printFrame.setVisible(true);
-        } else {
-            vistaFrame.showError("Seleccione un Paciente antes de imprimir la Receta!");
-        }
+//        if (vistaFrame != null) {
+//            printFrame = new PrintFrame();
+//            printFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//            printFrame.setVisible(true);
+//        } else {
+//            vistaFrame.showError("Seleccione un Paciente antes de imprimir la Receta!");
+//        }
     }//GEN-LAST:event_btnPrintActionPerformed
     
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Principal().setVisible(true);  
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new Principal().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnHistorial;

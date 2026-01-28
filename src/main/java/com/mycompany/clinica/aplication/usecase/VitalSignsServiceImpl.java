@@ -26,16 +26,16 @@ public class VitalSignsServiceImpl implements VitalSignsService {
     }
     
     @Override
-    public int guardar(VitalSigns vitalSigns, int consultationId) {
+    public int guardar(VitalSigns vitalSigns, int medicalAppointmentId) {
         String mensaje = validarCampos(vitalSigns);
         if(mensaje != null) {
             throw new NegocioException(mensaje);
         }
-        return vitalSignsRepo.insertVitalSigns(vitalSigns, consultationId);
+        return vitalSignsRepo.insertVitalSigns(vitalSigns, medicalAppointmentId);
     }
 
     @Override
-    public List<VitalSigns> obtenerSignosVitales(int consultationId) {
-        return vitalSignsRepo.getAllVitalSigns(consultationId);
+    public List<VitalSigns> obtenerSignosVitales(int medicalAppointmentId) {
+        return vitalSignsRepo.getAllVitalSigns(medicalAppointmentId);
     }
 }
