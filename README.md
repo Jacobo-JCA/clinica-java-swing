@@ -68,6 +68,22 @@ Esta estructura me permite tener un diseño limpio, entendible y alineado con bu
 
 ---
 
+#### Importancia de la arquitectura y lecciones aprendidas
+
+Desde el inicio del proyecto tomé la decisión clave para mantener el sistema organizado, escalable y fácil de evolucionar. 
+Definir claramente los límites entre capas y responsabilidades permitió evitar el acoplamiento entre componentes y mantener la lógica de negocio independiente de detalles técnicos.
+
+Durante el desarrollo aprendí que un diseño modular y bien estructurado facilita significativamente los cambios tecnológicos. Gracias a la separación entre la capa de presentación y el resto del sistema, fue posible migrar la interfaz gráfica de **Java Swing a JavaFX** sin necesidad de modificar la lógica de negocio ni los casos de uso.  
+Este cambio se realizó de manera sencilla porque las vistas actúan únicamente como consumidoras de los servicios de la aplicación, respetando el principio de **Inversión de Dependencias**.
+
+Esta experiencia reforzó la importancia de:
+
+- Diseñar módulos con responsabilidades claras.
+- Reducir el acoplamiento entre capas.
+- Pensar la arquitectura no solo para el presente, sino para la evolución futura del sistema.
+
+---
+
 ### ⚙️ Tecnologías
 
 - **Java 17**
