@@ -3,7 +3,7 @@ package com.mycompany.clinica.presentation.view.viewfx;
 import com.mycompany.clinica.domain.entity.Patient;
 import com.mycompany.clinica.presentation.controller.MedicalAppointmentController;
 import com.mycompany.clinica.presentation.controller.PatientController;
-import com.mycompany.clinica.presentation.view.utils.ControllerFactory;
+import com.mycompany.clinica.infrastructure.di.DependencyInjector;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,10 +14,14 @@ public class MainViewFx {
     @FXML private StackPane contentArea;
     @FXML private Button btnPacientes;
     @FXML private Button btnCitas;
-    
+    private final DependencyInjector dependencyInjector;
     private PatientController patientController;
-    private PatientViewFX patientViewFX; // 👈 Guardar referencia
+    private PatientViewFX patientViewFX;
     
+    public MainViewFx(DependencyInjector dependencyInjector) {
+        this.dependencyInjector = dependencyInjector;
+    }
+   
     @FXML
     public void initialize() {
         btnPacientes.setOnAction(e -> loadPatientView());
@@ -41,15 +45,11 @@ public class MainViewFx {
             FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/PatientView.fxml")
             );
-            Parent view = loader.load();
-            
+            Parent view = loader.load(); 
             patientViewFX = loader.getController();
+            patientController = dependencyInjector.getPatienteController(patientViewFX);
             
-            patientController = ControllerFactory.getInstance()
-                .getPatienteController(patientViewFX);
-            
-            contentArea.getChildren().setAll(view);
-            
+            contentArea.getChildren().setAll(view); 
             patientController.getAllPatients();
             
         } catch (Exception e) {
@@ -70,8 +70,6 @@ public class MainViewFx {
             return;
         }
         
-        int patientId = selected.getPatientId();
-        
         try {
             FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/MedicalAppointmentView.fxml")
@@ -79,16 +77,9 @@ public class MainViewFx {
             Parent view = loader.load();
             
             MedicalAppointmentViewFX appointmentView = loader.getController();
-            
-            MedicalAppointmentController controller = new MedicalAppointmentController(
-                appointmentView,
-                ControllerFactory.getInstance().getAppointmentService(),
-                patientId
-            );
-            
+            MedicalAppointmentController controller = dependencyInjector.getAppointmentController(appointmentView, selected.getPatientId());
             appointmentView.setController(controller);
-            contentArea.getChildren().setAll(view);
-            
+            contentArea.getChildren().setAll(view);       
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Error cargando vista de citas: " + e.getMessage());

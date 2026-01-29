@@ -1,4 +1,4 @@
-package com.mycompany.clinica.presentation.view.utils;
+package com.mycompany.clinica.infrastructure.di;
 
 import com.mycompany.clinica.aplication.usecase.MedicalAppoinmentServiceImpl;
 import com.mycompany.clinica.aplication.usecase.PatientServiceImpl;
@@ -13,24 +13,20 @@ import com.mycompany.clinica.presentation.controller.PatientController;
 import com.mycompany.clinica.presentation.view.viewfx.MedicalAppointmentViewFX;
 import com.mycompany.clinica.presentation.view.viewfx.PatientViewFX;
 
-public class ControllerFactory {
-    private static ControllerFactory instance;
+public class DependencyInjector {
     private final PatientRepo patientRepo = new PatientRepoJdbc();
     private final PatientService patientService = new PatientServiceImpl(patientRepo);
     private final MedicalAppointmentRepo medicalAppointmentRepo = new MedicalAppointmentJdbc();
     private final MedicalAppointmentService appointmentService = new MedicalAppoinmentServiceImpl(medicalAppointmentRepo);
 
-    private ControllerFactory() {}
-
-    public static ControllerFactory getInstance() {
-        if (instance == null) {
-            instance = new ControllerFactory();
-        }
-        return instance;
-    }
+    public DependencyInjector() {}
 
     public PatientController getPatienteController(PatientViewFX patientViewFX) {
         return new PatientController(patientService, patientViewFX);
+    }
+    
+    public MedicalAppointmentController getAppointmentController(MedicalAppointmentViewFX appointmentView, int patientId) {
+        return new MedicalAppointmentController(appointmentView, appointmentService, patientId);
     }
 
     public MedicalAppointmentService getAppointmentService() {

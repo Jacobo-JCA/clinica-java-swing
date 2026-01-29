@@ -1,6 +1,6 @@
-package com.mycompany.clinica.presentation.view;
+package com.mycompany.clinica.presentation.view.viewswing;
 
-import com.mycompany.clinica.presentation.view.utils.ControllerFactory;
+import com.mycompany.clinica.infrastructure.di.DependencyInjector;
 import com.mycompany.clinica.domain.entity.Patient;
 import com.mycompany.clinica.presentation.view.contract.View;
 import com.mycompany.clinica.presentation.view.utils.NotificationMessage;

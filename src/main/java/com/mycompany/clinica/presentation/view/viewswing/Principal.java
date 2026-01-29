@@ -1,8 +1,8 @@
-package com.mycompany.clinica.presentation.view;
+package com.mycompany.clinica.presentation.view.viewswing;
 
 import com.mycompany.clinica.presentation.view.viewfx.PatientViewFX;
 import com.mycompany.clinica.aplication.context.SesionContexto;
-import com.mycompany.clinica.presentation.view.utils.ControllerFactory;
+import com.mycompany.clinica.infrastructure.di.DependencyInjector;
 import com.mycompany.clinica.presentation.controller.PatientController;
 import com.mycompany.clinica.presentation.controller.RegistroControllerCentral;
 import com.mycompany.clinica.presentation.view.utils.NotificationMessage;
@@ -153,7 +153,7 @@ public class Principal extends javax.swing.JFrame {
 //    }
     
     private void connectDependencies() {
-        ControllerFactory controllerFactory = ControllerFactory.getInstance();
+        //DependencyInjector controllerFactory = DependencyInjector.getInstance();
         if (fxPanel == null) {
             fxPanel = new JFXPanel();
             fxPanel.setPreferredSize(new Dimension(800, 600));
@@ -170,7 +170,7 @@ public class Principal extends javax.swing.JFrame {
                     Parent root = loader.load();
 
                     PatientViewFX vistaFX = loader.getController();
-                    patientController = controllerFactory.getPatienteController(vistaFX);
+                    //patientController = controllerFactory.getPatienteController(vistaFX);
                     // patientController.setView(vistaFX);
 
                     fxPanel.setScene(new Scene(root));

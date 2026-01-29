@@ -3,8 +3,8 @@ package com.mycompany.clinica.presentation.controller;
 import com.mycompany.clinica.aplication.context.SesionContexto;
 
 import com.mycompany.clinica.domain.entity.VitalSigns;
-import com.mycompany.clinica.presentation.view.PatientFrame;
-import com.mycompany.clinica.presentation.view.VitalSignsFrame;
+import com.mycompany.clinica.presentation.view.viewswing.PatientFrame;
+import com.mycompany.clinica.presentation.view.viewswing.VitalSignsFrame;
 import java.util.List;
 import javax.swing.JDialog;
 import com.mycompany.clinica.domain.service.VitalSignsService;

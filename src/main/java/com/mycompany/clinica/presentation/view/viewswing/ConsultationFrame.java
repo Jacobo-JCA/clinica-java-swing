@@ -1,4 +1,4 @@
-package com.mycompany.clinica.presentation.view;
+package com.mycompany.clinica.presentation.view.viewswing;
 
 import com.mycompany.clinica.presentation.controller.ConsultationController;
 import com.mycompany.clinica.infrastructure.execption.ValidationException;

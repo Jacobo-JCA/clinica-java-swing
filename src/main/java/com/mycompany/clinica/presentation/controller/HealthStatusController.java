@@ -3,7 +3,7 @@ package com.mycompany.clinica.presentation.controller;
 import com.mycompany.clinica.aplication.context.SesionContexto;
 import com.mycompany.clinica.infrastructure.execption.NegocioException;
 import com.mycompany.clinica.domain.entity.HealthStatus;
-import com.mycompany.clinica.presentation.view.HealthStatusFrame;
+import com.mycompany.clinica.presentation.view.viewswing.HealthStatusFrame;
 
 import java.util.List;
 import javax.swing.JDialog;
